@@ -15,6 +15,18 @@
       "affiliations": [],
       "ldap_groups": []
     },
+    "curated_uploader": {
+      "all_authenticated": false,
+      "usernames": [],
+      "affiliations": [],
+      "ldap_groups": []
+    },
+    "unrestricted_uploader": {
+      "all_authenticated": false,
+      "usernames": [],
+      "affiliations": [],
+      "ldap_groups": []
+    },
     "approver": {
       "usernames": [],
       "affiliations": [],

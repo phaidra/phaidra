@@ -30,7 +30,9 @@ A blocked account or an expired account cannot authenticate. For remote users, t
 
 Roles are strings assigned to users. The available role names come from the OPA authorization data, together with the built-in `admin` and `superuser` roles. Their meaning is defined by the authorization policy and institution configuration, rather than by the user tables.
 
-The configured default role is applied to remote authenticated sessions and is also stored when a remote user is first provisioned. Later stored-role changes are administrator-controlled and are not overwritten by subsequent remote logins. See [Authorization](authorization.md) for role and policy behavior.
+The configured default role is applied to remote authenticated sessions and is also stored when a remote user is first provisioned. Later stored-role changes are administrator-controlled and are not overwritten by subsequent remote logins.
+
+For uploads, `curated_uploader` always submits into the approval queue, `uploader` is queued only when an introducing metadata policy matches, and `unrestricted_uploader` bypasses metadata-policy curation. Users without an upload role cannot create objects. See [Authorization](authorization.md) for role and policy behavior.
 
 ## Remote-user attribute synchronization
 

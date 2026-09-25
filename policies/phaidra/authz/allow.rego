@@ -366,6 +366,6 @@ create_initial_state := "PendingApproval" if {
 	metadata.needs_approval
 }
 
-create_initial_state := "Inactive" if {
+create_initial_state := "Active" if {
 	not metadata.needs_approval
 }

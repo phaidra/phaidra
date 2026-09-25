@@ -465,15 +465,15 @@ test_create_allowed_for_uploader if {
 	}
 	decision.allow == true
 	decision.reason == "uploader"
-	decision.initial_state == "Inactive"
+	decision.initial_state == "Active"
 }
 
-test_create_queued_without_uploader if {
+test_create_allowed_for_curated_uploader if {
 	decision := authz.allow with input as {
 		"subject": {
 			"username": "alice",
 			"authenticated": true,
-			"roles": ["writer"],
+			"roles": ["curated_uploader"],
 			"affiliations": [],
 			"org_units_l1": [],
 			"org_units_l2": [],
@@ -489,6 +489,28 @@ test_create_queued_without_uploader if {
 	}
 	decision.allow == true
 	decision.initial_state == "PendingApproval"
+}
+
+test_create_denied_without_role if {
+	decision := authz.allow with input as {
+		"subject": {
+			"username": "alice",
+			"authenticated": true,
+			"roles": [],
+			"affiliations": [],
+			"org_units_l1": [],
+			"org_units_l2": [],
+			"ldap_groups": [],
+			"project_groups": [],
+		},
+		"resource": {
+			"type": "object",
+		},
+		"action": {"id": "create"},
+		"environment": {"institution": "default"},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false},
+	}
+	decision.allow == false
 }
 
 test_admin_create_not_queued if {
@@ -511,7 +533,7 @@ test_admin_create_not_queued if {
 		"config": {"admin_username": "phaidraAdmin", "enabledelete": false},
 	}
 	decision.allow == true
-	decision.initial_state == "Inactive"
+	decision.initial_state == "Active"
 }
 
 test_private_ds_denied_anonymous if {
@@ -698,12 +720,12 @@ oer_md := {
 	"license": ["http://creativecommons.org/licenses/by/4.0/"],
 }
 
-test_oer_create_pending_approval if {
+test_oer_uploader_create_pending_approval if {
 	decision := authz.allow with input as {
 		"subject": {
 			"username": "alice",
 			"authenticated": true,
-			"roles": ["uploader", "writer"],
+			"roles": ["uploader"],
 			"affiliations": [],
 			"org_units_l1": [],
 			"org_units_l2": [],
@@ -715,7 +737,51 @@ test_oer_create_pending_approval if {
 		"environment": {"institution": "default"},
 		"config": {"admin_username": "phaidraAdmin", "enabledelete": false},
 	}
-		with data.phaidra.config.metadata_policies as oer_policies
+	with data.phaidra.config.metadata_policies as oer_policies
+	decision.allow == true
+	decision.initial_state == "PendingApproval"
+}
+
+test_oer_unrestricted_uploader_create_active if {
+	decision := authz.allow with input as {
+		"subject": {
+			"username": "alice",
+			"authenticated": true,
+			"roles": ["unrestricted_uploader"],
+			"affiliations": [],
+			"org_units_l1": [],
+			"org_units_l2": [],
+			"ldap_groups": [],
+			"project_groups": [],
+		},
+		"resource": {"type": "object", "metadata": oer_md},
+		"action": {"id": "create"},
+		"environment": {"institution": "default"},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false},
+	}
+	with data.phaidra.config.metadata_policies as oer_policies
+	decision.allow == true
+	decision.initial_state == "Active"
+}
+
+test_oer_curated_uploader_create_pending_approval if {
+	decision := authz.allow with input as {
+		"subject": {
+			"username": "alice",
+			"authenticated": true,
+			"roles": ["curated_uploader"],
+			"affiliations": [],
+			"org_units_l1": [],
+			"org_units_l2": [],
+			"ldap_groups": [],
+			"project_groups": [],
+		},
+		"resource": {"type": "object", "metadata": oer_md},
+		"action": {"id": "create"},
+		"environment": {"institution": "default"},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false},
+	}
+	with data.phaidra.config.metadata_policies as oer_policies
 	decision.allow == true
 	decision.initial_state == "PendingApproval"
 }

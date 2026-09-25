@@ -4,11 +4,10 @@ import rego.v1
 
 import data.phaidra.authz.helpers
 
-# Curation on create:
-# - Uncurated submit requires the uploader role (or admin).
-# - Instance-wide on  = nobody is granted uploader (default_role unset).
-# - Instance-wide off = default_role=uploader, empty metadata_policies.
-# - Conditional       = default_role=uploader + metadata_policies (queue on introducing).
+# Create state follows the highest upload role:
+# - unrestricted_uploader and site admin create Active objects.
+# - uploader creates Active objects unless an introducing metadata policy queues it.
+# - curated_uploader creates PendingApproval objects.
 #
 # Metadata policies fire on *introducing* a match (proposed matches, existing does not).
 # Repeating already-stored values (full JSON-LD POST that only changes title) is not a match.
@@ -84,23 +83,35 @@ introducing_ids contains p.id if {
 	not exempt(p)
 }
 
-can_uncurated_submit if {
-	helpers.role_granted("uploader")
+can_bypass_curation if {
+	helpers.role_granted("unrestricted_uploader")
 }
 
-can_uncurated_submit if {
+can_bypass_curation if {
 	data.phaidra.authz.admin.grant
 }
 
-# No uploader role ⇒ every create is curated (instance-wide on).
+has_uploader if {
+	helpers.role_granted("uploader")
+}
+
+has_curated_uploader if {
+	helpers.role_granted("curated_uploader")
+}
+
+# Role precedence is unrestricted_uploader, uploader, then curated_uploader.
 needs_approval if {
 	input.action.id == "create"
-	not can_uncurated_submit
+	not can_bypass_curation
+	has_uploader
+	count(introducing_ids) > 0
 }
 
 needs_approval if {
 	input.action.id == "create"
-	count(introducing_ids) > 0
+	not can_bypass_curation
+	not has_uploader
+	has_curated_uploader
 }
 
 needs_approval if {

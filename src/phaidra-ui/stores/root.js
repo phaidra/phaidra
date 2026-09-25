@@ -19,6 +19,7 @@ export const useRootStore = defineStore('root', {
     hasInactiveObjects: false,
     canManageInactiveObjects: false,
     isInactiveObjectsAdmin: false,
+    canCreateObjects: false,
     groups: [],
     breadcrumbs: [],
     loading: false
@@ -710,6 +711,7 @@ export const useRootStore = defineStore('root', {
     this.hasInactiveObjects = false
     this.canManageInactiveObjects = false
     this.isInactiveObjectsAdmin = false
+    this.canCreateObjects = false
     let cookieOptions = {
       path: '/',
       secure: true,
@@ -728,6 +730,7 @@ export const useRootStore = defineStore('root', {
     this.hasInactiveObjects = false
     this.canManageInactiveObjects = false
     this.isInactiveObjectsAdmin = false
+    this.canCreateObjects = false
     this.groups = []
     let cookieOptions = {
       path: '/',
@@ -868,7 +871,10 @@ export const useRootStore = defineStore('root', {
         this.setAlerts(response.data.alerts)
       }
       this.setLoginData(response.data.user_data)
-      await this.fetchHasInactiveObjects()
+      await Promise.all([
+        this.fetchCapabilities(),
+        this.fetchHasInactiveObjects()
+      ])
     } catch (error) {
       console.log('getLoginData error')
       console.log(error)
@@ -876,6 +882,23 @@ export const useRootStore = defineStore('root', {
         this.setAlerts([{ type: 'success', msg: 'You have been logged out' }])
         this.clearStore()
       }
+    }
+  },
+  async fetchCapabilities() {
+    if (!this.user?.token) {
+      this.canCreateObjects = false
+      return
+    }
+    try {
+      const response = await this.$axios.get('/authz/capabilities', {
+        headers: {
+          'X-XSRF-TOKEN': this.user.token
+        }
+      })
+      this.canCreateObjects = (response.data.capabilities || []).includes('create')
+    } catch (error) {
+      console.log('fetchCapabilities error', error)
+      this.canCreateObjects = false
     }
   },
   async fetchHasInactiveObjects() {

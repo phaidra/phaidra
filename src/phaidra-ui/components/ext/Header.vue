@@ -295,7 +295,7 @@
                               }}</v-list-item-title></v-list-item
                           >
                           <v-list-item
-                              v-if="signedin"
+                              v-if="signedin && canCreateObjects"
                               nuxt
                               :to="localePath('/submit')"
                               ><v-list-item-title>{{
@@ -410,7 +410,7 @@
                     <v-hover v-slot:default="{ isHovering, props }">
                       <v-btn
                         v-bind="props"
-                        v-show="signedin"
+                        v-show="signedin && canCreateObjects"
                        
                         tile
                         variant="flat"

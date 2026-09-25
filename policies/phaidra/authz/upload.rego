@@ -13,7 +13,11 @@ can_create if {
 }
 
 can_create if {
-	helpers.role_granted("writer")
+	helpers.role_granted("curated_uploader")
+}
+
+can_create if {
+	helpers.role_granted("unrestricted_uploader")
 }
 
 can_delete if {

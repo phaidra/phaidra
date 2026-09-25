@@ -40,23 +40,24 @@ The bridge requires each protected route to declare an **`action_id`**. Object a
 
 Institution admins tune behaviour via data bundles in `policies/<institution>/config/data.json` (default: `phaidra/config/data.json`) without editing Rego:
 
-- **Writer / uploader roles** — `writer` (who may create) is decided by OPA from `cfg.roles.writer` (`all_authenticated`, affiliations, ldap groups, usernames). Default `phaidra` bundle sets `all_authenticated: true` (any authenticated user may create objects). Institutions may restrict it. `uploader` is the **uncurated submit** privilege
-- **Default role** — `PHAIDRA_DEFAULT_ROLE` (PEP puts it on the subject). Default `uploader` = curation off
+- **Upload roles** — `curated_uploader` always queues submission, `uploader` queues only when an introducing metadata policy matches, and `unrestricted_uploader` bypasses that curation. All can be assigned through the corresponding entries in `cfg.roles` (`all_authenticated`, affiliations, ldap groups, usernames).
+- **Default role** — `PHAIDRA_DEFAULT_ROLE` (PEP puts it on the subject). Default `uploader` allows active submission when no metadata policy matches
 - **Privileged submit forms** — catalog-fetch upload, bulk upload
 - **Metadata policies** (optional) — match JSON-LD on create/edit; default bundle has none enabled
 - **Restricted rights management** — who may set access restrictions and max expiry
 
-### Curated submit (UI part not yet implemented)
+### Upload roles
 
-Create is allowed when `role_granted("writer")` or `role_granted("uploader")` (or admin). Whether the object is activated depends on the `uploader` role and metadata policies:
+Create is allowed for `curated_uploader`, `uploader`, `unrestricted_uploader`, or site admin. The upload navigation is hidden for users without one of these privileges.
 
-| Setup | Effect |
-|-------|--------|
-| `PHAIDRA_DEFAULT_ROLE=uploader`, empty `metadata_policies` | **Curation off** (default). Every user can submit uncurated. |
-| `PHAIDRA_DEFAULT_ROLE=uploader` + metadata policies | **Conditional.** Introducing a policy match queues the upload (`PendingApproval`); otherwise it activates. |
-| `PHAIDRA_DEFAULT_ROLE` unset or empty | **Curation on.** Nobody gets `uploader`; every create stays pending. Site admin still skips the queue. |
+| Role | Effect |
+|------|--------|
+| `curated_uploader` | Always creates a `PendingApproval` object. |
+| `uploader` | Creates an active object unless an introducing metadata policy queues it for approval. |
+| `unrestricted_uploader` | Always creates an active object, bypassing metadata-policy curation. |
+| Site admin | Creates an active object. |
 
-OPA does not auto-grant `uploader` (`all_authenticated` is false). The API puts `default_role` on the subject; later user management can assign `uploader` per user the same way. Users without `uploader` can still create when they have `writer` (via config); they cannot skip curation on create. Object **edit** remains owner/admin (not a global writer privilege).
+`PHAIDRA_DEFAULT_ROLE=uploader` keeps the backward-compatible behavior for metadata that does not match an enabled curation policy. To require curation for every submission, leave that default role empty and assign `curated_uploader` to the users or groups that may submit. If multiple upload roles apply, precedence is `unrestricted_uploader`, then `uploader`, then `curated_uploader`. Object **edit** remains owner/admin (not a global upload privilege).
 
 Activation of queued objects is `POST /object/{pid}/approve` (`approver` or admin).
 
@@ -66,11 +67,11 @@ The PEP flattens submitted JSON-LD (`edm:hasType`, `edm:rights`) into `resource.
 
 A policy applies only when the **proposed** payload newly matches (`introducing`): stored metadata did not already match. A full JSON-LD POST that only changes title (and still carries the same object type / licence) is not introducing.
 
-When a policy is introduced and the user is not in `exempt_roles`:
+An introducing policy queues a create by `uploader` when the user is not in `exempt_roles`. `curated_uploader` is already queued regardless of policy matching; `unrestricted_uploader` and site admin remain active.
 
 | Action / object state | Effect |
 |-----------------------|--------|
-| `create`, or `write` on Inactive | Allow; keep pending approval (do not activate) |
+| `create` by `uploader`, or `write` on Inactive | Allow; keep pending approval (do not activate) |
 | `write` on Active | Deny — cannot change *to* those values |
 | `write` on Active when values were already set | Allow |
 
@@ -140,7 +141,7 @@ Environment variables (see `PhaidraAPI.conf`):
 | `OPA_FAIL_MODE` | `legacy` | `legacy` or `closed` on OPA errors |
 | `OPA_DUAL_RUN` | `false` | Log mismatches vs legacy Perl logic |
 | `OPA_INSTITUTION` | `default` | Institution id for data bundle |
-| `PHAIDRA_DEFAULT_ROLE` | `uploader` | Directory role for every user. `uploader` = uncurated submit; empty = instance-wide curation |
+| `PHAIDRA_DEFAULT_ROLE` | `uploader` | Role added for every authenticated user. `uploader` is subject to metadata-policy curation; empty requires explicit upload-role assignment. |
 
 ## Audit
 

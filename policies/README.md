@@ -43,7 +43,7 @@ Built by `PhaidraAPI::Model::Policy::Context`:
 | `environment` | Timestamp, institution id, remote address |
 | `config` | Runtime flags (`enabledelete`, admin username) |
 
-Roles like `writer` and `uploader` are **not** hard-coded in the PEP (except elevated roles such as admin/superuser). OPA grants them from `data.phaidra.config.roles` via `helpers.role_granted`.
+Roles such as `uploader`, `curated_uploader`, and `unrestricted_uploader` are **not** hard-coded in the PEP (except elevated roles such as admin/superuser). OPA grants them from `data.phaidra.config.roles` via `helpers.role_granted`.
 
 ## Policy evaluation flow
 
@@ -111,23 +111,24 @@ Tune behaviour in `<institution>/config/data.json` without editing Rego. Loaded 
 
 | Config key | Purpose |
 |------------|---------|
-| `roles` | Who gets `writer`, `uploader`, `approver`, `canmodifyownerid`, … (`all_authenticated`, usernames, affiliations, ldap_groups) |
+| `roles` | Who gets `uploader`, `curated_uploader`, `unrestricted_uploader`, `approver`, `canmodifyownerid`, … (`all_authenticated`, usernames, affiliations, ldap_groups) |
 | `submit_forms` | Which roles may use privileged upload forms |
 | `metadata_policies` | Optional curation rules on create/edit (match JSON-LD fields) |
 | `restrictions` | Who may set RIGHTS restrictions, max expiry |
 | `delete` | Owner/superuser self-delete roles, `require_enabledelete` gate |
 
-Default `phaidra` bundle: `writer.all_authenticated = true` (legacy parity — any authenticated user may create). Institutions can restrict (see `univie/config/data.json`: staff/faculty + `phaidra-writers` LDAP group).
+### Upload quick reference
 
-### Curation quick reference
+| Role | Effect |
+|------|--------|
+| `curated_uploader` | Always creates an object in `PendingApproval`. |
+| `uploader` | Creates an active object unless an introducing metadata policy queues it for approval. |
+| `unrestricted_uploader` | Always creates an active object, bypassing metadata-policy curation. |
+| no upload role | Cannot create an object. |
 
-| `PHAIDRA_DEFAULT_ROLE` | `metadata_policies` | Effect |
-|------------------------|---------------------|--------|
-| `uploader` (default) | empty | Curation off — uncurated submit |
-| `uploader` | configured | Queue when policy newly matches |
-| empty / unset | any | Curation on — all creates pending |
+`PHAIDRA_DEFAULT_ROLE=uploader` preserves the legacy behavior when no metadata policy applies. With no default role, grant an upload role explicitly in user management or the OPA role configuration.
 
-`create_initial_state` in `allow.rego` reads `metadata.needs_approval` → `PendingApproval` or `Inactive`.
+`create_initial_state` in `allow.rego` reads `metadata.needs_approval` → `PendingApproval` or `Active`.
 
 ## Local testing
 

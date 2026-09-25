@@ -35,9 +35,27 @@ plain_metadata := {
 	"license": [],
 }
 
-test_oer_needs_approval_on_create if {
+test_oer_uploader_needs_approval_on_create if {
 	metadata.needs_approval with input as {
 		"subject": {"username": "alice", "authenticated": true, "roles": ["uploader"]},
+		"resource": {"type": "object", "metadata": oer_metadata},
+		"action": {"id": "create"},
+	}
+		with data.phaidra.config.metadata_policies as [oer_policy]
+}
+
+test_oer_unrestricted_uploader_does_not_need_approval_on_create if {
+	not metadata.needs_approval with input as {
+		"subject": {"username": "alice", "authenticated": true, "roles": ["unrestricted_uploader"]},
+		"resource": {"type": "object", "metadata": oer_metadata},
+		"action": {"id": "create"},
+	}
+		with data.phaidra.config.metadata_policies as [oer_policy]
+}
+
+test_unrestricted_uploader_overrides_other_upload_roles if {
+	not metadata.needs_approval with input as {
+		"subject": {"username": "alice", "authenticated": true, "roles": ["curated_uploader", "uploader", "unrestricted_uploader"]},
 		"resource": {"type": "object", "metadata": oer_metadata},
 		"action": {"id": "create"},
 	}
@@ -155,9 +173,9 @@ test_empty_policies_noop if {
 		with data.phaidra.config.metadata_policies as []
 }
 
-test_create_curated_without_uploader if {
+test_curated_uploader_needs_approval if {
 	metadata.needs_approval with input as {
-		"subject": {"username": "alice", "authenticated": true, "roles": ["writer"]},
+		"subject": {"username": "alice", "authenticated": true, "roles": ["curated_uploader"]},
 		"resource": {"type": "object", "metadata": plain_metadata},
 		"action": {"id": "create"},
 	}

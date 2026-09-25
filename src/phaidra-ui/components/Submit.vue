@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div v-if="instanceconfig.cms_submit">
+    <div v-if="canCreateObjects && instanceconfig.cms_submit">
       <runtimetemplate :template="instanceconfig.cms_submit" />
     </div>
     
-    <div v-else>
+    <div v-else-if="canCreateObjects">
       <v-row class="my-6" justify="start">
         <div class="d-flex flex-row ml-3">
           <v-btn

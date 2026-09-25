@@ -15,6 +15,9 @@ export const context = {
     hasInactiveObjects () {
       return !!useRootStore().hasInactiveObjects
     },
+    canCreateObjects () {
+      return !!useRootStore().canCreateObjects
+    },
     canManageInactiveObjects () {
       return !!useRootStore().canManageInactiveObjects
     },
