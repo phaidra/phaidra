@@ -264,7 +264,7 @@ sub _build_config {
   return {
     admin_username => $c->app->config->{phaidra}->{adminusername} // '',
     iraccount      => $pubconfig->{iraccount}                     // '',
-    enabledelete   => $privconfig->{enabledelete} ? true : false,
+    enabledelete   => $privconfig->{enabledelete}        ? true : false,
     readonly       => ($c->app->config->{readonly} // 0) ? true : false,
   };
 }

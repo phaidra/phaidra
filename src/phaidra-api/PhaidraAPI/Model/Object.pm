@@ -547,7 +547,7 @@ sub can_change_owner {
 
   require PhaidraAPI::Model::Authorization;
   my $authz_model = PhaidraAPI::Model::Authorization->new;
-  my $decision = $authz_model->check_action($c, 'change_owner', {resource_type => 'object'});
+  my $decision    = $authz_model->check_action($c, 'change_owner', {resource_type => 'object'});
   return $decision->{allow} ? 1 : 0;
 }
 

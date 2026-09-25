@@ -79,10 +79,10 @@ sub _legacy_fallback {
     my @roles = @{$input->{subject}->{roles} // []};
     my $allow = grep {$_ eq 'admin' || $_ eq 'canmodifyownerid'} @roles;
     return {
-      allow       => $allow ? true : false,
-      effect      => $allow ? 'allow' : 'deny',
+      allow       => $allow ? true           : false,
+      effect      => $allow ? 'allow'        : 'deny',
       reason      => $allow ? 'change_owner' : 'default_deny',
-      rights      => $allow ? 'rw' : '',
+      rights      => $allow ? 'rw'           : '',
       source      => $reason,
       duration_ms => int(tv_interval($t0) * 1000),
     };
