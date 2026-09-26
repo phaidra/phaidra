@@ -114,7 +114,8 @@ export default {
       if (instanceconfig.googlesiteverificationcode) {
         meta.push({
           name: 'google-site-verification',
-          content: instanceconfig.googlesiteverificationcode
+          content: instanceconfig.googlesiteverificationcode,
+          tagPriority: 'critical'
         })
       }
 
