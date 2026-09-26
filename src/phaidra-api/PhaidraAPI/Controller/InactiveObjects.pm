@@ -105,7 +105,7 @@ sub list {
 
 sub events {
   my $self = shift;
-  my $pid = $self->stash('pid');
+  my $pid  = $self->stash('pid');
   unless ($pid && $pid =~ m/^o:\d+$/) {
     $self->render(json => {alerts => [{type => 'error', msg => 'Invalid pid'}], status => 400}, status => 400);
     return;
@@ -114,7 +114,7 @@ sub events {
   my $username = $self->stash->{basic_auth_credentials}->{username};
   my ($can_manage, $is_admin) = $self->_staff_flags;
   my $inactive_model = PhaidraAPI::Model::InactiveObjects->new;
-  my $row = $inactive_model->get_by_pid($self, $pid);
+  my $row            = $inactive_model->get_by_pid($self, $pid);
   if ($row->{status} ne 200) {
     $self->render(json => $row, status => $row->{status});
     return;
@@ -240,7 +240,7 @@ sub activate {
   }
   if ($source eq 'curated_submit' || $source eq 'deferred_upload') {
     my $event_model = PhaidraAPI::Model::Event->new;
-    $event_model->add($self, 'approve', [$pid], $username);
+    $event_model->add($self, 'approve',                                                                                [$pid], $username);
     $event_model->add($self, $nr->{notification_sent} ? 'approval_notification_sent' : 'approval_notification_failed', [$pid], $username);
   }
 

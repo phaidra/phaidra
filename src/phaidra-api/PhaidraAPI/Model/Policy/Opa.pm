@@ -144,14 +144,16 @@ sub _legacy_action_fallback {
     my $adminuser = $c->app->config->{phaidra}->{adminusername} // '';
     my $is_admin  = ($adminuser ne '' && $username eq $adminuser)
       || grep {$_ eq 'admin'} @roles;
-    my $is_uploader = grep {$_ eq 'uploader'} @roles;
-    my $is_curated_uploader = grep {$_ eq 'curated_uploader'} @roles;
+    my $is_uploader              = grep {$_ eq 'uploader'} @roles;
+    my $is_curated_uploader      = grep {$_ eq 'curated_uploader'} @roles;
     my $is_unrestricted_uploader = grep {$_ eq 'unrestricted_uploader'} @roles;
 
     $allow = $username && ($is_admin || $is_uploader || $is_curated_uploader || $is_unrestricted_uploader);
-    $initial_state = ($is_admin || $is_uploader || $is_unrestricted_uploader)
+    $initial_state
+      = ($is_admin || $is_uploader || $is_unrestricted_uploader)
       ? 'Active'
-      : 'PendingApproval' if $allow;
+      : 'PendingApproval'
+      if $allow;
   }
   elsif ($action_id eq 'capabilities' || $action_id eq 'check_forms') {
     $allow = 1;
@@ -197,7 +199,8 @@ sub _legacy_action_fallback {
     my $adminuser = $c->app->config->{phaidra}->{adminusername} // '';
     my $is_admin  = ($adminuser ne '' && $username eq $adminuser)
       || grep {$_ eq 'admin'} @roles;
-    my $can_create = $username && ($is_admin
+    my $can_create = $username
+      && ($is_admin
       || grep {$_ eq 'uploader' || $_ eq 'curated_uploader' || $_ eq 'unrestricted_uploader'} @roles);
     $decision->{capabilities} = $can_create ? ['create'] : [];
   }
