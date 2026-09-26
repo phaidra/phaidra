@@ -641,9 +641,12 @@ address {
 .v-input--indent-details .v-input__details {
     margin-bottom: 8px;
 }
-h1, h2, h3, h4, h5, h6 {
-  padding: 0;
-  margin: 0;
+
+@layer vuetify-core.reset {
+  h1, h2, h3, h4, h5, h6 {
+    padding: 0;
+    margin: 0;
+  }
 }
 </style>
 
