@@ -18,6 +18,7 @@ use PhaidraAPI::Model::Config;
 use PhaidraAPI::Model::Jsonld;
 use PhaidraAPI::Model::Directory;
 use PhaidraAPI::Model::EmailTemplate;
+use PhaidraAPI::Model::Event;
 use Time::HiRes qw/tv_interval gettimeofday/;
 use Storable    qw(dclone);
 use POSIX       qw/strftime/;
@@ -155,26 +156,7 @@ sub notifications {
 
 sub addEvent {
   my ($self, $eventtype, $pids, $username) = @_;
-
-  my $time = strftime "%Y-%m-%dT%H:%M:%SZ", (gmtime);
-
-  foreach my $pid (@$pids) {
-    if ($eventtype eq 'submit') {
-
-      # do not add double 'submits'
-      my $check_ss  = qq/SELECT * FROM event WHERE user_id = ? AND event_type = 'submit' AND pid = ? LIMIT 1/;
-      my $check_sth = $self->app->db_ir->dbh->prepare($check_ss) or $self->app->log->error($self->app->db_ir->dbh->errstr);
-      $check_sth->execute($username, $pid) or $self->app->log->error($self->app->db_ir->dbh->errstr);
-      if ($check_sth->rows) {
-        $self->app->log->info("IR skipping addEvent (username=" . $username . ", alerttype=$eventtype, pids=$pid), already added.");
-        next;
-      }
-    }
-    $self->app->log->info("IR addEvent (username=" . $username . ", alerttype=$eventtype, pids=$pid)");
-    my $ss  = qq/INSERT INTO event (event_type, pid, user_id, gmtimestamp) VALUES (?,?,?,?)/;
-    my $sth = $self->app->db_ir->dbh->prepare($ss) or $self->app->log->error($self->app->db_ir->dbh->errstr);
-    $sth->execute($eventtype, $pid, $username, $time) or $self->app->log->error($self->app->db_ir->dbh->errstr);
-  }
+  PhaidraAPI::Model::Event->new->add($self, $eventtype, $pids, $username);
 }
 
 sub addAlert {
@@ -456,17 +438,8 @@ sub events {
     return;
   }
 
-  my @events;
-  my $ss  = qq/SELECT event_type, user_id, gmtimestamp FROM event WHERE pid = ? ORDER BY gmtimestamp DESC;/;
-  my $sth = $self->app->db_ir->dbh->prepare($ss) or $self->app->log->error($self->app->db_ir->dbh->errstr);
-  $sth->execute($pid) or $self->app->log->error($self->app->db_ir->dbh->errstr);
-  my ($event, $username_out, $ts);
-  $sth->bind_columns(\$event, \$username_out, \$ts) or $self->app->log->error($self->app->db_ir->dbh->errstr);
-  while ($sth->fetch()) {
-    push @events, {event => $event, username => $username_out, ts => $ts};
-  }
-
-  $res->{events} = \@events;
+  my $event_model = PhaidraAPI::Model::Event->new;
+  $res->{events} = $event_model->list($self, $pid);
 
   $self->render(json => $res, status => $res->{status});
 }

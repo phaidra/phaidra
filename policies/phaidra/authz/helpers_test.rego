@@ -21,9 +21,3 @@ test_role_granted_admin_not_via_cfg if {
 		"subject": {"username": "phaidraAdmin", "authenticated": true, "roles": ["admin"]},
 	}
 }
-
-test_role_granted_via_cfg_all_authenticated if {
-	helpers.role_granted("writer") with input as {
-		"subject": {"username": "alice", "authenticated": true, "roles": []},
-	}
-}

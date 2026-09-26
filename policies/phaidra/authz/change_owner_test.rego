@@ -33,9 +33,9 @@ test_change_owner_role_grants if {
 test_change_owner_role_required if {
 	decision := authz.allow with input as {
 		"subject": {
-			"username": "writer",
+			"username": "owner",
 			"authenticated": true,
-			"roles": ["writer"],
+			"roles": [],
 			"affiliations": [],
 			"org_units_l1": [],
 			"org_units_l2": [],
@@ -45,7 +45,7 @@ test_change_owner_role_required if {
 		"resource": {
 			"type": "object",
 			"pid": "o:1",
-			"owner": "writer",
+			"owner": "owner",
 			"state": "Active",
 			"rights": {},
 		},

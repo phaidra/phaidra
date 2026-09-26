@@ -104,6 +104,19 @@
                     <v-icon-btn
                       variant="text"
                       class="mx-1"
+                      @click="openHistory(item)"
+                      v-bind="activatorProps"
+                      :aria-label="$t('History')"
+                      icon="mdi-clock-outline"
+                    />
+                  </template>
+                  <span>{{ $t('History') }}</span>
+                </v-tooltip>
+                <v-tooltip location="bottom">
+                  <template v-slot:activator="{ props: activatorProps }">
+                    <v-icon-btn
+                      variant="text"
+                      class="mx-1"
                       @click="openPreview(item)"
                       v-bind="activatorProps"
                       :aria-label="$t('Preview')"
@@ -148,7 +161,7 @@
                         color="primary"
                         :loading="actionPid === item.pid && actionType === 'activate'"
                         :disabled="!!actionPid"
-                        @click="activateObject(item)"
+                        @click="openActionConfirm(item, 'activate')"
                         v-bind="activatorProps"
                         :aria-label="$t('Activate')"
                         icon="mdi-check-circle"
@@ -161,7 +174,7 @@
                       <v-icon-btn
                         variant="text"
                         class="mx-1"
-                        @click="deregisterObject(item)"
+                        @click="openActionConfirm(item, 'deregister')"
                         v-bind="activatorProps"
                         :aria-label="$t('Deregister')"
                         icon="mdi-playlist-remove"
@@ -206,6 +219,53 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn variant="outlined" @click="previewDialog = false">{{ $t('Close') }}</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="historyDialog" max-width="700px" scrollable>
+      <v-card v-if="historyItem">
+        <v-card-title class="text-title-large font-weight-light text-white">
+          {{ $t('History') }} — {{ historyItem.pid }}
+        </v-card-title>
+        <v-card-text class="mt-4" style="max-height: 70vh;">
+          <div v-if="historyLoading" class="text-center py-8">
+            <v-progress-circular indeterminate color="primary"></v-progress-circular>
+          </div>
+          <v-table v-else-if="historyEvents.length">
+            <tbody>
+              <tr v-for="event in historyEvents" :key="event.event + event.username + event.ts">
+                <td>{{ event.event }}</td>
+                <td>{{ event.username }}</td>
+                <td>{{ formatDate(event.ts) }}</td>
+              </tr>
+            </tbody>
+          </v-table>
+          <div v-else>{{ $t('No history available') }}</div>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn variant="outlined" @click="historyDialog = false">{{ $t('Close') }}</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="actionConfirmDialog" max-width="500px" v-if="actionConfirmItem">
+      <v-card>
+        <v-card-title class="text-title-large font-weight-light text-white">
+          {{ $t(actionConfirmType === 'activate' ? 'Activate' : 'Deregister') }}
+        </v-card-title>
+        <v-card-text class="mt-4">
+          {{ $t('INACTIVE_OBJECT_ACTION_CONFIRM', {
+            action: $t(actionConfirmType === 'activate' ? 'Activate' : 'Deregister'),
+            pid: actionConfirmItem.pid
+          }) }}
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn variant="outlined" @click="actionConfirmDialog = false">{{ $t('Cancel') }}</v-btn>
+          <v-btn color="primary" @click="confirmAction()">{{ $t(actionConfirmType === 'activate' ? 'Activate' : 'Deregister') }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -275,6 +335,13 @@ export default {
       previewItem: null,
       previewJsonld: null,
       previewLoading: false,
+      historyDialog: false,
+      historyItem: null,
+      historyEvents: [],
+      historyLoading: false,
+      actionConfirmDialog: false,
+      actionConfirmItem: null,
+      actionConfirmType: null,
       deleteDialog: false,
       deleteItem: null,
       deleteLoading: false,
@@ -438,6 +505,45 @@ export default {
         useRootStore().setAlerts([{ type: 'error', msg: error }])
       } finally {
         this.previewLoading = false
+      }
+    },
+    async openHistory(item) {
+      this.historyItem = item
+      this.historyEvents = []
+      this.historyDialog = true
+      this.historyLoading = true
+      try {
+        const response = await this.$axios.get('/inactive-objects/' + encodeURIComponent(item.pid) + '/events', {
+          headers: {
+            'X-XSRF-TOKEN': useRootStore().user.token
+          }
+        })
+        if (response.data.alerts && response.data.alerts.length > 0) {
+          useRootStore().setAlerts(response.data.alerts)
+        }
+        this.historyEvents = response.data.events || []
+      } catch (error) {
+        console.error(error)
+        useRootStore().setAlerts([{ type: 'error', msg: error }])
+      } finally {
+        this.historyLoading = false
+      }
+    },
+    openActionConfirm(item, type) {
+      this.actionConfirmItem = item
+      this.actionConfirmType = type
+      this.actionConfirmDialog = true
+    },
+    async confirmAction() {
+      const item = this.actionConfirmItem
+      const type = this.actionConfirmType
+      this.actionConfirmDialog = false
+      this.actionConfirmItem = null
+      this.actionConfirmType = null
+      if (type === 'activate') {
+        await this.activateObject(item)
+      } else {
+        await this.deregisterObject(item)
       }
     },
     async activateObject(item) {

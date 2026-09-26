@@ -24,6 +24,7 @@ use PhaidraAPI::Model::Fedora;
 use PhaidraAPI::Model::Config;
 use PhaidraAPI::Model::Directory;
 use PhaidraAPI::Model::InactiveObjects;
+use PhaidraAPI::Model::Event;
 use IO::Scalar;
 use File::MimeInfo;
 use File::MimeInfo::Magic;
@@ -779,6 +780,7 @@ sub create_simple {
       $c->app->log->error("pid[$pid] failed to register inactive object for deferred upload: " . $c->app->dumper($ir));
       push @{$res->{alerts}}, @{$ir->{alerts}} if scalar @{$ir->{alerts}} > 0;
     }
+    PhaidraAPI::Model::Event->new->add($c, 'submit', [$pid], $username);
   }
   elsif ($initial_state eq 'PendingApproval') {
     $c->app->log->info("Object created pid[$pid] awaiting approval");
@@ -790,6 +792,7 @@ sub create_simple {
       $c->app->log->error("pid[$pid] failed to register inactive object for approval: " . $c->app->dumper($ir));
       push @{$res->{alerts}}, @{$ir->{alerts}} if scalar @{$ir->{alerts}} > 0;
     }
+    PhaidraAPI::Model::Event->new->add($c, 'submit', [$pid], $username);
   }
   else {
     $r = $self->modify($c, $pid, 'A', undef, undef, undef, undef, $username, $password);
@@ -1081,6 +1084,7 @@ sub create_container {
       $c->app->log->error("pid[$pid] failed to register inactive object for approval: " . $c->app->dumper($ir));
       push @{$res->{alerts}}, @{$ir->{alerts}} if scalar @{$ir->{alerts}} > 0;
     }
+    PhaidraAPI::Model::Event->new->add($c, 'submit', [$pid], $username);
   }
   else {
     $r = $self->modify($c, $pid, 'A', undef, undef, undef, undef, $username, $password);

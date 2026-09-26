@@ -23,6 +23,7 @@ import {
   mdiCircleHalfFull, // Used by Phaidra Unipd (Padova) - PLEASE DO NOT REMOVE
   mdiCircleMedium, // Used by Phaidra Unipd (Padova) - PLEASE DO NOT REMOVE
   mdiClock,
+  mdiClockOutline,
   mdiClose,
   mdiCloudUpload,
   mdiContentCopy,
@@ -103,6 +104,7 @@ const mdiIconPaths = {
   'mdi-circle-half-full': mdiCircleHalfFull, // Used by Phaidra Unipd (Padova) - PLEASE DO NOT REMOVE
   'mdi-circle-medium': mdiCircleMedium, // Used by Phaidra Unipd (Padova) - PLEASE DO NOT REMOVE
   'mdi-clock': mdiClock,
+  'mdi-clock-outline': mdiClockOutline,
   'mdi-close': mdiClose,
   'mdi-cloud-upload': mdiCloudUpload,
   'mdi-content-copy': mdiContentCopy,

@@ -10,6 +10,7 @@ use PhaidraAPI::Model::Object;
 use PhaidraAPI::Model::Membersorder;
 use PhaidraAPI::Model::Config;
 use PhaidraAPI::Model::InactiveObjects;
+use PhaidraAPI::Model::Event;
 
 sub create {
 
@@ -61,6 +62,7 @@ sub create {
       $c->app->log->error("pid[$pid] failed to register inactive object for approval: " . $c->app->dumper($ir));
       push @{$res->{alerts}}, @{$ir->{alerts}} if scalar @{$ir->{alerts}} > 0;
     }
+    PhaidraAPI::Model::Event->new->add($c, 'submit', [$pid], $username);
   }
   else {
     my $res_act = $object_model->modify($c, $pid, 'A', undef, undef, undef, undef, $username, $password);

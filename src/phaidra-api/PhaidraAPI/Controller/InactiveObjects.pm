@@ -11,6 +11,7 @@ use PhaidraAPI::Model::Object;
 use PhaidraAPI::Model::Directory;
 use PhaidraAPI::Model::Config;
 use PhaidraAPI::Model::EmailTemplate;
+use PhaidraAPI::Model::Event;
 use base 'Mojolicious::Controller';
 
 # Single capabilities check: can_manage (admin/approver) and is_admin.
@@ -65,6 +66,13 @@ sub _assert_staff_row {
   return 1;
 }
 
+sub _can_view_row {
+  my ($self, $row, $username, $can_manage, $is_admin) = @_;
+  return 1 if $is_admin;
+  return 1 if $can_manage && ($row->{source} // '') eq 'curated_submit';
+  return ($row->{owner} // '') eq $username;
+}
+
 sub list {
   my $self = shift;
 
@@ -93,6 +101,31 @@ sub list {
   $res->{is_admin}   = $is_admin   ? true : false;
 
   $self->render(json => $res, status => $res->{status});
+}
+
+sub events {
+  my $self = shift;
+  my $pid = $self->stash('pid');
+  unless ($pid && $pid =~ m/^o:\d+$/) {
+    $self->render(json => {alerts => [{type => 'error', msg => 'Invalid pid'}], status => 400}, status => 400);
+    return;
+  }
+
+  my $username = $self->stash->{basic_auth_credentials}->{username};
+  my ($can_manage, $is_admin) = $self->_staff_flags;
+  my $inactive_model = PhaidraAPI::Model::InactiveObjects->new;
+  my $row = $inactive_model->get_by_pid($self, $pid);
+  if ($row->{status} ne 200) {
+    $self->render(json => $row, status => $row->{status});
+    return;
+  }
+  unless ($self->_can_view_row($row->{object}, $username, $can_manage, $is_admin)) {
+    $self->render(json => {alerts => [{type => 'error', msg => 'Forbidden'}], status => 403}, status => 403);
+    return;
+  }
+
+  my $event_model = PhaidraAPI::Model::Event->new;
+  $self->render(json => {alerts => [], status => 200, events => $event_model->list($self, $pid)}, status => 200);
 }
 
 sub register {
@@ -205,6 +238,11 @@ sub activate {
   if ($nr->{status} ne 200) {
     push @{$res->{alerts}}, @{$nr->{alerts}} if @{$nr->{alerts}};
   }
+  if ($source eq 'curated_submit' || $source eq 'deferred_upload') {
+    my $event_model = PhaidraAPI::Model::Event->new;
+    $event_model->add($self, 'approve', [$pid], $username);
+    $event_model->add($self, $nr->{notification_sent} ? 'approval_notification_sent' : 'approval_notification_failed', [$pid], $username);
+  }
 
   $self->render(json => $res, status => $res->{status});
 }
@@ -212,7 +250,7 @@ sub activate {
 sub _notify_owner_activated {
   my ($self, $pid, $owner, $title, $source) = @_;
 
-  my $res = {alerts => [], status => 200};
+  my $res = {alerts => [], status => 200, notification_sent => 0};
 
   unless ($owner) {
     unshift @{$res->{alerts}}, {type => 'error', msg => "Cannot notify: no owner for pid[$pid]"};
@@ -300,6 +338,7 @@ sub _notify_owner_activated {
     return $res;
   }
 
+  $res->{notification_sent} = 1;
   $self->app->log->info("pid[$pid] notified owner[$owner] source[$source] at $email");
   return $res;
 }

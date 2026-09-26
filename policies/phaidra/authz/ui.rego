@@ -37,11 +37,6 @@ capabilities contains cap if {
 }
 
 capabilities contains cap if {
-	helpers.role_granted("writer")
-	cap := "write"
-}
-
-capabilities contains cap if {
 	data.phaidra.authz.upload.can_approve
 	cap := "approve"
 }
