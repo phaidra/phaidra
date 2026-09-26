@@ -347,7 +347,11 @@ sub handler {
 
   if ($verb eq 'GetRecord') {
     my $id = $params->{identifier};
-    $id =~ s/^$ns//;
+    unless ($id =~ s/^\Q$ns\E//) {
+      push @$errors, [idDoesNotExist => "identifier " . $params->{identifier} . " is unknown or illegal"];
+      $self->render(template => 'oai/error', format => 'xml', handler => 'ep');
+      return;
+    }
 
     my $rec = $self->mongo->get_collection('oai_records')->find_one({"pid" => $id});
     if (defined $rec) {
@@ -472,7 +476,11 @@ sub handler {
   elsif ($verb eq 'ListMetadataFormats') {
 
     if (my $id = $params->{identifier}) {
-      $id =~ s/^$ns//;
+      unless ($id =~ s/^\Q$ns\E//) {
+        push @$errors, [idDoesNotExist => "identifier " . $params->{identifier} . " is unknown or illegal"];
+        $self->render(template => 'oai/error', format => 'xml', handler => 'ep');
+        return;
+      }
       my $rec = $self->mongo->get_collection('oai_records')->find_one({"pid" => $id});
       unless (defined $rec) {
         push @$errors, [idDoesNotExist => "identifier " . $params->{identifier} . " is unknown or illegal"];
