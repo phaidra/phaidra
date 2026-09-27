@@ -1014,6 +1014,17 @@ const fields = [
     multilingual: true
   },
   {
+    id: 'book-edition',
+    fieldname: 'Book edition',
+    predicate: 'bibo:edition',
+    component: 'p-text-field',
+    label: 'Book edition',
+    value: '',
+    definition: 'The edition of the book.',
+    allowLanguageCancel: true,
+    multilingual: true
+  },
+  {
     id: 'issue',
     fieldname: 'Issue',
     predicate: 'bibo:issue',
@@ -1679,6 +1690,7 @@ const predicateOrder = [
   'rdau:P60550',
   'bibo:issue',
   'bibo:volume',
+  'bibo:edition',
   'schema:numberOfPages',
   'bf:soundCharacteristic',
   'bf:supplementaryContent',

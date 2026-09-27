@@ -1239,6 +1239,18 @@ export default {
               components.push(f)
               break
 
+            // bibo:edition
+            case 'bibo:edition':
+              f = fields.getField('book-edition')
+              if (typeof obj === 'object' && obj['@value']) {
+                f.value = obj['@value']
+                f.language = obj['@language'] ? obj['@language'] : ''
+              } else {
+                f.value = obj
+              }
+              components.push(f)
+              break
+
             // vra:hasInscription
             case 'vra:hasInscription':
               if (obj['@type'] === 'vra:Inscription') {
@@ -2768,6 +2780,7 @@ export default {
 
         case 'bibo:issue':
         case 'bibo:volume':
+        case 'bibo:edition':
           if (f.value) {
             this.push_value(jsonld, f.predicate, this.get_json_valueobject(f.value, f.language))
           }
