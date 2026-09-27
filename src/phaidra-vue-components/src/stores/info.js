@@ -1480,6 +1480,47 @@ export const state = () => ({
           ]
         },
         {
+          title: 'Book edition',
+          predicate: 'bibo:edition',
+          open: false,
+          sections: [
+            {
+              id: 'description',
+              title: 'Description',
+              content: 'The edition of the book.'
+            },
+            {
+              id: 'usagenotes',
+              title: 'Usage notes',
+              content: {
+                level1: 'Enter the edition statement of the book (for example, “2nd revised edition”).',
+                level2: '',
+                level3: ''
+              }
+            },
+            {
+              id: 'vocabulary',
+              title: 'Vocabulary',
+              content: 'None'
+            },
+            {
+              id: 'obligation',
+              title: 'Obligation',
+              content: ''
+            },
+            {
+              id: 'occurrence',
+              title: 'Occurrence',
+              content: ''
+            },
+            {
+              id: 'exampleHR',
+              title: 'Example',
+              content: ''
+            }
+          ]
+        },
+        {
           title: 'Object type',
           predicate: 'edm:hasType',
           open: false,

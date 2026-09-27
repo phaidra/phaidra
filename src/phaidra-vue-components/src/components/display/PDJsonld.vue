@@ -340,6 +340,10 @@
           <p-d-lang-value :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'volume'+j" v-bind="displayProperties"></p-d-lang-value>
         </template>
 
+        <template v-else-if="entry.p==='bibo:edition'">
+          <p-d-lang-value :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'bookEdition'+j" v-bind="displayProperties"></p-d-lang-value>
+        </template>
+
         <template v-else-if="entry.p==='bf:soundCharacteristic'">
           <p-d-value :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'soundCharacteristic'+j" v-bind="displayProperties"></p-d-value>
         </template>
@@ -447,7 +451,7 @@ const PD_JSONLD_KNOWN_PREDICATES = new Set([
   'vra:placeOfSite', 'ebucore:filename', 'ebucore:hasMimeType', 'opaque:cco_accessionNumber',
   'vra:hasInscription', 'vra:material', 'vra:hasTechnique', 'dce:format', 'rdau:P60048',
   'phaidra:levelOfDescription', 'schema:width', 'schema:height', 'schema:depth', 'vra:diameter',
-  'schema:weight', 'schema:duration', 'schema:numberOfPages', 'bibo:issue', 'bibo:volume',
+  'schema:weight', 'schema:duration', 'schema:numberOfPages', 'bibo:issue', 'bibo:volume', 'bibo:edition',
   'bf:soundCharacteristic', 'schema:pageStart', 'schema:pageEnd', 'bf:supplementaryContent',
   'dcterms:audience', 'bf:awards', 'bf:scale', 'rdfs:seeAlso', 'edm:rights', 'dce:rights',
   'phaidra:systemTag'
