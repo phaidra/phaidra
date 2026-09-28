@@ -72,31 +72,6 @@
         </v-row>
         <v-divider class="my-2"></v-divider>
       </template>
-      <!-- TODO: Uncomment this when setting the capabilities will be possible in user management
-      <template v-if="user.authzForms && user.authzForms.catalogfetchupload">
-        <v-row class="my-6" justify="start">
-          <div class="d-flex flex-row ml-3">
-            <v-btn
-              color="primary"
-              variant="elevated"
-              prepend-icon="mdi-plus-circle"
-              @click="$router.push(localePath('/submit/catalogfetchupload'))"
-            >
-              {{ $t("Catalog-fetch upload") }}
-            </v-btn>
-            </div>
-          <div class="d-flex flex-row pt-3 ml-3 ml-md-6">
-            <span>
-            {{
-              $t(
-                "Upload objects by pulling metadata from catalogue."
-              )
-            }}
-            </span>
-          </div>
-        </v-row>
-        <v-divider class="my-2"></v-divider>
-      </template> -->
       <template v-if="instanceconfig.uwmsubmit">
         <v-row class="my-6" justify="start">
           <v-col cols="12">
