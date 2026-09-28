@@ -58,14 +58,17 @@ sub get_jsonld {
           elsif ($subfield->{'@code'} eq 'b') {
             $subtitle_text .= _strip_article_signs($subfield->{'#text'});
           }
+
           # Added in mapping v2026-09-14
           elsif ($subfield->{'@code'} eq 'n') {
             $subtitle_text .= ($subtitle_text ? '. ' : '') . _strip_article_signs($subfield->{'#text'});
           }
+
           # Added in mapping v2026-09-14
           elsif ($subfield->{'@code'} eq 'p') {
             $subtitle_text .= ($subtitle_text ? ', ' : '') . _strip_article_signs($subfield->{'#text'});
           }
+
           # Added in mapping v2026-09-14
           elsif ($subfield->{'@code'} eq 'c') {
             $jsonld->{'role:ctb'} //= [];
@@ -80,7 +83,7 @@ sub get_jsonld {
         if ($subtitle_text) {
           my $subtitle = {'@value' => $subtitle_text};
           $subtitle->{'@language'} = $primary_language if defined $primary_language;
-          $title->{'bf:subtitle'} = [$subtitle];
+          $title->{'bf:subtitle'}  = [$subtitle];
         }
 
         push @{$jsonld->{'dce:title'}}, $title;
@@ -125,7 +128,7 @@ sub get_jsonld {
         };
 
         my $foundLabel = 0;
-        my $foundId = 0;
+        my $foundId    = 0;
         foreach my $subfield (@{_ensure_array($field->{subfield})}) {
           if ($subfield->{'@code'} eq 'a') {
             $foundLabel = 1;
@@ -330,6 +333,7 @@ sub get_jsonld {
         $jsonld->{$role} //= [];
         push @{$jsonld->{$role}}, $entity;
       }
+
       # Added in mapping v2026-09-14
       elsif ($tag eq '111') {
         my ($role, $entity) = _person_role($field);
@@ -337,8 +341,8 @@ sub get_jsonld {
         push @{$jsonld->{$role}}, $entity;
       }
       elsif ($tag eq '710') {
-        my @names = map { $_->{'#text'} }
-          grep { $_->{'@code'} eq 'a' } @{_ensure_array($field->{subfield})};
+        my @names = map {$_->{'#text'}}
+          grep {$_->{'@code'} eq 'a'} @{_ensure_array($field->{subfield})};
         @names = (undef) unless @names;
 
         # Added in mapping v2026-09-14
@@ -348,6 +352,7 @@ sub get_jsonld {
           push @{$jsonld->{$role}}, $entity;
         }
       }
+
       # Added in mapping v2026-09-14
       elsif ($tag eq '110') {
         my ($role, $entity) = _organization_role($field, $primary_language, 'role:aut', 0, 1);
@@ -411,8 +416,8 @@ sub _person_role {
 sub _organization_role {
   my ($field, $primary_language, $default_role, $include_qualifiers, $include_orcid, $name_override) = @_;
 
-  my $role = $default_role;
-  my $name = defined($name_override) ? $name_override : '';
+  my $role   = $default_role;
+  my $name   = defined($name_override) ? $name_override : '';
   my $entity = {
     '@type'       => 'schema:Organization',
     'schema:name' => []
@@ -422,10 +427,12 @@ sub _organization_role {
     if ($subfield->{'@code'} eq 'a') {
       $name = $subfield->{'#text'} unless defined $name_override;
     }
+
     # Added in mapping v2026-09-14
     elsif ($include_qualifiers && $subfield->{'@code'} eq 'b') {
       $name .= ($name ? '. ' : '') . $subfield->{'#text'};
     }
+
     # Added in mapping v2026-09-14
     elsif ($include_qualifiers && $subfield->{'@code'} eq 'g') {
       $name .= ($name ? ' (' : '') . $subfield->{'#text'} . ($name ? ')' : '');
