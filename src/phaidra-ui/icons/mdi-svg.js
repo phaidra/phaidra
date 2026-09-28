@@ -10,6 +10,7 @@ import {
   mdiArrowLeft,
   mdiArrowRight,
   mdiBookOpenVariant,
+  mdiBookPlus, // Used by Phaidra Unipd (Padova) - PLEASE DO NOT REMOVE
   mdiBookmarkOutline, // Used by Phaidra Unipd (Padova) - PLEASE DO NOT REMOVE
   mdiBookmarkPlusOutline,
   mdiCalendar,
@@ -91,6 +92,7 @@ const mdiIconPaths = {
   'mdi-arrow-left': mdiArrowLeft,
   'mdi-arrow-right': mdiArrowRight,
   'mdi-book-open-variant': mdiBookOpenVariant,
+  'mdi-book-plus': mdiBookPlus, // Used by Phaidra Unipd (Padova) - PLEASE DO NOT REMOVE
   'mdi-bookmark-outline': mdiBookmarkOutline, // Used by Phaidra Unipd (Padova) - PLEASE DO NOT REMOVE
   'mdi-bookmark-plus-outline': mdiBookmarkPlusOutline,
   'mdi-calendar': mdiCalendar,
