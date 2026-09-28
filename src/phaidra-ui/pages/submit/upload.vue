@@ -19,6 +19,7 @@
           :feedback-user="user"
           :feedback-context="'Upload'"
           :doiImport="instanceconfig.doiImport"
+          :catalog-import="hasCatalogImportCapability"
           :disableChecksum="instanceconfig.disableChecksum"
           :deferred-upload="deferredUploadMode"
           :external-jobs="submitJobs"
@@ -67,6 +68,11 @@ export default {
     })
     const goTo = useGoTo()
     return { goTo }
+  },
+  computed: {
+    hasCatalogImportCapability() {
+      return useRootStore().capabilities.includes('submit_form:catalogfetchupload')
+    }
   },
   data() {
     return {

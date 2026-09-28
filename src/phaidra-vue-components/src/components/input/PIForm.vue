@@ -47,6 +47,7 @@
       <v-tab v-if="help" value="help" class="text-title-large font-weight-light text-capitalize">{{ $t('Help') }}</v-tab>
       <v-tab v-if="feedback" value="feedback" class="text-title-large font-weight-light text-capitalize">{{ $t('Feedback') }}</v-tab>
       <v-tab v-if="doiImport" value="doiImport" class="text-title-large font-weight-light text-capitalize">{{ $t('DOI Import') }}</v-tab>
+      <v-tab v-if="catalogImport" value="catalogImport" class="text-title-large font-weight-light text-capitalize">{{ $t('Catalog import') }}</v-tab>
     </v-tabs>
 
     <v-window v-model="activetab">
@@ -942,6 +943,12 @@
           @load-form="loadFormFromDoiImport"
         ></p-doi-import>
       </v-window-item>
+      <v-window-item value="catalogImport" v-if="catalogImport" class="pa-4">
+        <p-catalog-import
+          :external-form="form"
+          @load-form="loadFormFromCatalogImport"
+        ></p-catalog-import>
+      </v-window-item>
     </v-window>
     <v-dialog v-model="showEditFieldPopup" max-width="600px" scrollable>
       <v-card>
@@ -1089,6 +1096,7 @@ import PIAlert from './PIAlert'
 import PFeedback from '../utils/PFeedback'
 import PHelp from '../info/PHelp'
 import PDoiImport from '../utils/PDoiImport'
+import PCatalogImport from '../utils/PCatalogImport'
 
 export default {
   name: 'p-i-form',
@@ -1139,7 +1147,8 @@ export default {
     PIResourceType,
     PFeedback,
     PHelp,
-    PDoiImport
+    PDoiImport,
+    PCatalogImport
   },
   props: {
     form: {
@@ -1249,6 +1258,10 @@ export default {
       type: Boolean,
       default: false
     },
+    catalogImport: {
+      type: Boolean,
+      default: false
+    },
     feedbackUser: {
       type: Object
     },
@@ -1348,6 +1361,10 @@ export default {
     loadFormFromDoiImport: function (form) {
       this.$emit('load-form', form)
       // Switch back to metadata tab after importing DOI data.
+      this.activetab = 'metadata'
+    },
+    loadFormFromCatalogImport: function (form) {
+      this.$emit('load-form', form)
       this.activetab = 'metadata'
     },
     toggleSectionCollapse: function (section) {

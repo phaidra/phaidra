@@ -16,6 +16,7 @@ export const useRootStore = defineStore('root', {
     user: {
       token: null
     },
+    capabilities: [],
     hasInactiveObjects: false,
     canManageInactiveObjects: false,
     isInactiveObjectsAdmin: false,
@@ -708,6 +709,7 @@ export const useRootStore = defineStore('root', {
   },
   clearUser() {
     this.user = {}
+    this.capabilities = []
     this.hasInactiveObjects = false
     this.canManageInactiveObjects = false
     this.isInactiveObjectsAdmin = false
@@ -727,6 +729,7 @@ export const useRootStore = defineStore('root', {
     this.objectMembers = []
     this.collectionMembers = []
     this.user = {}
+    this.capabilities = []
     this.hasInactiveObjects = false
     this.canManageInactiveObjects = false
     this.isInactiveObjectsAdmin = false
@@ -886,6 +889,7 @@ export const useRootStore = defineStore('root', {
   },
   async fetchCapabilities() {
     if (!this.user?.token) {
+      this.capabilities = []
       this.canCreateObjects = false
       return
     }
@@ -895,9 +899,11 @@ export const useRootStore = defineStore('root', {
           'X-XSRF-TOKEN': this.user.token
         }
       })
-      this.canCreateObjects = (response.data.capabilities || []).includes('create')
+      this.capabilities = response.data.capabilities || []
+      this.canCreateObjects = this.capabilities.includes('create')
     } catch (error) {
       console.log('fetchCapabilities error', error)
+      this.capabilities = []
       this.canCreateObjects = false
     }
   },

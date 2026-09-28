@@ -48,21 +48,58 @@ sub get_jsonld {
           'bf:mainTitle' => []
         };
 
+        my $subtitle_text = '';
         foreach my $subfield (@{_ensure_array($field->{subfield})}) {
           if ($subfield->{'@code'} eq 'a') {
-            my $main_title = {'@value' => $subfield->{'#text'}};
+            my $main_title = {'@value' => _strip_article_signs($subfield->{'#text'})};
             $main_title->{'@language'} = $primary_language if defined $primary_language;
             push @{$title->{'bf:mainTitle'}}, $main_title;
           }
           elsif ($subfield->{'@code'} eq 'b') {
-            $title->{'bf:subtitle'} //= [];
-            my $subtitle = {'@value' => $subfield->{'#text'}};
-            $subtitle->{'@language'} = $primary_language if defined $primary_language;
-            push @{$title->{'bf:subtitle'}}, $subtitle;
+            $subtitle_text .= _strip_article_signs($subfield->{'#text'});
+          }
+
+          # Added in mapping v2026-09-14
+          elsif ($subfield->{'@code'} eq 'n') {
+            $subtitle_text .= ($subtitle_text ? '. ' : '') . _strip_article_signs($subfield->{'#text'});
+          }
+
+          # Added in mapping v2026-09-14
+          elsif ($subfield->{'@code'} eq 'p') {
+            $subtitle_text .= ($subtitle_text ? ', ' : '') . _strip_article_signs($subfield->{'#text'});
+          }
+
+          # Added in mapping v2026-09-14
+          elsif ($subfield->{'@code'} eq 'c') {
+            $jsonld->{'role:ctb'} //= [];
+            push @{$jsonld->{'role:ctb'}},
+              {
+              '@type'       => 'schema:Person',
+              'schema:name' => [{'@value' => $subfield->{'#text'}}]
+              };
           }
         }
 
+        if ($subtitle_text) {
+          my $subtitle = {'@value' => $subtitle_text};
+          $subtitle->{'@language'} = $primary_language if defined $primary_language;
+          $title->{'bf:subtitle'}  = [$subtitle];
+        }
+
         push @{$jsonld->{'dce:title'}}, $title;
+      }
+
+      # Added in mapping v2026-09-14
+      # Edition statement mapping (250)
+      elsif ($tag eq '250') {
+        foreach my $subfield (@{_ensure_array($field->{subfield})}) {
+          if ($subfield->{'@code'} eq 'a') {
+            $jsonld->{'bibo:edition'} //= [];
+            my $edition = {'@value' => $subfield->{'#text'}};
+            $edition->{'@language'} = $primary_language if defined $primary_language;
+            push @{$jsonld->{'bibo:edition'}}, $edition;
+          }
+        }
       }
 
       # Basisklassifikation mapping (084)
@@ -90,21 +127,22 @@ sub get_jsonld {
           'skos:prefLabel' => []
         };
 
-        my $found = 0;
+        my $foundLabel = 0;
+        my $foundId    = 0;
         foreach my $subfield (@{_ensure_array($field->{subfield})}) {
           if ($subfield->{'@code'} eq 'a') {
-            $found = 1;
+            $foundLabel = 1;
             my $label = {'@value' => $subfield->{'#text'}};
             $label->{'@language'} = $primary_language if defined $primary_language;
             push @{$subject->{'skos:prefLabel'}}, $label;
           }
           elsif ($subfield->{'@code'} eq '0' && $subfield->{'#text'} =~ /\(DE-588\)(.+)/) {
-            $found = 1;
+            $foundId = 1;
             $subject->{'skos:exactMatch'} = ["http://d-nb.info/gnd/$1"];
           }
         }
 
-        push @{$jsonld->{'dcterms:subject'}}, $subject if $found;
+        push @{$jsonld->{'dcterms:subject'}}, $subject if ($foundLabel && $foundId);
       }
 
       # Keywords mapping (65X)
@@ -289,86 +327,35 @@ sub get_jsonld {
         }
       }
 
-      # Role mapping (100, 700, 710)
+      # Role mapping (100, 700)
       elsif ($tag eq '100' || $tag eq '700') {
-        my $role   = 'role:oth';    # Default role
-        my $entity = {
-          '@type'             => 'schema:Person',
-          'schema:familyName' => [],
-          'schema:givenName'  => []
-        };
-        foreach my $subfield (@{_ensure_array($field->{subfield})}) {
-          if ($subfield->{'@code'} eq 'a') {
-            my ($family_name, $given_name) = split /, /, $subfield->{'#text'}, 2;
-            push @{$entity->{'schema:familyName'}}, {'@value' => $family_name};
-            push @{$entity->{'schema:givenName'}},  {'@value' => $given_name} if defined $given_name;
-          }
-          elsif ($subfield->{'@code'} eq '4') {
-            $role = 'role:' . $subfield->{'#text'};
-          }
-          elsif ($subfield->{'@code'} eq '0') {
-            $entity->{'skos:exactMatch'} //= [];
-            if (defined($subfield->{'#text'})) {
-              my $v = $subfield->{'#text'};
-              $v =~ s/\(DE-588\)//g;
-              push @{$entity->{'skos:exactMatch'}},
-                {
-                '@type'  => 'ids:gnd',
-                '@value' => $v
-                };
-            }
-          }
-        }
-        unless (defined($entity->{'skos:exactMatch'})) {
+        my ($role, $entity) = _person_role($field);
+        $jsonld->{$role} //= [];
+        push @{$jsonld->{$role}}, $entity;
+      }
 
-          # if there was no GND, try orcid
-          foreach my $subfield (@{_ensure_array($field->{subfield})}) {
-            if ($subfield->{'@code'} eq '9') {
-              if (defined($subfield->{'#text'})) {
-                my $v = $subfield->{'#text'};
-                $v =~ s/\(orcid\)//g;
-                push @{$entity->{'skos:exactMatch'}},
-                  {
-                  '@type'  => 'ids:orcid',
-                  '@value' => $v
-                  };
-              }
-            }
-          }
-        }
+      # Added in mapping v2026-09-14
+      elsif ($tag eq '111') {
+        my ($role, $entity) = _person_role($field);
         $jsonld->{$role} //= [];
         push @{$jsonld->{$role}}, $entity;
       }
       elsif ($tag eq '710') {
-        my $role   = 'role:oth';    # Default role
-        my $entity = {
-          '@type'       => 'schema:Organization',
-          'schema:name' => []
-        };
-        foreach my $subfield (@{_ensure_array($field->{subfield})}) {
-          if ($subfield->{'@code'} eq 'a') {
-            push @{$entity->{'schema:name'}},
-              {
-              '@value'    => $subfield->{'#text'},
-              '@language' => $primary_language
-              };
-          }
-          elsif ($subfield->{'@code'} eq '4') {
-            $role = 'role:' . $subfield->{'#text'};
-          }
-          elsif ($subfield->{'@code'} eq '0') {
-            $entity->{'skos:exactMatch'} //= [];
-            if (defined($subfield->{'#text'})) {
-              my $v = $subfield->{'#text'};
-              $v =~ s/\(DE-588\)//g;
-              push @{$entity->{'skos:exactMatch'}},
-                {
-                '@type'  => 'ids:gnd',
-                '@value' => $v
-                };
-            }
-          }
+        my @names = map {$_->{'#text'}}
+          grep {$_->{'@code'} eq 'a'} @{_ensure_array($field->{subfield})};
+        @names = (undef) unless @names;
+
+        # Added in mapping v2026-09-14
+        foreach my $name (@names) {
+          my ($role, $entity) = _organization_role($field, $primary_language, 'role:oth', 1, 0, $name);
+          $jsonld->{$role} //= [];
+          push @{$jsonld->{$role}}, $entity;
         }
+      }
+
+      # Added in mapping v2026-09-14
+      elsif ($tag eq '110') {
+        my ($role, $entity) = _organization_role($field, $primary_language, 'role:aut', 0, 1);
         $jsonld->{$role} //= [];
         push @{$jsonld->{$role}}, $entity;
       }
@@ -379,6 +366,105 @@ sub get_jsonld {
   $res->{status} = 200;
 
   return $res;
+}
+
+sub _strip_article_signs {
+  my $value = shift;
+  $value =~ s/<<|>>//g;
+  return $value;
+}
+
+sub _person_role {
+  my $field = shift;
+
+  my $role   = 'role:oth';
+  my $entity = {
+    '@type'             => 'schema:Person',
+    'schema:familyName' => [],
+    'schema:givenName'  => []
+  };
+
+  foreach my $subfield (@{_ensure_array($field->{subfield})}) {
+    if ($subfield->{'@code'} eq 'a') {
+      my ($family_name, $given_name) = split /, /, $subfield->{'#text'}, 2;
+      push @{$entity->{'schema:familyName'}}, {'@value' => $family_name};
+      push @{$entity->{'schema:givenName'}},  {'@value' => $given_name} if defined $given_name;
+    }
+    elsif ($subfield->{'@code'} eq '4') {
+      $role = 'role:' . $subfield->{'#text'};
+    }
+    elsif ($subfield->{'@code'} eq '0' && defined($subfield->{'#text'})) {
+      my $value = $subfield->{'#text'};
+      $value =~ s/\(DE-588\)//g;
+      push @{$entity->{'skos:exactMatch'}}, {'@type' => 'ids:gnd', '@value' => $value};
+    }
+  }
+
+  unless (defined($entity->{'skos:exactMatch'})) {
+    foreach my $subfield (@{_ensure_array($field->{subfield})}) {
+      if ($subfield->{'@code'} eq '9' && defined($subfield->{'#text'})) {
+        my $value = $subfield->{'#text'};
+        $value =~ s/\(orcid\)//g;
+        push @{$entity->{'skos:exactMatch'}}, {'@type' => 'ids:orcid', '@value' => $value};
+      }
+    }
+  }
+
+  return ($role, $entity);
+}
+
+sub _organization_role {
+  my ($field, $primary_language, $default_role, $include_qualifiers, $include_orcid, $name_override) = @_;
+
+  my $role   = $default_role;
+  my $name   = defined($name_override) ? $name_override : '';
+  my $entity = {
+    '@type'       => 'schema:Organization',
+    'schema:name' => []
+  };
+
+  foreach my $subfield (@{_ensure_array($field->{subfield})}) {
+    if ($subfield->{'@code'} eq 'a') {
+      $name = $subfield->{'#text'} unless defined $name_override;
+    }
+
+    # Added in mapping v2026-09-14
+    elsif ($include_qualifiers && $subfield->{'@code'} eq 'b') {
+      $name .= ($name ? '. ' : '') . $subfield->{'#text'};
+    }
+
+    # Added in mapping v2026-09-14
+    elsif ($include_qualifiers && $subfield->{'@code'} eq 'g') {
+      $name .= ($name ? ' (' : '') . $subfield->{'#text'} . ($name ? ')' : '');
+    }
+    elsif ($subfield->{'@code'} eq '4') {
+      $role = 'role:' . $subfield->{'#text'};
+    }
+    elsif ($subfield->{'@code'} eq '0' && defined($subfield->{'#text'})) {
+      my $value = $subfield->{'#text'};
+      $value =~ s/\(DE-588\)//g;
+      push @{$entity->{'skos:exactMatch'}}, {'@type' => 'ids:gnd', '@value' => $value};
+    }
+  }
+
+  if ($name) {
+    my $name_value = {'@value' => $name};
+    $name_value->{'@language'} = $primary_language if defined $primary_language;
+    push @{$entity->{'schema:name'}}, $name_value;
+  }
+
+  # Added in mapping v2026-09-14
+  if ($include_orcid && !defined($entity->{'skos:exactMatch'})) {
+    foreach my $subfield (@{_ensure_array($field->{subfield})}) {
+      if ($subfield->{'@code'} eq '9' && defined($subfield->{'#text'})) {
+        my $value = $subfield->{'#text'};
+        $value =~ s/\(orcid\)//g;
+        push @{$entity->{'skos:exactMatch'}}, {'@type' => 'ids:orcid', '@value' => $value};
+      }
+    }
+  }
+
+  return ($role, $entity);
 }
 
 # Helper function to ensure subfield is always an array
