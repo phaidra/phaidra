@@ -1484,6 +1484,7 @@ services:
       - "/config/configuration.properties"
     environment:
       <<: [*api_common_env, *hosts]
+      JAVA_OPTIONS: "-Dfcrepo.camel.toolbox.log.=INFO"
       MONGODB_PHAIDRA_USER: "${MONGODB_PHAIDRA_USER:-phaidra}"
       MONGODB_PHAIDRA_PASSWORD: "${MONGODB_PHAIDRA_PASSWORD:-phaidra}"
       MONGODB_PHAIDRA_HOST: "${MONGODB_PHAIDRA_HOST:-mongodb-phaidra}"

@@ -4,9 +4,10 @@ FROM maven:3-openjdk-11 AS build
 WORKDIR /build
 
 # Install git and clone the repository
+ARG FCREPO_CAMEL_TOOLBOX_REF=fcrepo-camel-toolbox-6.2.1
 RUN apt-get update && \
     apt-get install -y git && \
-    git clone https://github.com/fcrepo-exts/fcrepo-camel-toolbox.git .
+    git clone --branch "${FCREPO_CAMEL_TOOLBOX_REF}" --depth 1 https://github.com/fcrepo-exts/fcrepo-camel-toolbox.git .
 
 # Add camel-exec dependency to fcrepo-fixity/pom.xml
 RUN sed -i '/<dependencies>/a \

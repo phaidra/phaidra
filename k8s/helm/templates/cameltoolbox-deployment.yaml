@@ -21,6 +21,9 @@ spec:
       containers:
         - image: phaidraorg/fcrepo-camel-toolbox:39bf4894
           name: cameltoolbox
+          env:
+            - name: JAVA_OPTIONS
+              value: "-Dfcrepo.camel.toolbox.log.=INFO"
           resources:
             requests:
               cpu: 100m
