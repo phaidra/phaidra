@@ -73,7 +73,7 @@ sub get_metadata {
 
   # use IIIF manifest for Picture and Books
   my $hasManifest = 0;
-  if (($rec->{cmodel} eq 'Pictures') || ($rec->{cmodel} eq 'Book')) {
+  if (($rec->{cmodel} eq 'Picture') || ($rec->{cmodel} eq 'Book')) {
     $hasManifest = 1;
   }
 
@@ -255,47 +255,49 @@ sub get_metadata {
   }
 
   # edm:type
-  # If it's Container, it has picture members and will get a manifest containing them
-  # so it needs to be edm:type: IMAGE
-  # (nothing else in Container would work in europeana anyway)
-  if (($rec->{cmodel} eq 'Picture') || ($rec->{cmodel} eq 'Container')) {
-    push @{$edmProvidedCHO->{children}},
-      {
-      name  => 'edm:type',
-      value => 'IMAGE'
-      };
-  }
-  if ($rec->{cmodel} eq 'Audio') {
-    push @{$edmProvidedCHO->{children}},
-      {
-      name  => 'edm:type',
-      value => 'SOUND'
-      };
-  }
-  if ($rec->{cmodel} eq 'Video') {
-    push @{$edmProvidedCHO->{children}},
-      {
-      name  => 'edm:type',
-      value => 'VIDEO'
-      };
-  }
-  if (($rec->{cmodel} eq 'PDFDocument') || ($rec->{cmodel} eq 'Book')) {
-    push @{$edmProvidedCHO->{children}},
-      {
-      name  => 'edm:type',
-      value => 'TEXT'
-      };
-  }
+  my $edmType;
   if (exists($rec->{edm_hastype_id})) {
     for my $edmt (@{$rec->{edm_hastype_id}}) {
       if ($edmt eq 'https://pid.phaidra.org/vocabulary/T6C3-46S4') {
-        push @{$edmProvidedCHO->{children}},
-          {
+        $edmType = {
           name  => 'edm:type',
           value => '3D'
-          };
+        };
       }
     }
+  }
+
+  # If it's Container, it has picture members and will get a manifest containing them
+  # so it needs to be edm:type: IMAGE
+  # (nothing else in Container would work in europeana anyway)
+  unless ($edmType) {
+    if (($rec->{cmodel} eq 'Picture') || ($rec->{cmodel} eq 'Container')) {
+      $edmType = {
+        name  => 'edm:type',
+        value => 'IMAGE'
+      };
+    }
+    if ($rec->{cmodel} eq 'Audio') {
+      $edmType = {
+        name  => 'edm:type',
+        value => 'SOUND'
+      };
+    }
+    if ($rec->{cmodel} eq 'Video') {
+      $edmType = {
+        name  => 'edm:type',
+        value => 'VIDEO'
+      };
+    }
+    if (($rec->{cmodel} eq 'PDFDocument') || ($rec->{cmodel} eq 'Book')) {
+      $edmType = {
+        name  => 'edm:type',
+        value => 'TEXT'
+      };
+    }
+  }
+  if ($edmType) {
+    push @{$edmProvidedCHO->{children}}, $edmType;
   }
 
   # dc:type
