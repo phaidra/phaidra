@@ -70,7 +70,7 @@
         :help="false" 
         :debug="false"
         :feedback="instanceconfig.feedback"
-        :feedback-user="this.user" 
+        :feedback-user="user"
         :feedback-context="'Related object submit'" 
         :mouseoverfielddef="true"
         :forcePreview="instanceconfig.forcePreview"

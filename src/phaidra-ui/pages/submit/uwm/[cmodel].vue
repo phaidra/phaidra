@@ -1,7 +1,7 @@
 <template>
   <v-card flat>
     <v-card-text>
-      <v-col cols="12" v-if="this.form.length > 0">
+      <v-col cols="12" v-if="form.length > 0">
         <v-container fluid v-if="objectType !== 'collection'">
           <client-only>
             <v-text-field

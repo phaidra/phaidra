@@ -207,7 +207,7 @@
                     </v-row>
                     <v-row v-if="selectedTemplateId">
                       <span>
-                        {{ $t("Currently selected") }}: {{ this.selectedTemplateId }}
+                        {{ $t("Currently selected") }}: {{ selectedTemplateId }}
                       </span>
                     </v-row>
                     <v-row v-else>
