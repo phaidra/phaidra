@@ -31,6 +31,27 @@ capabilities contains cap if {
 	cap := "submit_form:bulkupload"
 }
 
+skip_validation_allowed if {
+	helpers.is_admin
+}
+
+skip_validation_allowed if {
+	helpers.is_superuser
+}
+
+skip_validation_allowed if {
+	helpers.role_granted("librarian")
+}
+
+skip_validation_allowed if {
+	helpers.role_granted("power_user")
+}
+
+capabilities contains cap if {
+	skip_validation_allowed
+	cap := "submit:skip_validation"
+}
+
 capabilities contains cap if {
 	data.phaidra.authz.upload.can_create
 	cap := "create"

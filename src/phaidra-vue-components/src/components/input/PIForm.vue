@@ -847,7 +847,7 @@
             <v-btn v-if="templating && $route.params.templateid" class="mr-3 float-left" large raised :loading="loading" :disabled="loading" color="primary" @click="saveTemplate()"><span v-t="'Save template'"></span></v-btn>
             <div class="d-flex flex-wrap justify-end align-center ga-2">
               <v-switch
-                v-if="useRootStore().user.isadmin"
+                v-if="canSkipValidation"
                 v-model="skipValidation"
                 density="compact"
                 :hide-details="true"
@@ -1319,6 +1319,9 @@ export default {
     },
     instanceconfig: function () {
       return useRootStore().instanceconfig
+    },
+    canSkipValidation: function () {
+      return useRootStore().capabilities.includes('submit:skip_validation')
     }
   },
   data () {
@@ -1365,6 +1368,9 @@ export default {
     },
     loadFormFromCatalogImport: function (form) {
       this.$emit('load-form', form)
+      if (this.canSkipValidation) {
+        this.skipValidation = true
+      }
       this.activetab = 'metadata'
     },
     toggleSectionCollapse: function (section) {
@@ -1721,7 +1727,7 @@ export default {
     },
     submit: async function () {
       this.serverSubmitErrors = []
-      if (!this.skipValidation && !this.formIsValid()) {
+      if (!(this.skipValidation && this.canSkipValidation) && !this.formIsValid()) {
         this.validationError = true
         if(this.forcePreview){
           this.activetab = 'metadata'
