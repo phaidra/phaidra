@@ -79,18 +79,37 @@ sub get_metadata {
 
   # use IIIF manifest for Containers containing Picture members
   if ($rec->{cmodel} eq 'Container') {
-    my $index_model = PhaidraAPI::Model::Index->new;
-    my $urlget      = $index_model->_get_solrget_url($c, 'Container');
-    $urlget->query(q => "ismemberof:\"$pid\" AND cmodel:Picture", rows => "0", wt => "json");
+    my $index_model   = PhaidraAPI::Model::Index->new;
+    my $thumbnailPid  = $self->_get_related_thumbnail_pid($c, $index_model, $pid);
+    my $pidunderscore = $pid;
+    $pidunderscore =~ s/:/_/g;
+
+    my $urlget = $index_model->_get_solrget_url($c, 'Container');
+    my %query  = (
+      q    => "ismemberof:\"$pid\" AND cmodel:Picture",
+      rows => "0",
+      wt   => "json"
+    );
+    unless ($thumbnailPid) {
+      $query{fl}   = "pid";
+      $query{rows} = "1";
+      $query{sort} = "pos_in_$pidunderscore asc, created asc, pid asc";
+    }
+    $urlget->query(%query);
     my $r = $c->app->ua->get($urlget)->result;
     if ($r->is_success) {
       my $response = $r->json->{response};
       if ($response->{numFound} > 0) {
         $hasManifest = 1;
+        $thumbnailPid //= $response->{docs}->[0]->{pid};
       }
     }
     else {
       $c->app->log->warn("[$pid] Edm: Could not retrieve document from Solr: " . $r->code . " " . $r->message);
+    }
+
+    if ($thumbnailPid) {
+      $thumbnailUrl = "https://$apiBaseUrlPath/object/$thumbnailPid/thumbnail?w=600";
     }
   }
 
@@ -643,6 +662,30 @@ sub get_metadata {
   push @metadata, $edm;
 
   return \@metadata;
+}
+
+sub _get_related_thumbnail_pid {
+  my ($self, $c, $index_model, $pid) = @_;
+
+  my @cmodels = ('Container');
+  if (exists($c->app->config->{solr}->{core_pages}) && $c->app->config->{solr}->{core_pages} ne '') {
+    push @cmodels, 'Page';
+  }
+
+  for my $cmodel (@cmodels) {
+    my $urlget = $index_model->_get_solrget_url($c, $cmodel);
+    $urlget->query(q => '*:*', fq => "isthumbnailfor:\"$pid\"", fl => 'pid', rows => '1', wt => 'json');
+    my $r = $c->app->ua->get($urlget)->result;
+    if ($r->is_success) {
+      my $docs = $r->json->{response}->{docs};
+      return $docs->[0]->{pid} if @{$docs};
+    }
+    else {
+      $c->app->log->warn("[$pid] Edm: Could not search for related thumbnail in Solr: " . $r->code . " " . $r->message);
+    }
+  }
+
+  return;
 }
 
 sub _map_iso3_to_bcp {
