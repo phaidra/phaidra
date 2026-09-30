@@ -88,6 +88,19 @@ sub _build_subject {
     $userdata = $directory_model->get_user_data($c, $username) // {};
   }
 
+  my $affiliations = $userdata->{affiliation}  // [];
+  my $org_units_l1 = $userdata->{org_units_l1} // [];
+  my $org_units_l2 = $userdata->{org_units_l2} // [];
+  # prefer remote user attributes if available
+  if ($c->stash->{remote_user}) {
+    $affiliations = [grep {length} split(';', $c->stash->{affiliation}  // '')];
+    $org_units_l1 = [grep {length} split(',', $c->stash->{org_units_l1} // '')];
+    $org_units_l2 = [grep {length} split(',', $c->stash->{org_units_l2} // '')];
+    $userdata->{affiliation}  = $affiliations;
+    $userdata->{org_units_l1} = $org_units_l1;
+    $userdata->{org_units_l2} = $org_units_l2;
+  }
+
   my @roles = $self->_compute_roles($c, $username, $userdata);
 
   my @project_groups = ();
@@ -115,9 +128,9 @@ sub _build_subject {
     authenticated  => $username ? true : false,
     auth_method    => $auth_method,
     roles          => \@roles,
-    affiliations   => $userdata->{affiliation}  // [],
-    org_units_l1   => $userdata->{org_units_l1} // [],
-    org_units_l2   => $userdata->{org_units_l2} // [],
+    affiliations   => $affiliations,
+    org_units_l1   => $org_units_l1,
+    org_units_l2   => $org_units_l2,
     ldap_groups    => $userdata->{ldapgroups}   // [],
     project_groups => \@project_groups,
     remote_address => $remote_address // '',

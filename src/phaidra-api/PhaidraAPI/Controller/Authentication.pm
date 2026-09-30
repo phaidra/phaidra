@@ -55,6 +55,8 @@ sub extract_credentials {
       $self->stash->{remote_user}            = $remote_user;
       $self->stash->{affiliation}            = $remoteaffiliation;
       $self->stash->{groups}                 = $remotegroups;
+      $self->stash->{org_units_l1}           = $org_units_l1;
+      $self->stash->{org_units_l2}           = $org_units_l2;
       $self->stash->{basic_auth_credentials} = {username => $remote_user};
       return 1;
     }
@@ -474,8 +476,8 @@ sub signin_shib {
         $provision_data->{firstname}   = $remote_firstname    if defined($remote_firstname)           && length($remote_firstname);
         $provision_data->{lastname}    = $remote_lastname     if defined($remote_lastname)            && length($remote_lastname);
         $provision_data->{displayname} = $remote_displayname  if defined($remote_displayname)         && length($remote_displayname);
-        $provision_data->{affiliation} = $remote_affiliations if ref($remote_affiliations) eq 'ARRAY' && @{$remote_affiliations};
-        $provision_data->{org_units}   = $org_unit_ids        if @org_unit_notations;
+        $provision_data->{affiliation} = $remote_affiliations if ref($remote_affiliations) eq 'ARRAY';
+        $provision_data->{org_units}   = $org_unit_ids;
       }
       $provisioned = PhaidraAPI::Model::Users->new->upsert_shib($self, $provision_data);
     };
