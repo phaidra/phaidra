@@ -472,10 +472,10 @@ sub signin_shib {
 
         # Shibboleth attributes are not always supplied when a directory source has them.
         # Do not replace saved attributes when neither source provides a value.
-        $provision_data->{email}       = $remote_email        if defined($remote_email)               && length($remote_email);
-        $provision_data->{firstname}   = $remote_firstname    if defined($remote_firstname)           && length($remote_firstname);
-        $provision_data->{lastname}    = $remote_lastname     if defined($remote_lastname)            && length($remote_lastname);
-        $provision_data->{displayname} = $remote_displayname  if defined($remote_displayname)         && length($remote_displayname);
+        $provision_data->{email}       = $remote_email        if defined($remote_email)       && length($remote_email);
+        $provision_data->{firstname}   = $remote_firstname    if defined($remote_firstname)   && length($remote_firstname);
+        $provision_data->{lastname}    = $remote_lastname     if defined($remote_lastname)    && length($remote_lastname);
+        $provision_data->{displayname} = $remote_displayname  if defined($remote_displayname) && length($remote_displayname);
         $provision_data->{affiliation} = $remote_affiliations if ref($remote_affiliations) eq 'ARRAY';
         $provision_data->{org_units}   = $org_unit_ids;
       }
