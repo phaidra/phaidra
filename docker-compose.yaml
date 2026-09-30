@@ -879,6 +879,7 @@ services:
     hostname: "mariadb-phaidra"
     image: phaidraorg/mariadb-phaidra-dist:62e27136
     <<: [*common, *logs]
+    command: --max_connections=200
     environment:
       <<: [*api_common_env, *hosts]
       MARIADB_ROOT_PASSWORD: "${MARIADB_PHAIDRA_ROOT_PASSWORD:-example}"
@@ -894,6 +895,7 @@ services:
     hostname: "mariadb-phaidra"
     image: mariadb:11.3.2-jammy
     <<: [*common, *logs]
+    command: --max_connections=200
     environment:
       <<: [*api_common_env, *hosts]
       MARIADB_ROOT_PASSWORD: "${MARIADB_PHAIDRA_ROOT_PASSWORD:-example}"
