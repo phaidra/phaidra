@@ -115,8 +115,9 @@ export default async (req, res, next) => {
       return
     }
   }
-  if (/^\/o:\d+$/.test(req.url)) {
-    let pid = req.url.replace('/', '')
+  const pathname = req.url.split('?')[0]
+  if (/^\/o:\d+$/.test(pathname)) {
+    let pid = pathname.replace('/', '')
     try {
       await redirectEvaluator(pid)
       return
