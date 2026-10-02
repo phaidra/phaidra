@@ -71,46 +71,27 @@ sub get_metadata {
     $useViewer = 1;
   }
 
-  # use IIIF manifest for Picture and Books
+  # use IIIF manifest for Pictures, Books, and Containers
   my $hasManifest = 0;
-  if (($rec->{cmodel} eq 'Picture') || ($rec->{cmodel} eq 'Book')) {
+  if (($rec->{cmodel} eq 'Picture') || ($rec->{cmodel} eq 'Book') || ($rec->{cmodel} eq 'Container')) {
     $hasManifest = 1;
   }
 
-  # use IIIF manifest for Containers containing Picture members
+  my $index_model       = PhaidraAPI::Model::Index->new;
+  my $representationPid;
   if ($rec->{cmodel} eq 'Container') {
-    my $index_model   = PhaidraAPI::Model::Index->new;
-    my $thumbnailPid  = $self->_get_related_thumbnail_pid($c, $index_model, $pid);
-    my $pidunderscore = $pid;
-    $pidunderscore =~ s/:/_/g;
+    $representationPid = $self->_get_container_thumbnail_pid($c, $index_model, $pid);
+  }
+  elsif ($self->_is_3d($rec)) {
+    my $containerPid = $self->_get_containing_container_pid($c, $index_model, $pid);
+    if ($containerPid) {
+      $representationPid = $self->_get_container_thumbnail_pid($c, $index_model, $containerPid);
+    }
+  }
 
-    my $urlget = $index_model->_get_solrget_url($c, 'Container');
-    my %query  = (
-      q    => "ismemberof:\"$pid\" AND cmodel:Picture",
-      rows => "0",
-      wt   => "json"
-    );
-    unless ($thumbnailPid) {
-      $query{fl}   = "pid";
-      $query{rows} = "1";
-      $query{sort} = "pos_in_$pidunderscore asc, created asc, pid asc";
-    }
-    $urlget->query(%query);
-    my $r = $c->app->ua->get($urlget)->result;
-    if ($r->is_success) {
-      my $response = $r->json->{response};
-      if ($response->{numFound} > 0) {
-        $hasManifest = 1;
-        $thumbnailPid //= $response->{docs}->[0]->{pid};
-      }
-    }
-    else {
-      $c->app->log->warn("[$pid] Edm: Could not retrieve document from Solr: " . $r->code . " " . $r->message);
-    }
-
-    if ($thumbnailPid) {
-      $thumbnailUrl = "https://$apiBaseUrlPath/object/$thumbnailPid/thumbnail?w=600";
-    }
+  if ($representationPid) {
+    $thumbnailUrl = "https://$apiBaseUrlPath/object/$representationPid/thumbnail?w=600";
+    $getUrl       = "https://$apiBaseUrlPath/object/$representationPid/get" if $rec->{cmodel} eq 'Container';
   }
 
   #### ore:Aggregation ####
@@ -256,7 +237,17 @@ sub get_metadata {
 
   # edm:type
   my $edmType;
-  if (exists($rec->{edm_hastype_id})) {
+  # If it's Container, it has picture members and will get a manifest containing them
+  # so it needs to be edm:type: IMAGE
+  # (nothing else in Container would work in europeana anyway)
+  if ($rec->{cmodel} eq 'Container') {
+    $edmType = {
+      name  => 'edm:type',
+      value => 'IMAGE'
+    };
+  }
+  elsif (exists($rec->{edm_hastype_id})) {
+    # The if-else makes sure that Containers get IMAGE even if they have object type 3D in metadata
     for my $edmt (@{$rec->{edm_hastype_id}}) {
       if ($edmt eq 'https://pid.phaidra.org/vocabulary/T6C3-46S4') {
         $edmType = {
@@ -267,11 +258,8 @@ sub get_metadata {
     }
   }
 
-  # If it's Container, it has picture members and will get a manifest containing them
-  # so it needs to be edm:type: IMAGE
-  # (nothing else in Container would work in europeana anyway)
   unless ($edmType) {
-    if (($rec->{cmodel} eq 'Picture') || ($rec->{cmodel} eq 'Container')) {
+    if ($rec->{cmodel} eq 'Picture') {
       $edmType = {
         name  => 'edm:type',
         value => 'IMAGE'
@@ -666,6 +654,34 @@ sub get_metadata {
   return \@metadata;
 }
 
+sub _get_container_thumbnail_pid {
+  my ($self, $c, $index_model, $containerPid) = @_;
+
+  my $thumbnailPid = $self->_get_related_thumbnail_pid($c, $index_model, $containerPid);
+  return $thumbnailPid if $thumbnailPid;
+
+  my $pidunderscore = $containerPid;
+  $pidunderscore =~ s/:/_/g;
+  my $urlget = $index_model->_get_solrget_url($c, 'Container');
+  $urlget->query(
+    q    => "ismemberof:\"$containerPid\" AND cmodel:Picture",
+    fl   => 'pid',
+    rows => '1',
+    sort => "pos_in_$pidunderscore asc, created asc, pid asc",
+    wt   => 'json'
+  );
+  my $r = $c->app->ua->get($urlget)->result;
+  if ($r->is_success) {
+    my $docs = $r->json->{response}->{docs};
+    return $docs->[0]->{pid} if @{$docs};
+  }
+  else {
+    $c->app->log->warn("[$containerPid] Edm: Could not retrieve Picture members from Solr: " . $r->code . " " . $r->message);
+  }
+
+  return;
+}
+
 sub _get_related_thumbnail_pid {
   my ($self, $c, $index_model, $pid) = @_;
 
@@ -688,6 +704,29 @@ sub _get_related_thumbnail_pid {
   }
 
   return;
+}
+
+sub _get_containing_container_pid {
+  my ($self, $c, $index_model, $pid) = @_;
+
+  my $urlget = $index_model->_get_solrget_url($c, 'Container');
+  $urlget->query(q => "hasmember:\"$pid\" AND cmodel:Container", fl => 'pid', rows => '1', sort => 'pid asc', wt => 'json');
+  my $r = $c->app->ua->get($urlget)->result;
+  if ($r->is_success) {
+    my $docs = $r->json->{response}->{docs};
+    return $docs->[0]->{pid} if @{$docs};
+  }
+  else {
+    $c->app->log->warn("[$pid] Edm: Could not retrieve containing Container from Solr: " . $r->code . " " . $r->message);
+  }
+
+  return;
+}
+
+sub _is_3d {
+  my ($self, $rec) = @_;
+  return 0 unless exists($rec->{edm_hastype_id});
+  return scalar grep {$_ eq 'https://pid.phaidra.org/vocabulary/T6C3-46S4'} @{$rec->{edm_hastype_id}};
 }
 
 sub _map_iso3_to_bcp {
