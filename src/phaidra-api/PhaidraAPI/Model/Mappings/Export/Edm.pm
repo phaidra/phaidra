@@ -77,7 +77,7 @@ sub get_metadata {
     $hasManifest = 1;
   }
 
-  my $index_model       = PhaidraAPI::Model::Index->new;
+  my $index_model = PhaidraAPI::Model::Index->new;
   my $representationPid;
   if ($rec->{cmodel} eq 'Container') {
     $representationPid = $self->_get_container_thumbnail_pid($c, $index_model, $pid);
@@ -237,6 +237,7 @@ sub get_metadata {
 
   # edm:type
   my $edmType;
+
   # If it's Container, it has picture members and will get a manifest containing them
   # so it needs to be edm:type: IMAGE
   # (nothing else in Container would work in europeana anyway)
@@ -247,6 +248,7 @@ sub get_metadata {
     };
   }
   elsif (exists($rec->{edm_hastype_id})) {
+
     # The if-else makes sure that Containers get IMAGE even if they have object type 3D in metadata
     for my $edmt (@{$rec->{edm_hastype_id}}) {
       if ($edmt eq 'https://pid.phaidra.org/vocabulary/T6C3-46S4') {
@@ -671,6 +673,7 @@ sub _get_container_thumbnail_pid {
     wt   => 'json'
   );
   my $r = $c->app->ua->get($urlget)->result;
+
   if ($r->is_success) {
     my $docs = $r->json->{response}->{docs};
     return $docs->[0]->{pid} if @{$docs};
