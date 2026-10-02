@@ -63,6 +63,19 @@ sub _serve {
     return $self->proxy();
   }
   else {
+    my $dsid          = $trywebversion ? 'WEBVERSION' : 'OCTETS';
+    my $if_none_match = $self->req->headers->header('If-None-Match');
+    my $headres       = $fedora_model->headDatastream($self, $pid, $dsid, $if_none_match);
+
+    $self->res->headers->header('ETag' => $headres->{etag}) if $headres->{etag};
+    if ($headres->{status} == 304) {
+      return $self->rendered(304);
+    }
+    if ($headres->{status} != 200) {
+      $self->render(json => $headres, status => $headres->{status});
+      return;
+    }
+
     if ($trywebversion) {
       $dsAttr = $fedora_model->getDatastreamAttributes($self, $pid, 'WEBVERSION');
       if ($dsAttr->{status} ne 200) {

@@ -462,6 +462,33 @@ sub getDatastream {
   return $res;
 }
 
+sub headDatastream {
+  my ($self, $c, $pid, $dsid, $if_none_match) = @_;
+
+  my $res = {alerts => [], status => 200};
+
+  unless ($pid =~ m/^o:\d+$/) {
+    unshift @{$res->{alerts}}, {type => 'error', msg => 'Invalid pid'};
+    $res->{status} = 400;
+    return $res;
+  }
+
+  my $url = $c->app->fedoraurl->path("$pid/$dsid");
+  my $headers = {};
+  $headers->{'If-None-Match'} = $if_none_match if defined $if_none_match;
+
+  $c->app->log->debug("HEAD $url");
+  my $headres = $c->ua->head($url => $headers)->result;
+
+  $res->{status} = $headres->code;
+  $res->{etag}   = $headres->headers->header('ETag') if $headres->headers->header('ETag');
+
+  return $res if $headres->is_success || $headres->code == 304;
+
+  unshift @{$res->{alerts}}, {type => 'error', msg => $headres->message};
+  return $res;
+}
+
 sub getDatastreamAttributes {
   my ($self, $c, $pid, $dsid) = @_;
 

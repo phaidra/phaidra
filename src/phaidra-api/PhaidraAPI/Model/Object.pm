@@ -1407,19 +1407,21 @@ sub proxy_datastream {
   my $res = {alerts => [], status => 200};
 
   my $url = $c->app->fedoraurl->path("$pid/$dsid");
+  my $headers = {};
+  my $if_none_match = $c->req->headers->header('If-None-Match');
+  $headers->{'If-None-Match'} = $if_none_match if defined $if_none_match;
 
   if (Mojo::IOLoop->is_running) {
     $c->render_later;
     $c->ua->get(
-      $url,
-      sub {
+      $url => $headers => sub {
         my ($self, $tx) = @_;
         _proxy_tx($c, $tx);
       }
     );
   }
   else {
-    my $tx = $c->ua->get($url);
+    my $tx = $c->ua->get($url => $headers);
     _proxy_tx($c, $tx);
   }
 }
@@ -1427,10 +1429,15 @@ sub proxy_datastream {
 sub _proxy_tx {
   my ($c, $tx) = @_;
 
-  if ($tx->result->is_success) {
+  if ($tx->result->is_success || $tx->result->code == 304) {
     $c->tx->res($tx->result);
-    $c->tx->res->headers->content_type($tx->res->headers->content_type . '; charset=utf-8');
+    if ($tx->result->is_success && $tx->res->headers->content_type) {
+      $c->tx->res->headers->content_type($tx->res->headers->content_type . '; charset=utf-8');
+    }
     $c->rendered;
+  }
+  elsif ($tx->result->code == 400 && defined $c->req->headers->header('If-None-Match')) {
+    $c->render(status => 400, text => 'Invalid If-None-Match header');
   }
   else {
     $c->tx->res->headers->add('X-Remote-Status', $tx->result->code . ': ' . $tx->result->message);
