@@ -1,4 +1,4 @@
-FROM maven:3-openjdk-11 AS build
+FROM maven:3-eclipse-temurin-11 AS build
 
 # Create and use a build directory
 WORKDIR /build
@@ -21,7 +21,7 @@ RUN sed -i '/<dependencies>/a \
 # Build with maven
 RUN mvn clean package -DskipTests
 
-FROM openjdk:11-jre-slim AS app
+FROM eclipse-temurin:11-jre-jammy AS app
 
 WORKDIR /usr/local/fcrepo-camel-toolbox
 
@@ -32,9 +32,9 @@ RUN chmod a+x ./entrypoint.sh
 
 # Install MongoDB client tools and curl
 RUN apt-get update && \
-    apt-get install -y gnupg curl wget && \
+    apt-get install -y gnupg curl wget ca-certificates && \
     wget -qO - https://www.mongodb.org/static/pgp/server-6.0.asc | apt-key add - && \
-    echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/debian bullseye/mongodb-org/6.0 main" | tee /etc/apt/sources.list.d/mongodb-org-6.0.list && \
+    echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-6.0.list && \
     apt-get update && \
     apt-get install -y mongodb-mongosh && \
     rm -rf /var/lib/apt/lists/*
