@@ -1406,8 +1406,8 @@ sub proxy_datastream {
 
   my $res = {alerts => [], status => 200};
 
-  my $url = $c->app->fedoraurl->path("$pid/$dsid");
-  my $headers = {};
+  my $url           = $c->app->fedoraurl->path("$pid/$dsid");
+  my $headers       = {};
   my $if_none_match = $c->req->headers->header('If-None-Match');
   $headers->{'If-None-Match'} = $if_none_match if defined $if_none_match;
 

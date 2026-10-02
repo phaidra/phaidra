@@ -473,7 +473,7 @@ sub headDatastream {
     return $res;
   }
 
-  my $url = $c->app->fedoraurl->path("$pid/$dsid");
+  my $url     = $c->app->fedoraurl->path("$pid/$dsid");
   my $headers = {};
   $headers->{'If-None-Match'} = $if_none_match if defined $if_none_match;
 
