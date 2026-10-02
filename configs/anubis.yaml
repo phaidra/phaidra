@@ -49,6 +49,7 @@ bots:
         - 'verifyFCrDNS(remoteAddress, "kit\\.edu$")'
         - 'verifyFCrDNS(remoteAddress, "vbanos\\.gr$")'
         - 'verifyFCrDNS(remoteAddress, "kpool\\.at$")'
+        - 'verifyFCrDNS(remoteAddress, "kulturpool\\.at$")'
     action: ALLOW
 
   - name: friendly_ips
