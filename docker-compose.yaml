@@ -1474,7 +1474,7 @@ services:
 
   ############## camel-toolbox service ###############
   camel-toolbox:
-    image: phaidraorg/fcrepo-camel-toolbox:39bf4894
+    image: phaidraorg/fcrepo-camel-toolbox:f67f6a06
     <<: [*common, *logs]
     volumes:
       - "./camel-toolbox-config:/config"
