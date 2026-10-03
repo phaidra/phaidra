@@ -22,6 +22,10 @@ bots:
     path_regex: ^/api/object/o:(\d+)/360_frames/[^/]+\.png$
     action: ALLOW
 
+  - name: 360_viewer_javascript
+    path_regex: ^/api/360viewer/JavascriptViewer\.min\.js$
+    action: ALLOW
+
   - name: iiifmanifest
     path_regex: ^/api/object/o:(\d+)/iiifmanifest
     action: ALLOW
