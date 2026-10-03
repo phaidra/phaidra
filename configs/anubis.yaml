@@ -18,6 +18,10 @@ bots:
     path_regex: ^/api/object/o:(\d+)/preview
     action: ALLOW
 
+  - name: 360_frames
+    path_regex: ^/api/object/o:(\d+)/360_frames/[^/]+\.png$
+    action: ALLOW
+
   - name: iiifmanifest
     path_regex: ^/api/object/o:(\d+)/iiifmanifest
     action: ALLOW
