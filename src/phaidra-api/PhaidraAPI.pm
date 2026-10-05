@@ -136,7 +136,7 @@ sub startup {
       dsn      => $config->{phaidra_user_db}->{dsn},
       username => $config->{phaidra_user_db}->{username},
       password => $config->{phaidra_user_db}->{password},
-      options  => {mysql_auto_reconnect => 1}
+      options  => {mysql_auto_reconnect => 1, mysql_enable_utf8 => 1}
     };
   }
 
