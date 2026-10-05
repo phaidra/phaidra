@@ -671,6 +671,7 @@ sub preview {
       $self->stash(basepath => $self->config->{basepath});
       $self->stash(pid      => $pid);
       $self->stash(lang     => $lang);
+      $self->stash(enableimagetools => $modelres && $modelres->{enableimagetools} ? 1 : 0);
 
       my $u_model = PhaidraAPI::Model::Util->new;
       $u_model->track_action($self, $pid, 'preview');

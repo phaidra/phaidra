@@ -1,0 +1,20 @@
+{
+  "name": "phaidra-mirador-build",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "webpack --config webpack/webpack.config.js --mode production"
+  },
+  "dependencies": {
+    "mirador": "3.4.3",
+    "mirador-image-tools": "0.11.0",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
+    "react-draggable": "4.4.6",
+    "webpack": "^4.46.0",
+    "webpack-cli": "^3.3.12"
+  },
+  "overrides": {
+    "react-draggable": "4.4.6"
+  }
+}

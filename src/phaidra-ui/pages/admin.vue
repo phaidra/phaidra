@@ -451,6 +451,15 @@
                 <v-row>
                   <v-col>
                     <v-checkbox
+                      :label="$t('Enable image tools')"
+                      v-model="parsedPublicConfigData.enableimagetools"
+                    ></v-checkbox>
+                  </v-col>
+                  <v-col cols="6" class="mt-4">{{ $t("Show image manipulation tools (rotate, flip, brightness, contrast) in the book viewer.") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-checkbox
                       :label="$t('Access restrictions: show persons')"
                       v-model="parsedPublicConfigData.accessrestrictions_showpersons"
                     ></v-checkbox>
