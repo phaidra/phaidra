@@ -2,7 +2,7 @@
   <div>
     <v-row v-if="showInfoBanner" no-gutters class="mx-n4">
         <v-col class="bg-amber-lighten-2 text-body-large text-blue-grey-darken-4 text-center px-4 py-2" cols="12">
-          <v-row align="center">
+          <v-row align="center" density="compact">
             <v-col cols="12" md="10" offset-md="1">
               <h4 class="text-title-large ma-0">{{ infoBannerText }}</h4>
             </v-col>
@@ -171,7 +171,7 @@
             </v-col>
 
             <v-col md="9" >
-              <v-row justify-md="end" class="pr-4 py-2">
+              <v-row justify-md="end" density="compact" class="pr-4 py-2">
                 <div class="d-flex align-center me-2" v-if="signedin && $vuetify?.display?.smAndDown">
                   <v-icon
                     class="mr-1"
@@ -233,7 +233,7 @@
                 </v-tooltip>
               </v-row>
 
-              <v-row justify="center">
+              <v-row justify="center" density="compact">
                 <v-col 
                 v-if="appconfig.showinstanceswitch"                  
                 md="4"
@@ -272,10 +272,10 @@
                 </v-col>
               </v-row>
 
-              <v-row>
+              <v-row density="compact">
                 <v-toolbar flat density="compact" color="transparent" class="my-md-1">
                   <client-only>
-                    <v-row class="hidden-md-and-up">
+                    <v-row density="compact" class="hidden-md-and-up">
                         <v-menu offset-y min-width="150px" :close-on-content-click="true">
                           <template v-slot:activator="{ props }">
                           <v-btn id="mobile-menu-btn" variant="text" size="x-large" aria-controls="mobile-menu" aria-label="Main navigation menu"

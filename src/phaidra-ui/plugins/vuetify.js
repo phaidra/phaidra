@@ -109,9 +109,6 @@ export default defineNuxtPlugin((nuxtApp) => {
       color: 'primary',
       hideDetails: 'auto'
     },
-    VRow: {
-      density: 'compact'
-    },
     VSwitch: {
       color: 'primary',
     },
