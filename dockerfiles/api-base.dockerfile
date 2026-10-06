@@ -54,9 +54,9 @@ RUN gunzip /ip2country/ip2country-v4.tsv.gz /ip2country/ip2country-v6.tsv.gz
 
 FROM node:18-bookworm-slim AS mirador-builder
 WORKDIR /mirador-build
-COPY src/mirador-build/package.json src/mirador-build/package-lock.json ./
+COPY build/mirador-build/package.json build/mirador-build/package-lock.json ./
 RUN npm ci --no-audit --no-fund
-COPY src/mirador-build/ ./
+COPY build/mirador-build/ ./
 RUN npm run build
 
 FROM ubuntu:jammy-20260210.1

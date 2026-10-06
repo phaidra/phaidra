@@ -54,7 +54,7 @@ build-api-base:
         paths:
           - dockerfiles/api-base.dockerfile
           - src/phaidra-api/**/*
-          - src/mirador-build/**/*
+          - build/mirador-build/**/*
 
 build-api-dist:
   stage: build-dist
@@ -76,7 +76,7 @@ build-api-dist:
           - dockerfiles/api-base.dockerfile
           - dockerfiles/api-dist.dockerfile
           - src/phaidra-api/**/*
-          - src/mirador-build/**/*
+          - build/mirador-build/**/*
 
 build-ui:
   stage: build-common
