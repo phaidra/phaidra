@@ -451,11 +451,11 @@
                 <v-row>
                   <v-col>
                     <v-checkbox
-                      :label="$t('Enable image tools')"
-                      v-model="parsedPublicConfigData.enableimagetools"
+                      :label="$t('Disable image tools')"
+                      v-model="parsedPublicConfigData.disableimagetools"
                     ></v-checkbox>
                   </v-col>
-                  <v-col cols="6" class="mt-4">{{ $t("Show image manipulation tools (rotate, flip, brightness, contrast) in the book viewer.") }}</v-col>
+                  <v-col cols="6" class="mt-4">{{ $t("Hide image manipulation tools (rotate, flip, brightness, contrast) in the book viewer.") }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>

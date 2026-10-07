@@ -75,7 +75,7 @@ export const useRootStore = defineStore('root', {
       'doiImport',
       'enableresourcelink',
       'addannotation',
-      'enableimagetools',
+      'disableimagetools',
       'forcePreview',
       'hideInstitutionName',
       'isParentSelectionDisabled',
