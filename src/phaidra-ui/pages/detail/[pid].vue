@@ -1202,6 +1202,28 @@
                           >{{ $t("Open link") }}</v-btn
                         >
                       </v-row>
+                      <v-row
+                        v-if="objectInfo.dc_format"
+                        no-gutters
+                        class="pt-2"
+                      >
+                        <v-col
+                          class="text-body-small font-weight-bold"
+                          cols="12"
+                          >{{ $t("Format") }}</v-col
+                        >
+                        <v-col cols="12" class="mt-2">
+                          <template v-if="objectInfo.dc_format && objectInfo.dc_format.length > 1">
+                            <div
+                              v-for="(v, i) in objectInfo.dc_format"
+                              :key="i"
+                            >{{ v }}</div>
+                          </template>
+                          <template v-else>{{
+                            objectInfo.dc_format[0]
+                          }}</template>
+                        </v-col>
+                      </v-row>
                       <v-divider
                         class="my-4"
                         v-if="
@@ -1376,31 +1398,6 @@
                         <v-col cols="8" offset="1">{{
                           $t(objectInfo.cmodel)
                         }}</v-col>
-                      </v-row>
-                      <v-row
-                        v-if="objectInfo.dc_format"
-                        no-gutters
-                        class="pt-2"
-                      >
-                        <v-col
-                          class="text-body-small font-weight-bold"
-                          cols="3"
-                          >{{ $t("Format") }}</v-col
-                        >
-                        <v-col cols="8" offset="1">
-                          <template v-if="objectInfo.dc_format && objectInfo.dc_format.length > 1">
-                            <v-row>
-                              <v-col
-                                v-for="(v, i) in objectInfo.dc_format"
-                                :key="i"
-                                >{{ v }}</v-col
-                              >
-                            </v-row>
-                          </template>
-                          <template v-else>{{
-                            objectInfo.dc_format[0]
-                          }}</template>
-                        </v-col>
                       </v-row>
                       <v-row no-gutters class="pt-2">
                         <v-col
