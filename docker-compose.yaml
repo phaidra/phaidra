@@ -426,7 +426,7 @@ services:
     hostname: "ui"
     depends_on: [api]
     <<: [*common, *logs]
-    image: phaidraorg/ui:21592bca
+    image: phaidraorg/ui:6075eb1e
     command: ["pm2-runtime", "start", "ecosystem.config.js"]
     environment:
       <<: [*api_common_env, *hosts, *ui_theme_env]
@@ -439,7 +439,7 @@ services:
     hostname: "ui"
     depends_on: [api-s3]
     <<: [*common, *logs]
-    image: phaidraorg/ui:21592bca
+    image: phaidraorg/ui:6075eb1e
     command: ["pm2-runtime", "start", "ecosystem.config.js"]
     environment:
       <<: [*api_common_env, *hosts, *ui_theme_env]
@@ -494,7 +494,7 @@ services:
   api-s3:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora-s3, opa]
-    image: phaidraorg/api-dist:889dee2f
+    image: phaidraorg/api-dist:ad2b9e67
     <<: [*common, *logs]
     volumes:
       - s3-cache:/s3-cache
@@ -508,7 +508,7 @@ services:
   api:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora, opa]
-    image: phaidraorg/api-dist:889dee2f
+    image: phaidraorg/api-dist:ad2b9e67
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro
@@ -613,7 +613,7 @@ services:
     hostname: "agent-libvips"
     depends_on: [mongodb-phaidra, api]
     <<: [*common, *logs]
-    image: phaidraorg/agent-libvips-dist:b6636c4e
+    image: phaidraorg/agent-libvips-dist:de9b6b2d
     volumes:
       - fedora:/mnt/fedora:ro
       - derivates-images:/mnt/derivates-images
