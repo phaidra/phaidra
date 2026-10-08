@@ -8,6 +8,5 @@ agent-libvips:
     username:              'phaidra'
     password:              'phaidra'
     col:                   'jobs'
-    activity:              'activity'
   store:                 '/derivates-images'
   temp_path:             '/tmp'

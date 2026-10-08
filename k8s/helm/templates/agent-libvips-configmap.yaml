@@ -14,7 +14,6 @@ data:
         username:              'phaidra'
         password:              'phaidra'
         col:                   'jobs'
-        activity:              'activity'
       store:                 '/mnt/derivates-images'
       temp_path:             '/tmp'
 
