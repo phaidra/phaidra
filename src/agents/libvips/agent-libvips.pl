@@ -14,7 +14,6 @@ autoflush STDOUT 1;
 autoflush STDERR 1;
 
 my $fnm_config= './agent-libvips_conf.yml';
-# my $config= YAML::Syck::LoadFile($fnm_config);
 
 my $config = {
   'agent-libvips' => {
