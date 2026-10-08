@@ -2,9 +2,7 @@ use strict;
 
 use Data::Dumper;
 $Data::Dumper::Indent= 1;
-use lib qw(/opt/agent-libvips/perl_modules);
-use PAF::JobQueue;
-use PAF::Activity;
+use MongoDB;
 use YAML::Syck;
 use FileHandle;
 use File::Fetch;
@@ -27,7 +25,6 @@ my $config = {
       'username' => $ENV{MONGODB_PHAIDRA_USER},
       'password' => $ENV{MONGODB_PHAIDRA_PASSWORD},
       'col' => 'jobs',
-      'activity' => 'activity'
     },
     'store' => $ENV{DERIVATES_IMAGES_PATH},
     'temp_path' => '/tmp',
@@ -88,15 +85,8 @@ if ($op_mode eq 'direct') {
   exit(0);
 }
 
-my $jq= new PAF::JobQueue( mongodb => $config->{'agent-libvips'}->{mongodb} );
-my $mdb= $jq->get_database();
-my $activity;
-
-if (exists ($config->{'agent-libvips'}->{mongodb}->{activity})) {
-  $activity= new PAF::Activity ($mdb, $config->{'agent-libvips'}->{mongodb}->{activity}, $agent_name);
-}
-
-process_job_queue($jq, $activity);
+my $jobs_col= connect_jobs_collection($config->{'agent-libvips'}->{mongodb});
+process_job_queue($jobs_col);
 
 exit (0);
 
@@ -111,51 +101,75 @@ sub usage
     exit(0);
   }
 
+sub ts_iso
+  {
+    my $time= shift || time();
+    my @ts= localtime($time);
+    sprintf('%04d%02d%02dT%02d%02d%02d',
+            $ts[5]+1900, $ts[4]+1, $ts[3], $ts[2], $ts[1], $ts[0]);
+  }
+
+sub connect_jobs_collection
+  {
+    my $mdb= shift;
+
+    my %client_opts= (
+      host     => $mdb->{host},
+      username => $mdb->{username},
+      password => $mdb->{password},
+    );
+    $client_opts{db_name}= $mdb->{db_name} if defined $mdb->{db_name};
+
+    my $client= MongoDB::MongoClient->new(%client_opts);
+    die 'could not connect to MongoDB: ', Dumper($mdb) unless defined $client;
+
+    my $db_name= exists($mdb->{database}) ? $mdb->{database} : $mdb->{db_name};
+    print 'connecting to database: ', $db_name, "\n";
+    my $db= $client->get_database($db_name);
+    return $db->get_collection($mdb->{col});
+  }
+
+sub get_job
+  {
+    my ($col, $agent)= @_;
+
+    my $job= $col->find_one({ status => 'in_progress', agent => $agent });
+    return $job if defined $job;
+
+    foreach my $st (qw(retry new check_members)) {
+      $col->update_one(
+        { status => $st, agent => $agent },
+        { '$set' => { status => 'in_progress', agent => $agent } },
+      );
+      $job= $col->find_one({ status => 'in_progress', agent => $agent });
+      return $job if defined $job;
+    }
+
+    return undef;
+  }
+
+sub update_job
+  {
+    my ($col, $job)= @_;
+
+    $job->{ts_iso}= ts_iso();
+    $col->replace_one({ _id => $job->{_id} }, $job);
+  }
+
 sub process_job_queue
   {
-    my $jq= shift;
-    my $activity= shift;
-
-    # print __LINE__, " activity: ", Dumper ($activity);
-    my %activity_record=
-      (
-       agent   => $agent_name,
-       status  => 'starting',
-       procid  => $$,
-       e       => 0,
-      );
+    my $col= shift;
 
   JOB: while (1)
       {
-        my $job= $jq->get_job ( $agent_name );
+        my $job= get_job($col, $agent_name);
 
         unless (defined ($job))
           {
-            my $db = exists($config->{'agent-libvips'}->{mongodb}->{database}) ?
-              $config->{'agent-libvips'}->{mongodb}->{database} :
-              $config->{'agent-libvips'}->{mongodb}->{db_name};
-
-            if ($activity_record{e} + 600 < time () || $activity_record{status} ne 'idle') {
-              $activity_record{status}= 'idle';
-              $activity_record{e}=    time();
-              if (exists ($activity_record{pid})) {
-                delete ($activity_record{pid});
-                delete ($activity_record{idhash});
-              }
-
-              $activity->save (%activity_record) if (defined ($activity));
-            }
-
             sleep($config->{'agent-libvips'}->{sleep_time});
             next JOB;
           }
         print scalar localtime(), " ", "job: ", Dumper ($job);
-
-        $activity_record{status}=   'process_image';
-        $activity_record{pid}=    $job->{pid};
-        $activity_record{idhash}= $job->{idhash};
-        $activity_record{e}=      time();
-        $activity->save (%activity_record) if (defined ($activity));
 
         my $rc= process_image ($job->{pid}, $job->{idhash}, $job->{ds}, $job->{cmodel}, $job->{path});
 
@@ -200,7 +214,7 @@ sub process_job_queue
           }
         }
 
-        $jq->update_job ($job);
+        update_job($col, $job);
 
         # sleep(5);
       }
