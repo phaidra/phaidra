@@ -6,7 +6,7 @@
         <div class="mb-4">
           <h2 class="text-title-large font-weight-light">{{ $t('PHAIDRA uses the following resources') }}:</h2>
         </div>
-        <v-row density="default">
+        <v-row>
           <v-col cols="12">
             <a href="https://citation.doi.org/" target="_blank">DOI Foundation</a> - The DOI Citation Formatter | <a
               href="http://datacite.org/" target="_blank">DataCite</a>, <a href="http://crossref.org/" target="_blank">Crossref</a>, <a href="https://www.medra.org/"
