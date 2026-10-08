@@ -32,13 +32,6 @@ ADD --checksum=sha256:395b5b099c48f5e6cebdc4d64e85267e9a58e100c4cbb7869eddad62ec
     https://cdn.jsdelivr.net/npm/replaywebpage@2.4.4/sw.js \
     /replayweb/sw.js
 
-ADD --checksum=sha256:43caefc0eb119c8152e573a028c78c8b8a0497da20055358104c273fe2b98eac \
-    https://cdn.jsdelivr.net/npm/mirador@3.4.3/dist/mirador.min.js \
-    /mirador/mirador.min.js
-ADD --checksum=sha256:82467ff9dff8e95451472ff5c9d6206072b575748436af88585f5d26d4bdb8ab \
-    https://cdn.jsdelivr.net/npm/mirador@3.4.3/dist/mirador.min.js.map \
-    /mirador/mirador.min.js.map
-
 ADD https://github.com/ruven/iipmooviewer/archive/86bfcc698c969ce290d7c4f5a586483458d1f752.tar.gz /iipmooviewer.tar.gz
 RUN <<EOF
 tar -xzf /iipmooviewer.tar.gz
@@ -58,6 +51,13 @@ RUN unzip /roboto.zip -d /roboto
 ADD https://iptoasn.com/data/ip2country-v4.tsv.gz /ip2country/ip2country-v4.tsv.gz
 ADD https://iptoasn.com/data/ip2country-v6.tsv.gz /ip2country/ip2country-v6.tsv.gz
 RUN gunzip /ip2country/ip2country-v4.tsv.gz /ip2country/ip2country-v6.tsv.gz
+
+FROM node:18-bookworm-slim AS mirador-builder
+WORKDIR /mirador-build
+COPY build/mirador-build/package.json build/mirador-build/package-lock.json ./
+RUN npm ci --no-audit --no-fund
+COPY build/mirador-build/ ./
+RUN npm run build
 
 FROM ubuntu:jammy-20260210.1
 ENV DEBIAN_FRONTEND=noninteractive
@@ -104,7 +104,7 @@ COPY --from=builder /swagger-ui-5.32.4/dist/* /usr/local/phaidra/phaidra-api/pub
 COPY --from=builder /video-js/video.min.js /video-js/video-js.min.css /usr/local/phaidra/phaidra-api/public/video-js/
 COPY --from=builder /threejs/three.min.js /threejs/OrbitControls.js /threejs/GLTFLoader.js /usr/local/phaidra/phaidra-api/public/threejs/build/
 COPY --from=builder /replayweb/ui.js /replayweb/sw.js /usr/local/phaidra/phaidra-api/public/replayweb/
-COPY --from=builder /mirador/mirador.min.js /mirador/mirador.min.js.map /usr/local/phaidra/phaidra-api/public/mirador/
+COPY --from=mirador-builder /mirador-build/dist/mirador.min.js /usr/local/phaidra/phaidra-api/public/mirador/mirador.min.js
 COPY --from=builder \
     /iipmooviewer-86bfcc698c969ce290d7c4f5a586483458d1f752/js/iipmooviewer-2.0-min.js \
     /iipmooviewer-86bfcc698c969ce290d7c4f5a586483458d1f752/js/mootools-core-1.6.0-compressed.js \

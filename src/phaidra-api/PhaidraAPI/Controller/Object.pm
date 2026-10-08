@@ -665,12 +665,13 @@ sub preview {
 
       my $page = $self->param('page');
       $page = looks_like_number($page) ? $page : 1;
-      $self->stash(page     => $page);
-      $self->stash(baseurl  => $self->config->{baseurl});
-      $self->stash(scheme   => $self->config->{scheme});
-      $self->stash(basepath => $self->config->{basepath});
-      $self->stash(pid      => $pid);
-      $self->stash(lang     => $lang);
+      $self->stash(page             => $page);
+      $self->stash(baseurl          => $self->config->{baseurl});
+      $self->stash(scheme           => $self->config->{scheme});
+      $self->stash(basepath         => $self->config->{basepath});
+      $self->stash(pid              => $pid);
+      $self->stash(lang             => $lang);
+      $self->stash(enableimagetools => ($modelres && $modelres->{disableimagetools}) ? 0 : 1);
 
       my $u_model = PhaidraAPI::Model::Util->new;
       $u_model->track_action($self, $pid, 'preview');

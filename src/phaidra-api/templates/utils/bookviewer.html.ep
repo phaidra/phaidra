@@ -42,6 +42,7 @@
      var miradorInstance = Mirador.viewer({
        id: 'mirador',
        windows: [{
+         imageToolsEnabled: <%= stash('enableimagetools') ? 'true' : 'false' %>,
          manifestId: 'https://<%= $baseurl %>/<%= $basepath %>/object/<%= $pid %>/iiifmanifest',
          canvasId: 'https://<%= $baseurl %>/<%= $basepath %>/iiif/<%= $pid %>/canvas/<%= $page %>'
        }],
