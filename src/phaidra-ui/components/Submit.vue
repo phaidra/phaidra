@@ -56,7 +56,7 @@
               color="primary"
               variant="elevated"
               prepend-icon="mdi-school"
-              :href="'https://uscholar.univie.ac.at/login'"
+              :href="'https://' + instanceconfig.irbaseurl + '/login'"
             >
               {{ $t("Upload publication (via u:scholar)") }}
             </v-btn>
