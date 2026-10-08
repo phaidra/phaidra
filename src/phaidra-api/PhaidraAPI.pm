@@ -331,6 +331,7 @@ sub startup {
       unless ($self->res->headers->header('Access-Control-Allow-Origin')) {
         if ($self->req->headers->header('Origin')) {
           $self->res->headers->add('Access-Control-Allow-Origin' => $self->req->headers->header('Origin'));
+          $self->res->headers->add('Vary' => 'Origin');
         }
         else {
           $self->res->headers->add('Access-Control-Allow-Origin' => $config->{authentication}->{'Access-Control-Allow-Origin'});
