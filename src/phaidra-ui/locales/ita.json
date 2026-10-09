@@ -1573,6 +1573,8 @@
   "Edit user": "Modifica utente",
   "Delete user": "Elimina utente",
   "Delete user {username}?": "Eliminare l’utente {username}?",
+  "Send a password reset link to {username}?": "Inviare un link per reimpostare la password a {username}?",
+  "Password reset link sent successfully": "Il link per reimpostare la password è stato inviato correttamente.",
   "Active": "Attivo",
   "Inactive": "Inattivo",
   "Last login": "Ultimo accesso",

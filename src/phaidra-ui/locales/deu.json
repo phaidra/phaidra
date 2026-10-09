@@ -1481,6 +1481,8 @@
     "Edit user": "Benutzer:in bearbeiten",
     "Delete user": "Benutzer:in löschen",
     "Delete user {username}?": "Benutzer:in {username} löschen?",
+    "Send a password reset link to {username}?": "Soll ein Link zum Zurücksetzen des Passworts an {username} gesendet werden?",
+    "Password reset link sent successfully": "Der Link zum Zurücksetzen des Passworts wurde erfolgreich gesendet.",
     "Active": "Aktiv",
     "Inactive": "Inaktiv",
     "Last login": "Letzte Anmeldung",

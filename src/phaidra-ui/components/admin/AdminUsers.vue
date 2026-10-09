@@ -46,7 +46,7 @@
           </v-tooltip>
           <v-tooltip location="bottom">
             <template #activator="{ props }">
-              <v-icon-btn v-bind="props" icon="mdi-email-sync" color="primary" :aria-label="$t('Send password reset')" @click="sendReset(item)" />
+              <v-icon-btn v-bind="props" icon="mdi-email-sync" color="primary" :aria-label="$t('Send password reset')" @click="confirmSendReset(item)" />
             </template>
             <span>{{ $t('Send password reset') }}</span>
           </v-tooltip>
@@ -135,6 +135,20 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
+
+  <v-dialog v-model="resetDialog" max-width="500">
+    <v-card>
+      <v-card-title class="text-title-large font-weight-light text-white">{{ $t('Send password reset') }}</v-card-title>
+      <v-card-text class="pt-6">
+        {{ $t('Send a password reset link to {username}?', { username: selectedUser?.username }) }}
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn variant="outlined" @click="resetDialog = false">{{ $t('Cancel') }}</v-btn>
+        <v-btn color="primary" :loading="saving" @click="sendReset">{{ $t('Send password reset') }}</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
@@ -167,6 +181,7 @@ export default {
       creating: false,
       editDialog: false,
       deleteDialog: false,
+      resetDialog: false,
       selectedUser: null,
       form: emptyUser()
     }
@@ -285,6 +300,10 @@ export default {
       this.selectedUser = user
       this.deleteDialog = true
     },
+    confirmSendReset(user) {
+      this.selectedUser = user
+      this.resetDialog = true
+    },
     async deleteUser() {
       this.saving = true
       try {
@@ -298,12 +317,18 @@ export default {
         this.saving = false
       }
     },
-    async sendReset(user) {
+    async sendReset() {
+      if (!this.selectedUser) return
+      this.saving = true
       try {
-        const response = await this.request({ method: 'POST', url: '/admin/users/' + encodeURIComponent(user.username) + '/password-reset' })
+        const response = await this.request({ method: 'POST', url: '/admin/users/' + encodeURIComponent(this.selectedUser.username) + '/password-reset' })
         this.alerts(response)
+        useRootStore().setAlerts([{ type: 'success', msg: this.$t('Password reset link sent successfully') }])
+        this.resetDialog = false
       } catch (error) {
         this.errorAlert(error)
+      } finally {
+        this.saving = false
       }
     }
   }

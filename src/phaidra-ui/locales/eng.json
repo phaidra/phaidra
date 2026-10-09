@@ -16,6 +16,8 @@
     "Last modified": "Last modified",
     "Updated": "Updated",
     "Actions": "Actions",
+    "Send a password reset link to {username}?": "Send a password reset link to {username}?",
+    "Password reset link sent successfully": "Password reset link sent successfully",
     "History": "History",
     "No history available": "No history available",
     "Preview": "Preview",
