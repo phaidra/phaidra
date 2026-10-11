@@ -1822,6 +1822,7 @@ These fields are meant to support system logic and are not relevant to the user.
 | ÖFOS 2012 | oefos2012 | https://vocabs.acdh.oeaw.ac.at/oefosdisciplines/ |
 | Portland Common Data Model | pcdm |	http://pcdm.org/models# |
 | RDA Unconstrained | rdau | http://rdaregistry.info/Elements/u/ |
+| RDA Agent | rdaa | http://rdaregistry.info/Elements/a/ |
 | The RDF Concepts Vocabulary (RDF) | rdf | http://www.w3.org/1999/02/22-rdf-syntax-ns# |
 | RDF Schema 1.1 | rdfs | http://www.w3.org/2000/01/rdf-schema# |
 | MARC Code List for Relators | relators | http://id.loc.gov/vocabulary/relators/ |
