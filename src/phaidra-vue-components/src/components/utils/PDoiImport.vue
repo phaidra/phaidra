@@ -43,7 +43,13 @@
           >{{ $t("Import") }}</v-btn
         >
         <v-btn
-          :loading="loading"
+          v-if="loading"
+          class="mx-2"
+          color="error"
+          @click="abortDoiImport()"
+          >{{ $t("Abort") }}</v-btn
+        >
+        <v-btn
           :disabled="loading"
           class="mx-2"
           theme="dark"
@@ -344,6 +350,7 @@ export default {
       },
       doiImportErrors: [],
       loading: false,
+      doiRequestController: null,
       doiImportInput: null,
       doiImportData: null,
       journalSearchQuery: null,
@@ -648,7 +655,13 @@ export default {
       }
       this.$emit('load-form', this.form)
     },
+    abortDoiImport: function () {
+      this.doiRequestController?.abort()
+      this.doiRequestController = null
+      this.loading = false
+    },
     resetDOIImport: async function () {
+      this.abortDoiImport()
       this.doiImportInput = null;
       this.doiImportData = null;
       this.doiImportErrors = [];
@@ -659,6 +672,8 @@ export default {
       await this.resetForm(this, null);
     },
     importDOI: async function () {
+      const requestController = new AbortController()
+      this.doiRequestController = requestController
       this.loading = true;
       this.doiImportErrors = [];
       this.doiDuplicate = null;
@@ -669,15 +684,16 @@ export default {
         try {
           let doiAgency = null
           try {
-            const agencyResp = await this.$axios.get(`https://api.crossref.org/works/${this.doiToImport}/agency`)
+            const agencyResp = await this.$axios.get(`https://api.crossref.org/works/${this.doiToImport}/agency`, { signal: requestController.signal })
             doiAgency = agencyResp?.data?.message?.agency?.id
           } catch (error) {
+            if (requestController.signal.aborted) return
             console.log('Doi agency error', error)
           }
           if(doiAgency === 'datacite'){
               this.metaProviderName = 'Datacite'
               this.doiImportData = {}
-              const dataciteResp = await this.$axios.get(`https://api.datacite.org/dois/${this.doiToImport}`)
+              const dataciteResp = await this.$axios.get(`https://api.datacite.org/dois/${this.doiToImport}`, { signal: requestController.signal })
               const dataciteData = dataciteResp?.data;
               this.doiImportData = constructDataCite(dataciteData, this)
               await this.applyDoiImportData(this.doiImportData);
@@ -713,6 +729,7 @@ export default {
                 headers: {
                   Accept: this.doi.accept,
                 },
+                signal: requestController.signal,
               }
             );
 
@@ -1013,6 +1030,7 @@ if (crossrefData['issued']['date-parts'][0]) {
             }
           }
         } catch (error) {
+          if (requestController.signal.aborted) return
           console.error(error);
           if (error.response?.status === 404) {
             this.doiImportErrors.push(this.$t("DOI Not Found"));
@@ -1020,7 +1038,10 @@ if (crossrefData['issued']['date-parts'][0]) {
             this.doiImportErrors.push(error.message || this.$t("Unknown error"));
           }
         } finally {
-          this.loading = false;
+          if (this.doiRequestController === requestController) {
+            this.doiRequestController = null
+            this.loading = false
+          }
         }
       }
     },
