@@ -770,6 +770,7 @@ const fields = [
     component: 'p-event',
     name: '',
     nameLanguage: '',
+    number: '',
     place: '',
     identifierType: '',
     identifier: '',

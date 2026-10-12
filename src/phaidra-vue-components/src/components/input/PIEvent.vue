@@ -5,7 +5,7 @@
 
       <v-card variant="outlined" class="mb-8">
         <v-card-title class="text-title-large font-weight-light text-white">
-            <span>{{ $t('Event') }}</span>
+            <span>{{ $t(label || 'Event') }}</span>
             <v-spacer></v-spacer>
             <v-menu open-on-hover bottom offset-y v-if="actions.length">
               <template v-slot:activator="{ props: activatorProps }">
@@ -29,6 +29,7 @@
                     :label="$t('Name')"
                     @update:model-value="$emit('input-name', $event)"
                     :variant="fieldVariant"
+                    :error-messages="nameErrorMessages"
                   ></v-text-field>
                 </v-col>
                 <v-col cols="2">
@@ -42,7 +43,7 @@
 
               </v-row>
 
-              <v-row >
+              <v-row v-if="!hideDescription">
                 <v-col cols="10">
                   <v-text-field
                     :model-value="description"
@@ -60,6 +61,17 @@
                   <select-language ref="langdialogdescription" @language-selected="$emit('input-description-language', $event)"></select-language>
                 </v-col>
 
+              </v-row>
+
+              <v-row>
+                <v-col cols="12">
+                  <v-text-field
+                    :model-value="number"
+                    :label="$t('Number of conference')"
+                    @update:model-value="$emit('input-number', $event)"
+                    :variant="fieldVariant"
+                  ></v-text-field>
+                </v-col>
               </v-row>
 
               <v-row>
@@ -204,6 +216,13 @@ export default {
   props: {
     name: String,
     nameLanguage: String,
+    nameErrorMessages: Array,
+    number: String,
+    label: String,
+    hideDescription: {
+      type: Boolean,
+      default: false
+    },
     place: String,
     placeLabel: String,
     identifierType: String,

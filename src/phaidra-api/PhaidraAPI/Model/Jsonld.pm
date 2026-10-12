@@ -31,6 +31,7 @@ our $namespaces = {
   oefos2012    => {label => "ÖFOS 2012",                                                      IRI => "https://vocabs.acdh.oeaw.ac.at/oefosdisciplines/"},
   pcdm         => {label => "Portland Common Data Model",                                     IRI => "http://pcdm.org/models#"},
   rdau         => {label => "RDA Unconstrained",                                              IRI => "http://rdaregistry.info/Elements/u/"},
+  rdaa         => {label => "RDA Agent",                                                      IRI => "http://rdaregistry.info/Elements/a/"},
   rdf          => {label => "The RDF Concepts Vocabulary (RDF)",                              IRI => "http://www.w3.org/1999/02/22-rdf-syntax-ns#"},
   rdfs         => {label => "RDF Schema 1.1",                                                 IRI => "http://www.w3.org/2000/01/rdf-schema#"},
   relators     => {label => "MARC Code List for Relators",                                    IRI => "http://id.loc.gov/vocabulary/relators/"},

@@ -728,6 +728,9 @@
         "rdfs:comment": {
           "$ref": "#/$defs/language-tagged-values"
         },
+        "rdaa:P50019": {
+          "$ref": "#/$defs/language-tagged-values"
+        },
         "ebucore:hasEventRelatedLocation": {
           "$ref": "#/$defs/spatial"
         },

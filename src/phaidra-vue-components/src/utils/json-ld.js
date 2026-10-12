@@ -1050,6 +1050,11 @@ export default {
                     f.descriptionLanguage = c['@language'] ? c['@language'] : 'eng'
                   }
                 }
+                if (obj['rdaa:P50019']) {
+                  for (let n of obj['rdaa:P50019']) {
+                    f.number = n['@value'] || n
+                  }
+                }
                 if (obj['ebucore:eventStartDateTime']) {
                   for (let sd of obj['ebucore:eventStartDateTime']) {
                     f.dateFrom = sd
@@ -2017,6 +2022,13 @@ export default {
       if (e.descriptionLanguage) {
         h['rdfs:comment'][0]['@language'] = e.descriptionLanguage
       }
+    }
+    if (e.number) {
+      h['rdaa:P50019'] = [
+        {
+          '@value': e.number
+        }
+      ]
     }
     if (e.dateFrom) {
       h['ebucore:eventStartDateTime'] = [ e.dateFrom ]

@@ -594,6 +594,7 @@
                               v-bind="f"
                               v-on:input-name="f.name=$event"
                               v-on:input-name-language="setSelected(f, 'nameLanguage', $event)"
+                              v-on:input-number="f.number=$event"
                               v-on:input-description="f.description=$event"
                               v-on:input-description-language="setSelected(f, 'descriptionLanguage', $event)"
                               v-on:input-identifier-type="setSelected(f, 'identifierType', $event)"
