@@ -590,6 +590,9 @@ sub startup {
   $authz->post('admin/users/:username')                                      ->to('users#save', action_id => 'admin_users_write');
   $authz->post('admin/users/:username/delete')                               ->to('users#delete', action_id => 'admin_users_write');
   $authz->post('admin/users/:username/password-reset')                       ->to('users#send_reset', action_id => 'admin_users_write');
+  $authz->get('admin/termsofuse')                                              ->to('termsofuse#list', action_id => 'admin_termsofuse_read');
+  $authz->post('admin/termsofuse')                                             ->to('termsofuse#create', action_id => 'admin_termsofuse_write');
+  $authz->post('admin/termsofuse/:tid')                                        ->to('termsofuse#update', action_id => 'admin_termsofuse_write');
 
   $authz->get('groups')                                                    ->to('groups#get_users_groups', action_id => 'group_read');
   $authz->get('group/:gid')                                                ->to('groups#get_group', action_id => 'group_read');

@@ -79,4 +79,45 @@ sub getagreed {
   $self->render(json => $res, status => $res->{status});
 }
 
+sub list {
+  my $self = shift;
+
+  my $termsofuse_model = PhaidraAPI::Model::Termsofuse->new;
+  my $res              = $termsofuse_model->list($self);
+
+  $self->render(json => $res, status => $res->{status});
+}
+
+sub create {
+  my $self = shift;
+
+  my $data = $self->req->json;
+
+  my $termsofuse_model = PhaidraAPI::Model::Termsofuse->new;
+  my $res              = $termsofuse_model->create($self, $data);
+
+  $self->render(json => $res, status => $res->{status});
+}
+
+sub update {
+  my $self = shift;
+
+  my $tid = $self->stash('tid');
+  unless ($tid) {
+    $self->render(json => {alerts => [{type => 'error', msg => 'No TID provided'}]}, status => 400);
+    return;
+  }
+  unless (looks_like_number($tid)) {
+    $self->render(json => {alerts => [{type => 'error', msg => 'Invalid TID provided'}]}, status => 400);
+    return;
+  }
+
+  my $data = $self->req->json;
+
+  my $termsofuse_model = PhaidraAPI::Model::Termsofuse->new;
+  my $res              = $termsofuse_model->update($self, $tid, $data);
+
+  $self->render(json => $res, status => $res->{status});
+}
+
 1;

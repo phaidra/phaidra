@@ -128,6 +128,7 @@ sub _legacy_action_fallback {
     admin_imageserver_process admin_tikaserver_process admin_streaming_process
     admin_objects_modify_bulk admin_objects_delete_bulk
     admin_templates_read admin_templates_write admin_users_read admin_users_write
+    admin_termsofuse_read admin_termsofuse_write
     admin_ir_embargocheck
   );
 
