@@ -84,6 +84,7 @@ sub create {
     $sth->bind_columns(undef, \$versionexists) or $c->app->log->error($c->app->db_metadata->dbh->errstr);
     $sth->fetch();
     $sth->finish();
+
     unless ($versionexists) {
       my $errmsg = 'Unknown version provided';
       $c->app->log->error($errmsg);
@@ -101,6 +102,7 @@ sub create {
       $sth->bind_columns(undef, \$isocodeexists) or $c->app->log->error($c->app->db_metadata->dbh->errstr);
       $sth->fetch();
       $sth->finish();
+
       if ($isocodeexists) {
         my $errmsg = "Language $isocode already exists for version $version";
         $c->app->log->error($errmsg);
@@ -141,6 +143,7 @@ sub create {
     $sth->fetch();
     $sth->finish();
     my $tid;
+
     if ($latesttid) {
       $tid = $latesttid + 1;
     }
