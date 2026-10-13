@@ -7,7 +7,9 @@
           <v-card-title class="text-title-large font-weight-light text-white">{{
             $t("Terms of use")
           }}</v-card-title>
-          <v-card-text class="text-body-1 mt-4" style="white-space: pre-wrap">{{ tou }}</v-card-text>
+          <v-card-text class="text-body-1 mt-4">
+            <runtimetemplate v-if="tou" :template="tou" />
+          </v-card-text>
         </v-card>
       </v-col>
     </v-row>
