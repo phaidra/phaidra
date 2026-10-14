@@ -37,17 +37,7 @@ export default {
       window.location.href = '/'
     },
     async login () {
-      let returnto = this.$route.query.returnto
-      if (typeof returnto !== 'string' || !returnto.startsWith('/')) {
-        try {
-          returnto = localStorage.getItem('redirect')
-        } catch (_) {}
-      }
-      let url = '/login?consentversion=' + this.touVersion
-      if (typeof returnto === 'string' && returnto.startsWith('/')) {
-        url += '&returnto=' + encodeURIComponent(returnto)
-      }
-      window.location.href = url
+      window.location.href = '/login?consentversion=' + this.touVersion
     }
   },
   created: async function () {
