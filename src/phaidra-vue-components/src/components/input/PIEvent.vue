@@ -84,9 +84,8 @@
                   ></v-text-field>
                 </v-col>
                 <v-col cols="12" :md="4">
-                  <template>
-                    <v-text-field
-                      :model-value="dateFrom"
+                  <v-text-field
+                    :model-value="dateFrom"
                       @update:model-value="$emit('input-date-from', $event)"
                       :label="$t('Date from')"
                       :rules="[validationrules.date]"
@@ -115,13 +114,11 @@
                           ></v-date-picker>
                         </v-menu>
                       </template>
-                    </v-text-field>
-                  </template>
+                  </v-text-field>
                 </v-col>
                 <v-col cols="12" :md="4">
-                  <template>
-                    <v-text-field
-                      :model-value="dateTo"
+                  <v-text-field
+                    :model-value="dateTo"
                       @update:model-value="$emit('input-date-to', $event)"
                       :label="$t('Date to')"
                       :rules="[validationrules.date]"
@@ -150,8 +147,7 @@
                           ></v-date-picker>
                         </v-menu>
                       </template>
-                    </v-text-field>
-                  </template>
+                  </v-text-field>
                 </v-col>
               </v-row>
             </v-col>
