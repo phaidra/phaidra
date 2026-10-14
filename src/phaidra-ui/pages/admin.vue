@@ -50,6 +50,7 @@
             </v-list-group>
           </v-list-group>
           <v-list-item :title="$t('Users')" :active="activetab === 'users'" color="primary" @click="activetab = 'users'" />
+          <v-list-item :title="$t('Terms of use')" :active="activetab === 'termsofuse'" color="primary" @click="activetab = 'termsofuse'" />
           <v-list-item :title="$t('Manage Phaidra')" :active="activetab === 'manage'" color="primary" @click="activetab = 'manage'" />
           <v-list-item :title="$t('Statistics')" :active="activetab === 'stats'" color="primary" @click="activetab = 'stats'" />
         </v-list>
@@ -1382,6 +1383,9 @@
           <v-window-item value="users" class="pa-4">
             <AdminUsers />
           </v-window-item>
+          <v-window-item value="termsofuse" class="pa-4">
+            <AdminTermsOfUse />
+          </v-window-item>
           <v-window-item value="manage">
             <v-container>
               <v-row>
@@ -1434,12 +1438,13 @@ import { useRootStore } from '~/stores/root'
 import FaviconMixin from '../mixins/favicon'
 import PRepostat from '../components/Repostat.vue';
 import AdminUsers from '../components/admin/AdminUsers.vue';
+import AdminTermsOfUse from '../components/admin/AdminTermsOfUse.vue';
 import { config, useDocumentTitle } from "../mixins/config";
 import { encodeUtf8ToBase64 } from '@/utils/encode-base64'
 
 export default {
   mixins: [FaviconMixin, config],
-  components: { PRepostat, AdminUsers },
+  components: { PRepostat, AdminUsers, AdminTermsOfUse },
   setup() {
     const nuxtApp = useNuxtApp()
     const documentTitle = useDocumentTitle()

@@ -26,6 +26,8 @@ admin_actions := {
 	"admin_ir_embargocheck",
 	"admin_users_read",
 	"admin_users_write",
+	"admin_termsofuse_read",
+	"admin_termsofuse_write",
 }
 
 # Former $ir_admin bridge endpoints.

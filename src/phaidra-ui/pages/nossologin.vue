@@ -4,7 +4,9 @@
       <v-col>
         <v-card tile>
           <v-card-title class="text-title-large font-weight-light text-white">{{ $t('Terms of use') }}</v-card-title>
-          <v-card-text style="max-height: 500px; white-space: pre-wrap;" class="overflow-y-auto">{{ tou }}</v-card-text>
+          <v-card-text style="max-height: 500px;" class="overflow-y-auto">
+            <runtimetemplate v-if="tou" :template="tou" />
+          </v-card-text>
           <v-divider class="mt-5"></v-divider>
           <v-card-actions>
             <v-checkbox v-model="touCheckbox" @click="agree" :disabled="loading" :loading="loading" color="primary" :label="$t('I agree to the terms of use.')"></v-checkbox>
