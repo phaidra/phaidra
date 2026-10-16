@@ -2823,7 +2823,7 @@ export default {
       }
     },
     downloadable: function () {
-      return this.objectInfo.datastreams && this.objectInfo.datastreams.includes("OCTETS")
+      return this.objectInfo.datastreams && this.objectInfo.datastreams.includes("OCTETS") && this.objectInfo.cmodel !== "Resource"
     },
     showIiifManifestLink: function () {
       if (!this.objectInfo || !this.objectInfo.readrights) {
