@@ -44,6 +44,7 @@ export default {
         params.set('client', 'ir')
       }
       const returnto = this.$route.query.returnto
+      // harden a bit against open redirects
       if (typeof returnto === 'string' && returnto.startsWith('/') && !returnto.startsWith('//') && !/[\\\u0000-\u001f\u007f]/.test(returnto)) {
         params.set('returnto', returnto)
       }
