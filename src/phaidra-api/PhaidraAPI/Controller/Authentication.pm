@@ -5,7 +5,7 @@ use warnings;
 use v5.10;
 use Mojo::ByteStream qw(b);
 use Mojo::URL;
-use Mojo::Util qw(xml_escape);
+use Mojo::Util   qw(xml_escape);
 use POSIX        qw(strftime);
 use Scalar::Util qw(looks_like_number);
 use base 'Mojolicious::Controller';
@@ -16,15 +16,15 @@ use PhaidraAPI::Model::Directory;
 
 sub _safe_returnto {
   my $returnto = shift // '';
-  return '' if ref($returnto) || $returnto =~ /[\\\x00-\x1f\x7f]/;
-  return $returnto if $returnto =~ m{\A/(?!/)};
+  return ''        if ref($returnto) || $returnto =~ /[\\\x00-\x1f\x7f]/;
+  return $returnto if $returnto                   =~ m{\A/(?!/)};
   return '';
 }
 
 sub _shib_redirect_context {
   my $self = shift;
 
-  my $client   = $self->param('client') // '';
+  my $client   = $self->param('client')   // '';
   my $returnto = $self->param('returnto') // '';
   my $target   = $self->param('target');
   if ($target) {
@@ -489,8 +489,8 @@ sub signin_shib {
       }
 
       my $consent_url = Mojo::URL->new($self->app->config->{authentication}->{shibboleth}->{frontendconsenturl});
-      $consent_url->query->param(client => $client)       if $client;
-      $consent_url->query->param(returnto => $returnto)   if $returnto;
+      $consent_url->query->param(client   => $client)   if $client;
+      $consent_url->query->param(returnto => $returnto) if $returnto;
       $self->app->log->debug("redirecting to " . $consent_url);
       $self->redirect_to($consent_url);
       return;
@@ -622,7 +622,8 @@ sub signin_shib {
   }
   else {
     my $frontend_url = Mojo::URL->new($self->app->config->{authentication}->{shibboleth}->{frontendloginurl});
-    $redirecturl = $returnto
+    $redirecturl
+      = $returnto
       ? Mojo::URL->new($returnto)->base($frontend_url)->to_abs
       : $frontend_url;
   }
@@ -631,7 +632,7 @@ sub signin_shib {
 
   # 302 would set, but not immediately send strict cookies, so we need to send 200 and create a client side redirect via html
   my $escaped_redirecturl = xml_escape($redirecturl->to_string);
-  my $html = '<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="refresh" content="0;URL=\'' . $escaped_redirecturl . '\'" /></head><body><p>Redirecting...</p></body></html>';
+  my $html                = '<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="refresh" content="0;URL=\'' . $escaped_redirecturl . '\'" /></head><body><p>Redirecting...</p></body></html>';
 
   # set format explicitly because the stash value 'format' seems overwritten when saving consent (so application/json gets back)
   $self->render(text => $html, format => 'html', status => 200);
