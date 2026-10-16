@@ -64,7 +64,7 @@ do
     then
         sleep 10
     else
-        JOB_ID=$(jq -r '._id."$oid" // ._id' <<<"$JOB")
+        JOB_ID=$(jq -r '._id | if type == "object" then .["$oid"] else . end' <<<"$JOB")
         PID=$(jq -r '.pid' <<<"$JOB")
         ORIGINAL_FILE=$(jq -r '.path' <<<"$JOB")
         printf "%s -- uploading.\n" "$PID"

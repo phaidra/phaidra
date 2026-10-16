@@ -359,12 +359,14 @@ sub _create_imageserver_job_if_not_exists {
 }
 
 sub delete_hook {
-  my ($self, $c, $pid) = @_;
+  my ($self, $c, $pid, $cmodel) = @_;
   my $res = {alerts => [], status => 200};
 
-  my $search_model = PhaidraAPI::Model::Search->new;
-  my $res_cmodel   = $search_model->get_cmodel($c, $pid);
-  $c->app->log->debug("res_cmodel\n" . $c->app->dumper($res_cmodel));
+  unless (defined $cmodel) {
+    my $search_model = PhaidraAPI::Model::Search->new;
+    my $res_cmodel   = $search_model->get_cmodel($c, $pid);
+    $cmodel = $res_cmodel->{cmodel};
+  }
 
   my %valid_models = (
     'Picture'     => 'libvips',
@@ -374,12 +376,12 @@ sub delete_hook {
     'PDFDocument' => 'tika'
   );
 
-  if (defined $res_cmodel->{cmodel} && exists $valid_models{$res_cmodel->{cmodel}}) {
-    my $agent = $valid_models{$res_cmodel->{cmodel}};
-    my $find  = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid});
+  if (defined $cmodel && exists $valid_models{$cmodel}) {
+    my $agent = $valid_models{$cmodel};
+    my $find  = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => $agent});
 
     if ($find && defined $find->{status}) {
-      $c->app->log->info("delete object hook for cmodel $res_cmodel->{cmodel} pid[$pid] : Current streaming job status[$find->{status}]");
+      $c->app->log->info("delete object hook for cmodel $cmodel pid[$pid] : Current streaming job status[$find->{status}]");
 
       if ($find->{status} eq "TO_DELETE" or $find->{status} eq "DEL_REQUESTED") {
         $c->app->log->info("Delete already requested. Noop.");

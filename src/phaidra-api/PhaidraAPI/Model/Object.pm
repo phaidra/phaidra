@@ -420,6 +420,9 @@ sub delete {
 
   my $res = {alerts => [], status => 200};
 
+  my $search_model = PhaidraAPI::Model::Search->new;
+  my $cmodelr      = $search_model->get_cmodel($c, $pid);
+
   my $fedora_model = PhaidraAPI::Model::Fedora->new;
   my $delete_res   = $fedora_model->delete($c, $pid);
   if ($delete_res->{status} ne 200) {
@@ -437,7 +440,7 @@ sub delete {
   }
 
   my $hooks_model = PhaidraAPI::Model::Hooks->new;
-  my $hr          = $hooks_model->delete_hook($c, $pid);
+  my $hr          = $hooks_model->delete_hook($c, $pid, $cmodelr->{cmodel});
   push @{$res->{alerts}}, @{$hr->{alerts}} if scalar @{$hr->{alerts}} > 0;
   $res->{status} = $hr->{status};
 

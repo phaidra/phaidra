@@ -133,7 +133,7 @@ function process_job {
     local job_json="$1"
     local job_id pid oc_mpid workfile media_json track uri mimetype flavor filename ext
 
-    job_id=$(jq -r '._id."$oid" // ._id' <<<"$job_json")
+    job_id=$(jq -r '._id | if type == "object" then .["$oid"] else . end' <<<"$job_json")
     pid=$(jq -r '.pid' <<<"$job_json")
     oc_mpid=$(jq -r '.oc_mpid' <<<"$job_json")
 
