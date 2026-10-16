@@ -39,12 +39,20 @@ export default {
       window.location.href = '/'
     },
     async login () {
-      window.location.href = '/login?consentversion=' + this.touVersion
+      const params = new URLSearchParams({ consentversion: this.touVersion })
+      if (this.$route.query.client === 'ir') {
+        params.set('client', 'ir')
+      }
+      const returnto = this.$route.query.returnto
+      if (typeof returnto === 'string' && returnto.startsWith('/') && !returnto.startsWith('//') && !/[\\\u0000-\u001f\u007f]/.test(returnto)) {
+        params.set('returnto', returnto)
+      }
+      window.location.href = '/login?' + params.toString()
     }
   },
   created: async function () {
     const returnto = this.$route.query.returnto
-    if (typeof returnto === 'string' && returnto.startsWith('/')) {
+    if (this.$route.query.client !== 'ir' && typeof returnto === 'string' && returnto.startsWith('/') && !returnto.startsWith('//') && !/[\\\u0000-\u001f\u007f]/.test(returnto)) {
       try {
         localStorage.setItem('redirect', returnto)
       } catch (_) {}

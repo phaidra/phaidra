@@ -5,6 +5,7 @@ use warnings;
 use v5.10;
 use Mojo::ByteStream qw(b);
 use Mojo::URL;
+use Mojo::Util qw(xml_escape);
 use POSIX        qw(strftime);
 use Scalar::Util qw(looks_like_number);
 use base 'Mojolicious::Controller';
@@ -12,6 +13,47 @@ use PhaidraAPI::Model::Object;
 use PhaidraAPI::Model::Termsofuse;
 use PhaidraAPI::Model::Config;
 use PhaidraAPI::Model::Directory;
+
+sub _safe_returnto {
+  my $returnto = shift // '';
+  return '' if ref($returnto) || $returnto =~ /[\\\x00-\x1f\x7f]/;
+  return $returnto if $returnto =~ m{\A/(?!/)};
+  return '';
+}
+
+sub _shib_redirect_context {
+  my $self = shift;
+
+  my $client   = $self->param('client') // '';
+  my $returnto = $self->param('returnto') // '';
+  my $target   = $self->param('target');
+  if ($target) {
+    my $target_url = Mojo::URL->new($target);
+    $client   = $target_url->query->param('client')   // $client;
+    $returnto = $target_url->query->param('returnto') // $returnto;
+  }
+
+  return ($client, _safe_returnto($returnto));
+}
+
+sub _ir_callback_url {
+  my $self = shift;
+
+  my $confmodel = PhaidraAPI::Model::Config->new;
+  my $pubconfig = $confmodel->get_public_config($self) || {};
+  my $baseurl   = $pubconfig->{irbaseurl} // '';
+  $baseurl =~ s/^\s+|\s+$//g;
+  return unless length($baseurl);
+
+  $baseurl = "https://$baseurl" unless $baseurl =~ m{\A[a-z][a-z0-9+.-]*://}i;
+  my $url = Mojo::URL->new($baseurl);
+  return unless ($url->scheme // '') eq 'https' && $url->host;
+  return if $url->userinfo || $url->fragment || length($url->query->to_string);
+  return if length($url->path->to_string) && $url->path->to_string ne '/';
+
+  $url->path('/auth/shibboleth');
+  return $url;
+}
 
 sub extract_credentials {
   my $self = shift;
@@ -436,10 +478,19 @@ sub signin_shib {
     my $termsres         = $termsofuse_model->getagreed($self, $username);
     unless ($termsres->{agreed}) {
       $self->app->log->info("Authentication pending: remote user[$username] must agree to the terms of use");
+      my ($client, $returnto) = _shib_redirect_context($self);
+      if (length($client) && $client ne 'ir') {
+        $self->render(json => {status => 400, alerts => [{type => 'error', msg => 'Unknown login client'}]}, status => 400);
+        return;
+      }
+      if ($client eq 'ir' && !_ir_callback_url($self)) {
+        $self->render(json => {status => 400, alerts => [{type => 'error', msg => 'Institutional repository login is not configured'}]}, status => 400);
+        return;
+      }
+
       my $consent_url = Mojo::URL->new($self->app->config->{authentication}->{shibboleth}->{frontendconsenturl});
-      my $returnto    = $self->param('returnto') // '';
-      $returnto = '' unless $returnto =~ m{\A/};
-      $consent_url->query->param(returnto => $returnto) if $returnto;
+      $consent_url->query->param(client => $client)       if $client;
+      $consent_url->query->param(returnto => $returnto)   if $returnto;
       $self->app->log->debug("redirecting to " . $consent_url);
       $self->redirect_to($consent_url);
       return;
@@ -554,29 +605,33 @@ sub signin_shib {
     }
   }
 
-  my $redirecturl = $self->app->config->{authentication}->{shibboleth}->{frontendloginurl};
-  $redirecturl =~ s{/\z}{};
-  my $returnto;
+  my ($client, $returnto) = _shib_redirect_context($self);
+  if (length($client) && $client ne 'ir') {
+    $self->render(json => {status => 400, alerts => [{type => 'error', msg => 'Unknown login client'}]}, status => 400);
+    return;
+  }
 
-  my $target = $self->param('target');    # target is used if the user does not have a session at IdP...
-  if ($target) {
-    my $u = Mojo::URL->new($target);
-    $returnto = $u->query->param('returnto');
+  my $redirecturl;
+  if ($client eq 'ir') {
+    $redirecturl = _ir_callback_url($self);
+    unless ($redirecturl) {
+      $self->render(json => {status => 400, alerts => [{type => 'error', msg => 'Institutional repository login is not configured'}]}, status => 400);
+      return;
+    }
+    $redirecturl->query->param(returnto => $returnto) if $returnto;
   }
   else {
-    $returnto = $self->param('returnto');    # otherwise the query params are simply passed...
+    my $frontend_url = Mojo::URL->new($self->app->config->{authentication}->{shibboleth}->{frontendloginurl});
+    $redirecturl = $returnto
+      ? Mojo::URL->new($returnto)->base($frontend_url)->to_abs
+      : $frontend_url;
   }
-
-  # Sanitize to avoid open redirects. Allow only same-site paths.
-  $returnto = '' unless $returnto =~ m{\A/};
-
-  $redirecturl .= $returnto;
 
   $self->app->log->debug("redirecting to $redirecturl");
 
   # 302 would set, but not immediately send strict cookies, so we need to send 200 and create a client side redirect via html
-  #$self->redirect_to($self->app->config->{authentication}->{shibboleth}->{frontendloginurl});
-  my $html = '<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="refresh" content="0;URL=\'' . $redirecturl . '\'" /></head><body><p>Redirectring...</p></body></html>';
+  my $escaped_redirecturl = xml_escape($redirecturl->to_string);
+  my $html = '<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="refresh" content="0;URL=\'' . $escaped_redirecturl . '\'" /></head><body><p>Redirecting...</p></body></html>';
 
   # set format explicitly because the stash value 'format' seems overwritten when saving consent (so application/json gets back)
   $self->render(text => $html, format => 'html', status => 200);
