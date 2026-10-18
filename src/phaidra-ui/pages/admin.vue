@@ -773,6 +773,54 @@
                   </v-col>
                   <v-col cols="6" class="mt-6">{{ $t("The admin of IR and owner of accepted objects.") }}</v-col>
                 </v-row>
+                <v-row>
+                  <v-col>
+                    <v-text-field :label="$t('Title line')" v-model="parsedPublicConfigData.irtitleline" />
+                  </v-col>
+                  <v-col cols="6" class="mt-6">{{ $t('Institutional repository title line.') }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-text-field :label="$t('Phone')" v-model="parsedPublicConfigData.irphone" />
+                  </v-col>
+                  <v-col cols="6" class="mt-6">{{ $t('Institutional repository contact phone number.') }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-text-field :label="$t('Email')" v-model="parsedPublicConfigData.iremail" />
+                  </v-col>
+                  <v-col cols="6" class="mt-6">{{ $t('Institutional repository contact email.') }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-text-field :label="$t('Office contact email')" v-model="parsedPublicConfigData.irofficecontactemail" />
+                  </v-col>
+                  <v-col cols="6" class="mt-6">{{ $t('Institutional repository office contact email.') }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-text-field :label="$t('Office contact phone')" v-model="parsedPublicConfigData.irofficecontactphone" />
+                  </v-col>
+                  <v-col cols="6" class="mt-6">{{ $t('Institutional repository office contact phone number.') }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-text-field :label="$t('Primary color')" v-model="parsedPublicConfigData.irprimary" />
+                  </v-col>
+                  <v-col cols="6" class="mt-6">{{ $t('Institutional repository primary color.') }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-text-field :label="$t('Mandatory field background color')" v-model="parsedPublicConfigData.irmandatorybgcolor" />
+                  </v-col>
+                  <v-col cols="6" class="mt-6">{{ $t('Institutional repository mandatory field background color.') }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-checkbox :label="$t('Enable submit association')" v-model="parsedPublicConfigData.irsubmitassociation" />
+                  </v-col>
+                  <v-col cols="6" class="mt-6">{{ $t('Allow associating submitted objects with an existing object.') }}</v-col>
+                </v-row>
               </v-container>
                     </v-window-item>
                   </v-window>
