@@ -1615,14 +1615,14 @@ export default {
         },
         {
           key: 'irmdcheckemail',
-          title: 'Metadata check email',
+          title: 'IR - Metadata check email',
           hint: 'Template Toolkit variables: [% pid %], [% baseurl %]',
           hasSubject: true,
           hasText: false,
           legacy: null
         },
         {
-          key: 'irembargoendemail',
+          key: 'IR - irembargoendemail',
           title: 'Embargo end email',
           hint: 'Template Toolkit variables: [% pid %], [% baseurl %]',
           hasSubject: true,
