@@ -1622,8 +1622,8 @@ export default {
           legacy: null
         },
         {
-          key: 'IR - irembargoendemail',
-          title: 'Embargo end email',
+          key: 'irembargoendemail',
+          title: 'IR - Embargo end email',
           hint: 'Template Toolkit variables: [% pid %], [% baseurl %]',
           hasSubject: true,
           hasText: false,
