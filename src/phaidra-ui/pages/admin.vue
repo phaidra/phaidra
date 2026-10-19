@@ -819,7 +819,7 @@
                   <v-col>
                     <v-checkbox :label="$t('Enable submit association')" v-model="parsedPublicConfigData.irsubmitassociation" />
                   </v-col>
-                  <v-col cols="6" class="mt-6">{{ $t('Allow associating submitted objects with an existing object.') }}</v-col>
+                  <v-col cols="6" class="mt-6">{{ $t('Allow associating submitted objects with an org unit.') }}</v-col>
                 </v-row>
               </v-container>
                     </v-window-item>
