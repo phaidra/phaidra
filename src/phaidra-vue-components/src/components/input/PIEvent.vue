@@ -29,6 +29,7 @@
                     :label="$t('Name')"
                     @update:model-value="$emit('input-name', $event)"
                     :variant="fieldVariant"
+                    :bg-color="nameBackgroundColor || undefined"
                     :error-messages="nameErrorMessages"
                   ></v-text-field>
                 </v-col>
@@ -90,6 +91,7 @@
                       :label="$t('Date from')"
                       :rules="[validationrules.date]"
                       :variant="fieldVariant"
+                      :bg-color="dateFromBackgroundColor || undefined"
                       :error-messages="dateFromErrorMessages"
                     >
                       <template v-slot:append-inner>
@@ -213,6 +215,7 @@ export default {
     name: String,
     nameLanguage: String,
     nameErrorMessages: Array,
+    nameBackgroundColor: String,
     number: String,
     label: String,
     hideDescription: {
@@ -229,6 +232,7 @@ export default {
     dateFrom: String,
     dateTo: String,
     dateFromErrorMessages: Array,
+    dateFromBackgroundColor: String,
     dateToErrorMessages: Array,
     identifierVocabulary: {
       type: String,
