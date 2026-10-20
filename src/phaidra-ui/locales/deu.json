@@ -1528,5 +1528,6 @@
     "Confirm each keyword with enter, max {max} characters": "Jedes Stichwort mit Enter bestätigen, max. {max} Zeichen",
     "Each keyword must be at most {max} characters.": "Jedes Stichwort darf höchstens {max} Zeichen lang sein.",
     "Keyword max length": "Maximale Stichwortlänge",
-    "Maximum number of characters allowed for each keyword. Default is 50.": "Maximale Zeichenanzahl pro Stichwort. Standard ist 50."
+    "Maximum number of characters allowed for each keyword. Default is 50.": "Maximale Zeichenanzahl pro Stichwort. Standard ist 50.",
+    "Versions": "Versionen"
   }
