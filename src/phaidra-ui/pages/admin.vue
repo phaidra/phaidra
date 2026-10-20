@@ -537,9 +537,6 @@
 
                     <v-window-item value="pub-cms" class="pa-8">
               <v-container>
-                <v-alert type="warning" variant="tonal" density="compact" class="mb-4">
-                  {{ $t('Avoid the template tag in CMS content because it is not supported by runtime compilation.') }}
-                </v-alert>
                 <v-row>
                   <v-col>
                     <v-checkbox
@@ -831,9 +828,8 @@
                   <v-col>
                     <v-textarea
                       :label="$t(field.label)"
-                      :hint="$t('Vue template rendered in u:scholar. Leave empty to use the built-in content.')"
+                      :hint="$t('Vue template rendered in phaidra-ir. Leave empty to use the built-in content.')"
                       persistent-hint
-                      auto-grow
                       v-model="parsedPublicConfigData[field.key]"
                     />
                   </v-col>
@@ -957,7 +953,11 @@
                               :label="$t('SMTP password')"
                               v-model="parsedPrivateConfigData.smtppassword"
                               type="password"
-                              autocomplete="off"
+                              name="smtp-password"
+                              autocomplete="new-password"
+                              data-1p-ignore
+                              data-bwignore="true"
+                              data-lpignore="true"
                             ></v-text-field>
                           </v-col>
                           <v-col cols="6" class="mt-6">{{ $t("Used when PHAIDRA sends emails.") }}</v-col>
@@ -1013,7 +1013,11 @@
                               :label="$t('External LDAP security principal password')"
                               v-model="parsedPrivateConfigData.ldapextprincipalpassword"
                               type="password"
-                              autocomplete="off"
+                              name="ldap-security-principal-password"
+                              autocomplete="new-password"
+                              data-1p-ignore
+                              data-bwignore="true"
+                              data-lpignore="true"
                             ></v-text-field>
                           </v-col>
                           <v-col cols="6" class="mt-6">{{ $t("Password of the security principal") }}</v-col>
@@ -1203,6 +1207,39 @@
                 </v-row>
               </v-container>
                     </v-window-item>
+                    <v-window-item value="priv-apis" class="pa-8">
+                      <v-container>
+                        <v-card>
+                          <v-card-title class="text-title-large font-weight-light text-white">{{ $t('Open Policy Finder') }}</v-card-title>
+                          <v-card-text>
+                            <v-row class="mt-4">
+                              <v-col>
+                                <v-text-field
+                                  :label="$t('API URL')"
+                                  v-model="parsedPrivateConfigData.openpolicyfinderurl"
+                                />
+                              </v-col>
+                              <v-col cols="6" class="mt-6">{{ $t('Jisc Open Policy Finder retrieve endpoint.') }}</v-col>
+                            </v-row>
+                            <v-row>
+                              <v-col>
+                                <v-text-field
+                                  :label="$t('API key')"
+                                  v-model="parsedPrivateConfigData.openpolicyfinderapikey"
+                                  type="password"
+                                  name="open-policy-finder-api-key"
+                                  autocomplete="new-password"
+                                  data-1p-ignore
+                                  data-bwignore="true"
+                                  data-lpignore="true"
+                                />
+                              </v-col>
+                              <v-col cols="6" class="mt-6">{{ $t('Sent to Open Policy Finder in the x-api-key request header.') }}</v-col>
+                            </v-row>
+                          </v-card-text>
+                        </v-card>
+                      </v-container>
+                    </v-window-item>
                     <v-window-item value="priv-email" class="pa-8">
                       <v-container>
                         <v-card
@@ -1310,7 +1347,11 @@
                             :label="$t('SMTP password')"
                             v-model="parsedPrivateConfigData.irsmtppassword"
                             type="password"
-                            autocomplete="off"
+                            name="ir-smtp-password"
+                            autocomplete="new-password"
+                            data-1p-ignore
+                            data-bwignore="true"
+                            data-lpignore="true"
                           ></v-text-field>
                         </v-col>
                         <v-col cols="6" class="mt-6">{{ $t("Used when institutional repository sends emails.") }}</v-col>
@@ -1519,17 +1560,20 @@
         </v-window>
       </v-main>
     </v-layout>
-    <v-row v-if="activetab === 'config'" class="my-2">
-      <v-col>
-        <v-btn color="primary" variant="elevated" class="float-right" :loading="loading" @click="save()">{{ $t('Save') }}</v-btn>
-      </v-col>
-    </v-row>
+    <v-btn
+      v-if="activetab === 'config'"
+      color="primary"
+      variant="elevated"
+      class="config-save-button"
+      :loading="loading"
+      @click="save()"
+    >{{ $t('Save') }}</v-btn>
   </v-container>
 </template>
 
 <script setup>
 definePageMeta({
-  middleware: 'auth'
+  middleware: ['auth', 'admin']
 })
 </script>
 
@@ -1609,15 +1653,19 @@ export default {
       privateNavigationItems: [
         { title: 'General', value: 'priv-general' },
         { title: 'Functionality', value: 'priv-functionality' },
+        { title: 'APIs', value: 'priv-apis' },
         { title: 'Email templates', value: 'priv-email' },
         { title: 'IR', value: 'priv-ir' }
       ],
       irCmsTemplateFields: [
         { key: 'ircmsheader', label: 'Header' },
         { key: 'ircmsfooter', label: 'Footer' },
+        { key: 'ircmsbanner', label: 'Banner' },
         { key: 'ircmshome', label: 'Homepage' },
-        { key: 'ircmssubmitstart', label: 'Submit page step 1' },
+        { key: 'ircmssubmitstart', label: 'Submit page step 1 / start' },
         { key: 'ircmssubmitterms', label: 'Submit page step 2 / terms of use' },
+        { key: 'ircmscontact', label: 'Contact' },
+        { key: 'ircmspolicy', label: 'Policy' },
         { key: 'ircmsimpressum', label: 'Impressum' },
         { key: 'ircmscredits', label: 'Credits' },
         { key: 'ircmsmetadatapolicy', label: 'Metadata policy' },
@@ -1881,6 +1929,7 @@ export default {
           },
           data: httpFormData
         })
+        useRootStore().setAlerts([{ type: 'success', msg: this.$t('Configuration saved successfully') }])
       } catch (error) {
         console.error(error)
       } finally {
@@ -1967,6 +2016,9 @@ export default {
       if (response?.data?.private_config) {
         this.parsedPrivateConfigData = { ...response?.data?.private_config }
       }
+      if (!this.parsedPrivateConfigData.openpolicyfinderurl) {
+        this.parsedPrivateConfigData.openpolicyfinderurl = 'https://api.openpolicyfinder.jisc.ac.uk/retrieve'
+      }
 
       this.normalizeEmailTemplates()
       this.loading = false
@@ -1989,5 +2041,12 @@ export default {
 
 .admin-layout {
   min-height: max(800px, calc(100vh - 96px));
+}
+
+.config-save-button {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1000;
 }
 </style>

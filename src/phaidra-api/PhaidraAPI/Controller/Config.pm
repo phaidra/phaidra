@@ -80,7 +80,7 @@ sub post_private_config {
   for my $key (keys %{$private_config}) {
     if ($private_config->{$key}) {
       if ($key ne '_id') {
-        $self->app->log->info("private_config $key = " . $private_config->{$key});
+        $self->app->log->info("updating private_config key $key");
         $self->mongo->get_collection('config')->update_one({config_type => 'private'}, {'$set' => {$key => $private_config->{$key}}}, {upsert => 1});
       }
     }

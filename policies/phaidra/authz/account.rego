@@ -21,6 +21,7 @@ account_actions := {
 	"termsofuse_agree",
 	"users_search",
 	"ir_allowsubmit",
+	"ir_openpolicyfinder",
 	"ir_submit",
 	"ir_notifications",
 	"feedback",

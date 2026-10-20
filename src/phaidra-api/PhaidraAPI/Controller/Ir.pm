@@ -1250,6 +1250,88 @@ sub puresearch {
   $self->render(json => $res, status => $res->{status});
 }
 
+sub openpolicyfinder {
+  my ($self) = @_;
+
+  my $confmodel  = PhaidraAPI::Model::Config->new;
+  my $privconfig = $confmodel->get_private_config($self);
+  my $endpoint   = $privconfig->{openpolicyfinderurl};
+  my $apikey     = $privconfig->{openpolicyfinderapikey};
+
+  unless ($endpoint && $apikey) {
+    $self->render(json => {alerts => [{type => 'info', msg => 'Open Policy Finder is not configured'}]}, status => 503);
+    return;
+  }
+
+  my $title = $self->param('title') // '';
+  my $issn  = $self->param('issn')  // '';
+  $title =~ s/^\s+|\s+$//g;
+  $issn  =~ s/^\s+|\s+$//g;
+
+  unless ($title or $issn) {
+    $self->render(json => {alerts => [{type => 'info', msg => 'A journal title or ISSN is required'}]}, status => 400);
+    return;
+  }
+  if (length($title) > 500 or length($issn) > 32) {
+    $self->render(json => {alerts => [{type => 'info', msg => 'Open Policy Finder query is too long'}]}, status => 400);
+    return;
+  }
+
+  my $limit  = $self->param('limit')  // 10;
+  my $offset = $self->param('offset') // 0;
+  unless ($limit =~ /^\d+$/ and $limit >= 1 and $limit <= 100) {
+    $self->render(json => {alerts => [{type => 'info', msg => 'Limit must be between 1 and 100'}]}, status => 400);
+    return;
+  }
+  unless ($offset =~ /^\d+$/ and $offset <= 10000) {
+    $self->render(json => {alerts => [{type => 'info', msg => 'Offset must be between 0 and 10000'}]}, status => 400);
+    return;
+  }
+
+  my $url    = Mojo::URL->new($endpoint);
+  my $scheme = $url->scheme // '';
+  unless ($url->host and ($scheme eq 'https' or $scheme eq 'http')) {
+    $self->render(json => {alerts => [{type => 'error', msg => 'Open Policy Finder URL is invalid'}]}, status => 500);
+    return;
+  }
+
+  my @filter;
+  push @filter, ['title', 'contains word', $title] if $title;
+  push @filter, ['issn', 'equals', $issn] if $issn;
+  $url->query->param('item-type' => 'publication');
+  $url->query->param(format      => 'Json');
+  $url->query->param(limit       => $limit);
+  $url->query->param(offset      => $offset);
+  $url->query->param(filter      => encode_json(\@filter));
+
+  my $response;
+  eval {
+    $response = $self->ua->get($url => {Accept => 'application/json', 'x-api-key' => $apikey})->result;
+  };
+  if ($@ or !$response) {
+    $self->app->log->error('Open Policy Finder request failed: ' . ($@ || 'no response'));
+    $self->render(json => {alerts => [{type => 'error', msg => 'Open Policy Finder request failed'}]}, status => 502);
+    return;
+  }
+  unless ($response->is_success) {
+    my $error_body = $response->body // '';
+    $error_body =~ s/\s+/ /g;
+    $error_body = substr($error_body, 0, 2000);
+    $self->app->log->error('Open Policy Finder request failed: ' . $response->code . ' ' . $response->message . ' ' . $error_body);
+    $self->render(json => {alerts => [{type => 'error', msg => 'Open Policy Finder request failed'}]}, status => 502);
+    return;
+  }
+
+  my $body = eval {$response->json};
+  unless (!$@ and ref $body eq 'HASH' and ref $body->{items} eq 'ARRAY') {
+    $self->app->log->error('Open Policy Finder returned an invalid response');
+    $self->render(json => {alerts => [{type => 'error', msg => 'Open Policy Finder returned an invalid response'}]}, status => 502);
+    return;
+  }
+
+  $self->render(json => $body, status => 200);
+}
+
 sub pureimport_lock {
 
   my $self = shift;

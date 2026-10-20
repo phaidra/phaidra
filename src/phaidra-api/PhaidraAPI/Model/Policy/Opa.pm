@@ -115,7 +115,7 @@ sub _legacy_action_fallback {
     stats_myobjects directory_self
     termsofuse_read termsofuse_agree
     users_search
-    ir_allowsubmit ir_submit ir_notifications
+    ir_allowsubmit ir_openpolicyfinder ir_submit ir_notifications
     feedback request_doi
     inactive_objects_read
   );

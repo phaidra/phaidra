@@ -652,6 +652,7 @@ sub startup {
   $authz->post('ir/adminlistdata')                                         ->to('ir#adminlistdata', action_id => 'ir_admin_listdata');
   $authz->get('ir/:pid/events')                                            ->to('ir#events', action_id => 'ir_admin_events');
   $authz->get('ir/allowsubmit')                                            ->to('ir#allowsubmit', action_id => 'ir_allowsubmit');
+  $authz->get('ir/openpolicyfinder')                                       ->to('ir#openpolicyfinder', action_id => 'ir_openpolicyfinder');
   $authz->get('ir/puresearch')                                             ->to('ir#puresearch', action_id => 'ir_admin_puresearch');
   $authz->get('ir/pureimport/locks')                                       ->to('ir#pureimport_getlocks', action_id => 'ir_admin_pureimport_locks');
 
