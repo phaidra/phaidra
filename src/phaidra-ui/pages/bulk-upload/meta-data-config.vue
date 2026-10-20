@@ -315,8 +315,12 @@ export default {
       // Try automatic matching for CSV columns if no mapping exists
       if (!mapping) {
         if (allowedSources.includes('csv-column')) {
+          const aliases = [
+            field,
+            ...(this.fieldSettings[field]?.csvColumnAliases || [])
+          ].map(name => name.toLowerCase())
           const matchingColumn = this.getColumnHeaders.find(
-            col => col.toLowerCase() === field.toLowerCase()
+            col => aliases.includes(col.toLowerCase())
           )
           if (matchingColumn) {
             this.updateMapping(field, 'csv-column', matchingColumn)

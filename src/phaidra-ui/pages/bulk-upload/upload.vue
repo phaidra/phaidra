@@ -280,7 +280,17 @@ export default {
             const file = this.selectedFiles.find(f => f.name === filename)
             if (file) {
               formData.append('file', file)
-              formData.append('mimetype', file.type || 'application/octet-stream')
+
+              const csvMimetype = this.getMappedCsvValue('Mimetype', headers, values)
+              const mimetype = csvMimetype || file.type || 'application/octet-stream'
+              formData.append('mimetype', mimetype)
+
+              const checksum = this.getMappedCsvValue('Checksum', headers, values)
+              const checksumtype = this.getMappedCsvValue('Checksum type', headers, values)
+              if (checksum && checksumtype) {
+                formData.append('checksum', checksum)
+                formData.append('checksumtype', checksumtype)
+              }
 
               // add filename and mimetype to metadata
               formMetadata.sections[0].fields.push(
@@ -289,11 +299,11 @@ export default {
                   predicate: 'ebucore:filename',
                   component: 'p-file',
                   value: filename,
-                  mimetype: file.type || 'application/octet-stream'
+                  mimetype
                 }
               )
 
-              createmethod = mimeToCreateMethod(file.type)
+              createmethod = mimeToCreateMethod(mimetype)
             } else {
               throw new Error(`File not found: ${filename}`)
             }
@@ -371,6 +381,14 @@ export default {
       await this.startUpload()
     },
 
+    getMappedCsvValue(field, headers, values) {
+      const mapping = this.fieldMappings[field]
+      if (!mapping || mapping.source !== 'csv-column' || !mapping.csvValue) return ''
+      const columnIndex = headers.indexOf(mapping.csvValue)
+      if (columnIndex < 0) return ''
+      return String(values[columnIndex] ?? '').trim()
+    },
+
     async createFormMetadata(headers, values) {
       console.log('Creating form data with mappings:', this.fieldMappings)
       
@@ -386,8 +404,8 @@ export default {
       // Map fields based on fieldMappings
       for (const [field, mapping] of Object.entries(this.fieldMappings || {})) {
         if (!mapping) continue
-        // Skip Filename and Subtitle fields as they're handled separately
-        if (field === 'Filename' || field === 'Subtitle') continue
+        // File payload fields and subtitle are not metadata form components
+        if (!this.fieldSettings[field]?.phaidraComponentMapping) continue
         
         console.log(`Processing field: ${field} with mapping:`, mapping)
         
