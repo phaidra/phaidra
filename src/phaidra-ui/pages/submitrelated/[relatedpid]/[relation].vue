@@ -73,6 +73,7 @@
         :mouseoverfielddef="true"
         :forcePreview="instanceconfig.forcePreview"
         :doiImport="instanceconfig.doiImport"
+        :catalog-import="hasCatalogImportCapability"
         :disableChecksum="instanceconfig.disableChecksum"
         :hideContainedInPages="instanceconfig.hideContainedInPages"
         v-on:load-form="form = $event" 
@@ -135,6 +136,9 @@ export default {
     },
     objectInfo: function () {
       return useRootStore().objectInfo;
+    },
+    hasCatalogImportCapability() {
+      return useRootStore().capabilities.includes('submit_form:catalogfetchupload')
     },
   },
   data() {
