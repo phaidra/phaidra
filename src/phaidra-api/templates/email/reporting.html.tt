@@ -10,7 +10,7 @@
     </style>
   </head>
   <body>
-    <h1>Phaidra Daily Report - [% date %]</h1>
+    <h1>PHAIDRA Daily Report - [% date %]</h1>
     [% IF query_reports && query_reports.size > 0 %]
     <div class="section">
       <h2>Query Count Reports</h2>

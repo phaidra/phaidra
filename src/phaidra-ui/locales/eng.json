@@ -60,7 +60,7 @@
     "University of Vienna": "University of Vienna",
     "More": "More",
     "Policy of Phaidra": "Policy of Phaidra",
-    "Phaidra - Sandbox": "Phaidra - Sandbox",
+    "PHAIDRA - Sandbox": "PHAIDRA - Sandbox",
     "Service page": "Service page",
     "User guides": "User guides",
     "test instance": "test instance",
@@ -214,7 +214,7 @@
     "less 10MB": "< 10MB",
     "more 1GB": "> 1GB",
     "SEARCH_PLACEHOLDER": "Search",
-    "PHAIDRA_IS": "Phaidra is the repository for the permanent secure storage of digital assets at the University of Vienna.",
+    "PHAIDRA_IS": "PHAIDRA is the repository for the permanent secure storage of digital assets at the University of Vienna.",
     "If you have technical problems please contact": "If you have technical problems, please contact:",
 
     "phaidra:levelOfDescription": "Level of description",
@@ -337,7 +337,7 @@
 
     "RELATION_SUBMITTED": "The uploaded object will be",
 
-    "HOME_SANDBOX": "A {0} of Phaidra is available inside university's network.",
+    "HOME_SANDBOX": "A {0} of PHAIDRA is available inside university's network.",
 
     "PAGE_OF_BOOK": "This object is a page from book {bookpid}",
 
@@ -492,7 +492,7 @@
     "uwm_lifecycle_peer_reviewed": "Peer Reviewed",
     "uwm_lifecycle_status": "Status",
     "uwm_lifecycle_version": "Version",
-    "uwm_lifecycle_upload_date": "Phaidra Upload Date",
+    "uwm_lifecycle_upload_date": "PHAIDRA Upload Date",
     "uwm_general": "General",
     "uwm_general_identifiers": "Identifiers",
     "uwm_general_identifiers_identifier": "Identifier",
@@ -741,7 +741,7 @@
     "OpenCast submit as usual object help": "Standard PHAIDRA object for research, teaching, or general use.",
     "OpenCast submit as OER": "Upload as Open Educational Resource (OER)",
     "OpenCast submit as OER help": "Openly licensed teaching and learning material with OER metadata and licensing.",
-    "meta_description_home": "Phaidra is a repository for the permanent secure storage of digital assets.",
+    "meta_description_home": "PHAIDRA is a repository for the permanent secure storage of digital assets.",
     "meta_description_search": "Search objects and collections in the digital repository.",
     "meta_description_impressum": "Legal notice and imprint information for this repository.",
     "meta_description_contact": "Contact information and support for this repository.",

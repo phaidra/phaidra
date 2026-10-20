@@ -197,7 +197,7 @@ sub get_metadata_tree {
   my $autofield;       # ? i found no use for this one
   my $editable;        # 1 if the element is available in uwmetadataeditor
   my $oid;             # this was meant for metadata-owner feature
-  my $datatype;        # Phaidra datatype (/usr/local/fedora/cronjobs/XSD/datatypes.xsd)
+  my $datatype;        # PHAIDRA datatype (/usr/local/fedora/cronjobs/XSD/datatypes.xsd)
   my $valuespace;      # regex constraining the value
   my $mid_parent;      # introduces structure, eg firstname is under entity, etc
   my $cardinality;     # eg 1, 2, * - any
@@ -250,7 +250,7 @@ sub get_metadata_tree {
 
     $format{$mid}->{input_regex} = $valuespace;
 
-    # mapping of "Phaidra Datatypes" to form input types
+    # mapping of "PHAIDRA Datatypes" to form input types
     #
     # possible values (with schema restrictions):
     #  Duration PT(\d{1,2}H){0,1}(\d{1,2}M){0,1}(\d{1,2}S){0,1}

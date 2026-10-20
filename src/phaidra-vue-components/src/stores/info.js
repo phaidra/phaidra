@@ -160,7 +160,7 @@ export const state = () => ({
               id: 'vocabulary',
               title: 'Vocabulary',
               content:
-                '<a href="http://id.loc.gov/vocabulary/languages">MARC List for Languages</a> <br> <a href="https://vocab.phaidra.org/vocabulary/WKFZ-VG0C">Language Phaidra Vocabulary</a>'
+                '<a href="http://id.loc.gov/vocabulary/languages">MARC List for Languages</a> <br> <a href="https://vocab.phaidra.org/vocabulary/WKFZ-VG0C">Language PHAIDRA Vocabulary</a>'
             },
             {
               id: 'obligation',
@@ -292,7 +292,7 @@ export const state = () => ({
               id: 'vocabulary',
               title: 'Vocabulary',
               content:
-                '<a href="https://vocab.phaidra.org/vocabulary/en/collections/T465-XDJS.html">Audience Phaidra Vocabulary </a>'
+                '<a href="https://vocab.phaidra.org/vocabulary/en/collections/T465-XDJS.html">Audience PHAIDRA Vocabulary </a>'
             },
             {
               id: 'obligation',
@@ -378,7 +378,7 @@ export const state = () => ({
               id: 'vocabulary',
               title: 'Vocabulary',
               content:
-                '<a href="https://vocab.phaidra.org/vocabulary/YGE3-S9WD">Carrier type Phaidra Vocabulary</a>'
+                '<a href="https://vocab.phaidra.org/vocabulary/YGE3-S9WD">Carrier type PHAIDRA Vocabulary</a>'
             },
             {
               id: 'obligation',
@@ -588,7 +588,7 @@ export const state = () => ({
               title: 'Usage notes',
               content: {
                 level1:
-                  'Each resource is bounded to a time span, whatever type of event it refers to (e.g. creation, production, publication or modification, acquisition). When you describe your resource, it is thus highly recommended to provide any chronological indication of its life cycle. <br><b>Note:</b> This field should not express a date associated with the intellectual content of the resource. If you refer to this type of information, use instead the <i>Temporal coverage</i> field. <br> Phaidra Editor provides you with many types of dates that you can choose from: <br> <ul><li><b>Date</b>: <br> A point or period of time associated with an event in the lifecycle of the resource.</li> <li><b>Date created</b>: <br>Date of creation of the resource.</li> <li><b>Date modified</b>: <br> Date on which the resource was changed. </li><li><b>Date available</b>: <br> Date (often a range) that the resource became or will become available.</li> <li><b>Date issued</b>: <br> Date of formal issuance (e.g. publication) of the resource</li> <li><b>Date valid</b>: <br>Date (often a range) of validity of a resource.</li> <li><b> Date accepted </b>: <br>Date of acceptance of the resource.</li> <li><b>Date copyrighted</b>: <br> Date of copyright.</li> <li><b>Date submitted</b>: <br>Date of submission of the resource.</li> <li><b>Date of production:</b> <br>Date of the inscription, fabrication, construction, etc., of an unpublished resource.</li> <li><b>Date accessioned</b>: <br> Date on which an identification number was assigned to a particular donation or acquisition of the analogue object.</li> </ul> <br>If you need more than one type of date, duplicate the field.',
+                  'Each resource is bounded to a time span, whatever type of event it refers to (e.g. creation, production, publication or modification, acquisition). When you describe your resource, it is thus highly recommended to provide any chronological indication of its life cycle. <br><b>Note:</b> This field should not express a date associated with the intellectual content of the resource. If you refer to this type of information, use instead the <i>Temporal coverage</i> field. <br> PHAIDRA Editor provides you with many types of dates that you can choose from: <br> <ul><li><b>Date</b>: <br> A point or period of time associated with an event in the lifecycle of the resource.</li> <li><b>Date created</b>: <br>Date of creation of the resource.</li> <li><b>Date modified</b>: <br> Date on which the resource was changed. </li><li><b>Date available</b>: <br> Date (often a range) that the resource became or will become available.</li> <li><b>Date issued</b>: <br> Date of formal issuance (e.g. publication) of the resource</li> <li><b>Date valid</b>: <br>Date (often a range) of validity of a resource.</li> <li><b> Date accepted </b>: <br>Date of acceptance of the resource.</li> <li><b>Date copyrighted</b>: <br> Date of copyright.</li> <li><b>Date submitted</b>: <br>Date of submission of the resource.</li> <li><b>Date of production:</b> <br>Date of the inscription, fabrication, construction, etc., of an unpublished resource.</li> <li><b>Date accessioned</b>: <br> Date on which an identification number was assigned to a particular donation or acquisition of the analogue object.</li> </ul> <br>If you need more than one type of date, duplicate the field.',
                 level2:
                   'Enriching the contextual knowledge about the data should be done in a machine-actionable way in order to foster its discovery. This means that selecting a specific Date which conforms to the context you are referring to (e.g. <i>Date created</i> or <i>Date issued</i>) should be preferrable to the more general <i>Date</i>. The more accurate and meaningful your metadata is, the more findable, interoperable and reusable your resource is.',
                 level3: ''
@@ -901,7 +901,7 @@ export const state = () => ({
               id: 'vocabulary',
               title: 'Vocabulary',
               content:
-                '<a href="https://pid.phaidra.org/vocabulary/en/collections/BBDA-1SJY.html">Funders Phaidra Vocabulary</a>'
+                '<a href="https://pid.phaidra.org/vocabulary/en/collections/BBDA-1SJY.html">Funders PHAIDRA Vocabulary</a>'
             },
             {
               id: 'obligation',
@@ -944,7 +944,7 @@ export const state = () => ({
               id: 'vocabulary',
               title: 'Vocabulary',
               content:
-                '<a href="https://vocab.phaidra.org/vocabulary/2H73-WG6Y">Genre Phaidra Vocabulary </a>'
+                '<a href="https://vocab.phaidra.org/vocabulary/2H73-WG6Y">Genre PHAIDRA Vocabulary </a>'
             },
             {
               id: 'obligation',
@@ -1204,7 +1204,7 @@ export const state = () => ({
               id: 'vocabulary',
               title: 'Vocabulary',
               content:
-                '<a href="http://id.loc.gov/vocabulary/languages">MARC List for Languages</a> <br> <a href="https://vocab.phaidra.org/vocabulary/WKFZ-VG0C">Language Phaidra Vocabulary</a>'
+                '<a href="http://id.loc.gov/vocabulary/languages">MARC List for Languages</a> <br> <a href="https://vocab.phaidra.org/vocabulary/WKFZ-VG0C">Language PHAIDRA Vocabulary</a>'
             },
             {
               id: 'obligation',
@@ -1248,7 +1248,7 @@ export const state = () => ({
               id: 'vocabulary',
               title: 'Vocabulary',
               content:
-                '<a href="http://id.loc.gov/vocabulary/languages">MARC List for Languages</a> <br> <a href="https://vocab.phaidra.org/vocabulary/WKFZ-VG0C">Language Phaidra Vocabulary</a>'
+                '<a href="http://id.loc.gov/vocabulary/languages">MARC List for Languages</a> <br> <a href="https://vocab.phaidra.org/vocabulary/WKFZ-VG0C">Language PHAIDRA Vocabulary</a>'
             },
             {
               id: 'obligation',
@@ -1294,7 +1294,7 @@ export const state = () => ({
               id: 'vocabulary',
               title: 'Vocabulary',
               content:
-                '<a href="https://vocab.phaidra.org/vocabulary/VPSR-KHRC">Material Phaidra Vocabulary</a>'
+                '<a href="https://vocab.phaidra.org/vocabulary/VPSR-KHRC">Material PHAIDRA Vocabulary</a>'
             },
             {
               id: 'obligation',
@@ -1545,7 +1545,7 @@ export const state = () => ({
               id: 'vocabulary',
               title: 'Vocabulary',
               content:
-                '<a href="https://vocab.phaidra.org/vocabulary/NB34-DPJR">Object type Phaidra Vocabulary</a>'
+                '<a href="https://vocab.phaidra.org/vocabulary/NB34-DPJR">Object type PHAIDRA Vocabulary</a>'
             },
             {
               id: 'obligation',
@@ -2017,7 +2017,7 @@ export const state = () => ({
               id: 'vocabulary',
               title: 'Vocabulary',
               content:
-                '<a href="https://vocab.phaidra.org/vocabulary/HHB2-GXRZ">Regional encoding Phaidra Vocabulary</a>'
+                '<a href="https://vocab.phaidra.org/vocabulary/HHB2-GXRZ">Regional encoding PHAIDRA Vocabulary</a>'
             },
             {
               id: 'obligation',
@@ -2104,7 +2104,7 @@ export const state = () => ({
               id: 'vocabulary',
               title: 'Vocabulary',
               content:
-                '<a href="https://vocab.phaidra.org/vocabulary/8MPB-RN23">Reproduction note Phaidra Vocabulary</a>'
+                '<a href="https://vocab.phaidra.org/vocabulary/8MPB-RN23">Reproduction note PHAIDRA Vocabulary</a>'
             },
             {
               id: 'obligation',
@@ -2451,7 +2451,7 @@ export const state = () => ({
               id: 'vocabulary',
               title: 'Vocabulary',
               content:
-                '<a href="https://vocab.phaidra.org/vocabulary/W6R8-EAQS">Technique Phaidra Vocabulary</a>'
+                '<a href="https://vocab.phaidra.org/vocabulary/W6R8-EAQS">Technique PHAIDRA Vocabulary</a>'
             },
             {
               id: 'obligation',
@@ -2658,7 +2658,7 @@ export const state = () => ({
               title: 'Usage notes',
               content: {
                 level1:
-                  'If any, add an alternative identifier (other than Phaidra persistent identifier) that the resource might be provided of. The types of identifiers could be: DOI, Handle, URI, URN, AC-Number. <br> If you have more than one, duplicate the field.',
+                  'If any, add an alternative identifier (other than PHAIDRA persistent identifier) that the resource might be provided of. The types of identifiers could be: DOI, Handle, URI, URN, AC-Number. <br> If you have more than one, duplicate the field.',
                 level2: '',
                 level3: ''
               }
@@ -2795,7 +2795,7 @@ export const state = () => ({
               id: 'vocabulary',
               title: 'Vocabulary',
               content:
-                '<a href="https://vocab.phaidra.org/vocabulary/FDVS-NMG1">DC Format Phaidra Vocabulary</a>'
+                '<a href="https://vocab.phaidra.org/vocabulary/FDVS-NMG1">DC Format PHAIDRA Vocabulary</a>'
             },
             {
               id: 'obligation',
@@ -2830,7 +2830,7 @@ export const state = () => ({
               title: 'Usage notes',
               content: {
                 level1:
-                  'The information about the file format can be relevant to determine the equipment needed to display or operate a resource (e.g. if the described resource has format PDF, you need a PDF reader to use it). <br> Once you upload the file, the value is pre-selected by the system. Check if this value fits your digital object. If not, choose the right one from the drop-down menu. <br><b>Note:</b> If possible, before uploading the file consider file formats that are widely used and supported by the most commonly used software and tools. A list of the formats recommended by Phaidra can be found <a href="https://datamanagement.univie.ac.at/en/about-phaidra/formats/">here</a>.',
+                  'The information about the file format can be relevant to determine the equipment needed to display or operate a resource (e.g. if the described resource has format PDF, you need a PDF reader to use it). <br> Once you upload the file, the value is pre-selected by the system. Check if this value fits your digital object. If not, choose the right one from the drop-down menu. <br><b>Note:</b> If possible, before uploading the file consider file formats that are widely used and supported by the most commonly used software and tools. A list of the formats recommended by PHAIDRA can be found <a href="https://datamanagement.univie.ac.at/en/about-phaidra/formats/">here</a>.',
                 level2: '',
                 level3: ''
               }
@@ -2883,7 +2883,7 @@ export const state = () => ({
               id: 'vocabulary',
               title: 'Vocabulary',
               content:
-                '<a href="https://vocab.phaidra.org/vocabulary/7E4S-MA30">Resource type Phaidra Vocabulary</a>'
+                '<a href="https://vocab.phaidra.org/vocabulary/7E4S-MA30">Resource type PHAIDRA Vocabulary</a>'
             },
             {
               id: 'obligation',
@@ -2928,7 +2928,7 @@ export const state = () => ({
               id: 'vocabulary',
               title: 'Vocabulary',
               content:
-                '<a href="https://pid.phaidra.org/vocabulary/PY38-5KQZ">Access rights Phaidra Vocabulary</a>'
+                '<a href="https://pid.phaidra.org/vocabulary/PY38-5KQZ">Access rights PHAIDRA Vocabulary</a>'
             },
             {
               id: 'obligation',

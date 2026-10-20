@@ -3329,7 +3329,7 @@ sub _extact_text_from_ocr {
       }
     }
 
-    # 2. Phaidra custom OCRTEXT format (http://phaidra.univie.ac.at/XML/book/ocrtext/V1.0)
+    # 2. PHAIDRA custom OCRTEXT format (http://phaidra.univie.ac.at/XML/book/ocrtext/V1.0)
     if (!$extracted_text) {
       my @ocr_words = $alto_dom->find('ocrword')->each;
       if (@ocr_words) {

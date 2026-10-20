@@ -18,6 +18,8 @@ The DOI metadata import feature
 
 PHAIDRA IR requires only its PHAIDRA API URL as deployment configuration. Its repository-specific values are managed in PHAIDRA UI under **Admin → Public configuration → Institutional repository**. Configure the repository name, hostname, adminset, admin account, title line, contact details, primary color, mandatory-field background color, and submit-association option there.
 
+The same section also provides optional Vue templates for the header, footer, homepage, submit introduction and terms step, impressum, credits, metadata policy, and terms of use. An empty template leaves the built-in content active.
+
 ## Media library
 
 The Media Library is focused on ingesting digitized movies (e.g. DVDs). The submit contains metadatafields relevant in this context and also enables an import from The Movie Database (TMDb).

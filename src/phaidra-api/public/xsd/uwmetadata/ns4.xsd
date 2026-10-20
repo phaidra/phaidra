@@ -1230,7 +1230,7 @@
 	</xs:restriction>
 </xs:simpleType>
 
-<!-- Phaidra datatypes -->
+<!-- PHAIDRA datatypes -->
 
 <xs:simpleType name="Duration">
 	<xs:restriction base="xs:token">

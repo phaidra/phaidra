@@ -45,7 +45,7 @@ sub feedback {
       text => 'feedback.txt.tt',
     }
   );
-  my $subject = length($tpl->{subject}) ? $email_model->render($tpl->{subject}, \%emaildata) : 'Phaidra feedback';
+  my $subject = length($tpl->{subject}) ? $email_model->render($tpl->{subject}, \%emaildata) : 'PHAIDRA feedback';
   eval {
     my $msg = MIME::Lite::TT::HTML->new(
       From       => $pubconfig->{email},

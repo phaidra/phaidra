@@ -1,4 +1,4 @@
-Phaidra Daily Report - [% date %]
+PHAIDRA Daily Report - [% date %]
 
 [% IF query_reports && query_reports.size > 0 %]
 Query Count Reports

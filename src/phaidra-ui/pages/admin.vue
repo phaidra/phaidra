@@ -821,6 +821,23 @@
                   </v-col>
                   <v-col cols="6" class="mt-6">{{ $t('Allow associating submitted objects with an org unit.') }}</v-col>
                 </v-row>
+                <v-row>
+                  <v-col>
+                    <v-checkbox :label="$t('Pure integration')" v-model="parsedPublicConfigData.irpureintegration" />
+                  </v-col>
+                  <v-col cols="6" class="mt-6">{{ $t('Enables import from Pure') }}</v-col>
+                </v-row>
+                <v-row v-for="field in irCmsTemplateFields" :key="field.key">
+                  <v-col>
+                    <v-textarea
+                      :label="$t(field.label)"
+                      :hint="$t('Vue template rendered in u:scholar. Leave empty to use the built-in content.')"
+                      persistent-hint
+                      auto-grow
+                      v-model="parsedPublicConfigData[field.key]"
+                    />
+                  </v-col>
+                </v-row>
               </v-container>
                     </v-window-item>
                   </v-window>
@@ -1189,7 +1206,7 @@
                     <v-window-item value="priv-email" class="pa-8">
                       <v-container>
                         <v-card
-                          v-for="emailTemplate in emailTemplateDefinitions"
+                          v-for="emailTemplate in emailTemplateDefinitions.filter(template => !template.ir)"
                           :key="emailTemplate.key"
                           class="mb-6 email-template-card"
                         >
@@ -1335,6 +1352,41 @@
                           </v-col>
                           <v-col cols="6" class="mt-6">{{ $t("Comma separated list of accounts which can do bulk uploads.") }}</v-col>
                         </v-row>
+                      </v-card-text>
+                    </v-card>
+                  </v-col>
+                </v-row>
+
+                <v-row>
+                  <v-col>
+                    <v-card>
+                      <v-card-title class="text-title-large font-weight-light text-white">{{ $t('Email templates') }}</v-card-title>
+                      <v-card-text>
+                        <div
+                          v-for="emailTemplate in emailTemplateDefinitions.filter(template => template.ir)"
+                          :key="emailTemplate.key"
+                          class="mb-6"
+                        >
+                          <h3 class="text-h6 mb-4">{{ $t(emailTemplate.title) }}</h3>
+                          <div
+                            v-for="(entry, index) in (parsedPrivateConfigData[emailTemplate.key] || [])"
+                            :key="emailTemplate.key + '-' + index"
+                            class="mb-6"
+                          >
+                            <v-row>
+                              <v-col cols="12" md="4">
+                                <v-text-field :label="$t('Language')" v-model="entry.language" hint="eng, deu, ita, ..." persistent-hint />
+                              </v-col>
+                              <v-col cols="12" md="8" class="d-flex align-center justify-end">
+                                <v-btn color="error" variant="text" @click="removeEmailTemplateEntry(emailTemplate.key, index)">{{ $t('Remove') }}</v-btn>
+                              </v-col>
+                            </v-row>
+                            <v-text-field v-if="emailTemplate.hasSubject" :label="$t('Subject template')" v-model="entry.subject" />
+                            <v-textarea :label="$t('HTML template')" v-model="entry.html" rows="8" />
+                          </div>
+                          <v-btn color="primary" size="small" class="mb-4" @click="addEmailTemplateEntry(emailTemplate.key)">{{ $t('Add language') }}</v-btn>
+                          <div>{{ $t(emailTemplate.hint) }}</div>
+                        </div>
                       </v-card-text>
                     </v-card>
                   </v-col>
@@ -1560,6 +1612,17 @@ export default {
         { title: 'Email templates', value: 'priv-email' },
         { title: 'IR', value: 'priv-ir' }
       ],
+      irCmsTemplateFields: [
+        { key: 'ircmsheader', label: 'Header' },
+        { key: 'ircmsfooter', label: 'Footer' },
+        { key: 'ircmshome', label: 'Homepage' },
+        { key: 'ircmssubmitstart', label: 'Submit page step 1' },
+        { key: 'ircmssubmitterms', label: 'Submit page step 2 / terms of use' },
+        { key: 'ircmsimpressum', label: 'Impressum' },
+        { key: 'ircmscredits', label: 'Credits' },
+        { key: 'ircmsmetadatapolicy', label: 'Metadata policy' },
+        { key: 'ircmsterms', label: 'Terms of use' }
+      ],
       importExportNavigationItems: [
         { title: 'Export', value: 'impexp-export' },
         { title: 'Import', value: 'impexp-import' }
@@ -1615,19 +1678,21 @@ export default {
         },
         {
           key: 'irmdcheckemail',
-          title: 'IR - Metadata check email',
+          title: 'Metadata check email',
           hint: 'Template Toolkit variables: [% pid %], [% baseurl %]',
           hasSubject: true,
           hasText: false,
-          legacy: null
+          legacy: null,
+          ir: true
         },
         {
           key: 'irembargoendemail',
-          title: 'IR - Embargo end email',
+          title: 'Embargo end email',
           hint: 'Template Toolkit variables: [% pid %], [% baseurl %]',
           hasSubject: true,
           hasText: false,
-          legacy: null
+          legacy: null,
+          ir: true
         }
       ]
     };

@@ -18,7 +18,7 @@
           </v-text-field>
         </v-row>
         <v-row class="text-subtitle-1 font-weight-light text-center my-6">
-          <v-col>{{ $t('Phaidra is a repository for the permanent secure storage of digital assets') }}</v-col>
+          <v-col>{{ $t('PHAIDRA is a repository for the permanent secure storage of digital assets') }}</v-col>
         </v-row>
       </v-col>
     </v-row>

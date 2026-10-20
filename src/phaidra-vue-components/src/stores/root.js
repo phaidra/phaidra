@@ -90,7 +90,7 @@ export const useRootStore = defineStore('root', {
     setInstanceSolr (solr) {
       this.instanceconfig.solr = solr
     },
-    setInstancePhaidra (baseurl) {
+    setInstancePHAIDRA (baseurl) {
       this.instanceconfig.baseurl = baseurl
     },
     setSuggester (data) {

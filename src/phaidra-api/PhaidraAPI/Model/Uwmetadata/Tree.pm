@@ -442,8 +442,8 @@ our %tree = (
           "input_regex" => "",
           "input_type"  => "static",
           "labels"      => {
-            "de" => "Phaidra Uploaddatum",
-            "en" => "Phaidra Upload Date",
+            "de" => "PHAIDRA Uploaddatum",
+            "en" => "PHAIDRA Upload Date",
             "it" => "Data di caricamento di Phaidra",
             "sr" => "datum u?itavanja u Phaidru"
           },

@@ -1246,8 +1246,6 @@ sub save_metadata {
       my $rights       = $metadata->{rights};
       my $rights_model = PhaidraAPI::Model::Rights->new;
 
-      #my $xml = $rights_model->json_2_xml($c, $rights);
-      #my $r = $self->add_datastream($c, $pid, "RIGHTS", "text/xml", undef, "Phaidra Permissions", $xml, "X", undef, undef, $username, $password);
       my $r = $rights_model->save_to_object($c, $pid, $rights, $username, $password, $skiphook);
       if ($r->{status} ne 200) {
         $res->{status} = $r->{status};
@@ -1263,8 +1261,6 @@ sub save_metadata {
       my $geo       = $metadata->{geo};
       my $geo_model = PhaidraAPI::Model::Geo->new;
 
-      #my $xml = $geo_model->json_2_xml($c, $geo);
-      #my $r = $self->add_datastream($c, $pid, "GEO", "text/xml", undef, "Georeferencing", $xml, "X", undef, undef, $username, $password);
       my $r = $geo_model->save_to_object($c, $pid, $geo, $username, $password, $skiphook);
       if ($r->{status} ne 200) {
         $res->{status} = $r->{status};

@@ -23,7 +23,7 @@ export default createVuetify({
     themes: {
       light: {
         colors: {
-          /** Phaidra / legacy V2 look (orange segment controls, section headers). Default V3 primary is blue (#1867C0). */
+          /** PHAIDRA / legacy V2 look (orange segment controls, section headers). Default V3 primary is blue (#1867C0). */
           primary: '#D84315',
           'primary-darken-1': '#BF360C'
         }

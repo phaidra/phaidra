@@ -13,7 +13,7 @@ const fields = [
     identifierLabel: 'Identifier',
     valueErrorMessages: [],
     value: '',
-    definition: 'An alternative identifier (other than Phaidra persistent identifier) that uniquely identifies the resource. Relates a manifestation to an appellation of manifestation that consists of a code, number, or other string, usually independent of natural language and social naming conventions, used to identify a manifestation.'
+    definition: 'An alternative identifier (other than PHAIDRA persistent identifier) that uniquely identifies the resource. Relates a manifestation to an appellation of manifestation that consists of a code, number, or other string, usually independent of natural language and social naming conventions, used to identify a manifestation.'
   },
   {
     id: 'resource-type',

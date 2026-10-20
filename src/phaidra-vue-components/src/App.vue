@@ -3244,7 +3244,7 @@ export default {
                 {
                   input_type: 'input_text',
                   label: 'Display label',
-                  ui_value: 'Element from Phaidra Collection',
+                  ui_value: 'Element from PHAIDRA Collection',
                   xmlname: 'displayLabel'
                 },
                 {
@@ -4176,7 +4176,7 @@ export default {
     login: function () {
       useRootStore().setInstanceApi(this.apibaseurl)
       useRootStore().setInstanceSolr(this.solrbaseurl)
-      useRootStore().setInstancePhaidra(this.phaidrabaseurl)
+      useRootStore().setInstancePHAIDRA(this.phaidrabaseurl)
       useRootStore().login(this.credentials)
     },
     logout: function () {
@@ -4414,7 +4414,7 @@ export default {
   created: function () {
     useRootStore().setInstanceApi(this.apibaseurl)
     useRootStore().setInstanceSolr(this.solrbaseurl)
-    useRootStore().setInstancePhaidra(this.phaidrabaseurl)
+    useRootStore().setInstancePHAIDRA(this.phaidrabaseurl)
     useRootStore().setSuggester({
       suggester: 'gnd',
       url: 'https://ws.gbv.de/suggest/gnd/'

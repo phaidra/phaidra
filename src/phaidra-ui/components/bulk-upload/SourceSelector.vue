@@ -68,7 +68,7 @@ export default {
       if (this.allowedSources[0] === 'csv-column') {
         return this.$t('can only be sourced from a CSV column')
       } else if (this.allowedSources[0] === 'phaidra-field') {
-        return this.$t('can only be sourced from a default Phaidra value')
+        return this.$t('can only be sourced from a default PHAIDRA value')
       }
       return ''
     }

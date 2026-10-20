@@ -1,7 +1,7 @@
 export default {
   defaultinstance: 'default',
   global: {
-    title: 'Phaidra Docker',
+    title: 'PHAIDRA Docker',
     showinstanceswitch: 0,
     enablelogin: 1,
     showdeletebutton: 1,

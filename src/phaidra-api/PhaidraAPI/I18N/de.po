@@ -25,7 +25,7 @@ msgstr ""
 #: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:10
 msgid "helpmeta_10"
 msgstr ""
-"Diese Angaben beziehen sich auf das digitale Objekt in Phaidra - nicht auf "
+"Diese Angaben beziehen sich auf das digitale Objekt in PHAIDRA - nicht auf "
 "das eventuell existierende reale Objekt, das als Vorlage gedient hat - und "
 "erläutern den „Werdegang“ und den jeweiligen „Status“ des Objekts. (zum "
 "Beispiel um welche Version es sich handelt)"
@@ -44,7 +44,7 @@ msgstr ""
 #: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:61
 msgid "helpmeta_107"
 msgstr ""
-"Bezieht sich auf Objekte bevor sie in Phaidra archiviert wurden, z. B. Name "
+"Bezieht sich auf Objekte bevor sie in PHAIDRA archiviert wurden, z. B. Name "
 "des Auftraggebers eines Filmes, Autor eines Textes u.s.w."
 
 #: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:62
@@ -60,11 +60,11 @@ msgstr "Hier können Sie den Zeitraum beschreiben. (z.B. Mittelalter)."
 
 #: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:64
 msgid "helpmeta_117"
-msgstr "Bezieht sich auf das Objekt bevor es in Phaidra archiviert wurde."
+msgstr "Bezieht sich auf das Objekt bevor es in PHAIDRA archiviert wurde."
 
 #: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:65
 msgid "helpmeta_118"
-msgstr "Bezieht sich auf das Objekt bevor es in Phaidra archiviert wurde."
+msgstr "Bezieht sich auf das Objekt bevor es in PHAIDRA archiviert wurde."
 
 #: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:66
 msgid "helpmeta_119"
@@ -87,7 +87,7 @@ msgstr ""
 #: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:68
 msgid "helpmeta_121"
 msgstr ""
-"Digitaler Ursprung. Woher stammt das nun in Phaidra archivierte Objekt? "
+"Digitaler Ursprung. Woher stammt das nun in PHAIDRA archivierte Objekt? "
 "Falls die Quelle in der Auflistung nicht vorhanden ist, melden Sie sich "
 "bitte bei <a href=\"mailto:support.phaidra@univie.ac.at\">support."
 "phaidra@univie.ac.at</a>"
@@ -246,7 +246,7 @@ msgstr ""
 #: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:31
 msgid "helpmeta_44"
 msgstr ""
-"Phaidra bietet die Möglichkeit an, Begriffe zur Systematisierung und zur "
+"PHAIDRA bietet die Möglichkeit an, Begriffe zur Systematisierung und zur "
 "Klassifizierung Ihrer Objekte auszuwählen. Eine Beschreibung der angebotenen "
 "Klassifikationssystemen erhalten Sie im Hilfefeld zu \"hierarchische "
 "Klassifikation (Klassen,Unterklassen)\".<br /><br />Wählen Sie zunächst ein "
@@ -381,7 +381,7 @@ msgstr "Spezifiziert die Sprache der  NutzerInnen der Lehr-/Lernressource."
 #: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:8
 msgid "helpmeta_7"
 msgstr ""
-"Sie können mehrere Versionen eines Objektes erstellen. Phaidra zeigt nach "
+"Sie können mehrere Versionen eines Objektes erstellen. PHAIDRA zeigt nach "
 "einer Suche alle Versionen des Objektes an."
 
 #: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:48

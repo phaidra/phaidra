@@ -693,7 +693,7 @@ sub send_daily_report {
   my $subject
     = length($tpl->{subject})
     ? $email_model->render($tpl->{subject}, \%emaildata)
-    : ('Phaidra Daily Report - ' . $emaildata{date});
+    : ('PHAIDRA Daily Report - ' . $emaildata{date});
   eval {
     my $msg = MIME::Lite::TT::HTML->new(
       From       => $pubconfig->{email} || $privconfig->{reportingemail},

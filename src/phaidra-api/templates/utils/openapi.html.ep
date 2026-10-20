@@ -4,7 +4,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Phaidra API</title>
+  <title>PHAIDRA API</title>
   <link rel="stylesheet" type="text/css"
     href="<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/swagger-ui/swagger-ui.css" />
   <link rel="stylesheet" type="text/css"

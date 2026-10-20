@@ -794,7 +794,7 @@ sub authenticate() {
     # this account is (should be) local to fedora so we cannot authenticate it against LDAP
     $c->app->log->debug("auth: phaidraadmin login");
     $res->{status} = 200;
-    $c->app->log->info("Authentication accepted: local user[$username] via Phaidra admin configuration");
+    $c->app->log->info("Authentication accepted: local user[$username] via PHAIDRA admin configuration");
     $c->stash({phaidra_auth_result => $res});
     return $username;
   }

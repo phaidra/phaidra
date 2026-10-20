@@ -6,7 +6,7 @@ msgstr ""
 #: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:10
 msgid "helpmeta_10"
 msgstr ""
-"These figures relate to the digital object saved in Phaidra and explain the "
+"These figures relate to the digital object saved in PHAIDRA and explain the "
 "\"life cycle\" and the current \"status\" of the object (for example, which "
 "version it is)."
 
@@ -220,7 +220,7 @@ msgstr ""
 #: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:31
 msgid "helpmeta_44"
 msgstr ""
-"Phaidra gives you the option to select terms for the systematization and "
+"PHAIDRA gives you the option to select terms for the systematization and "
 "classification of your objects. You can read a description of the proposed "
 "classification system in the help box \"hierarchical classification "
 "(classes, subclasses)\".<br /><br />First, choose a classification scheme, "
@@ -351,7 +351,7 @@ msgstr "This specifies the language of the users of the teaching resource."
 #: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:8
 msgid "helpmeta_7"
 msgstr ""
-"You can create multiple versions of an object. Phaidra displays all versions "
+"You can create multiple versions of an object. PHAIDRA displays all versions "
 "of the object after a search."
 
 #: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:48
