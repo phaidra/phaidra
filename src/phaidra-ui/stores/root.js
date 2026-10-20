@@ -471,7 +471,7 @@ export const useRootStore = defineStore('root', {
       }
       this.breadcrumbs.push(
         {
-          text: 'Submit of an object related to ' + transition.from.params.pid,
+          text: 'Submit of an object related to ' + transition.to.params.relatedpid,
           to: { path: transition.to.path },
           disabled: true
         }

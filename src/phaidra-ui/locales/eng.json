@@ -753,6 +753,14 @@
     "meta_description_terms_of_use": "Terms of use for the digital repository.",
     "meta_description_metadata_fields": "Overview of metadata fields used in the digital repository.",
     "Confirm each keyword with enter, max {max} characters": "Confirm each keyword with enter, max {max} characters",
-    "Each keyword must be at most {max} characters.": "Each keyword must be at most {max} characters."
+    "Each keyword must be at most {max} characters.": "Each keyword must be at most {max} characters.",
+    "SUBMIT_RELATED_REFERENCES": "Submit of an object referencing {pid}",
+    "SUBMIT_RELATED_ISBACKSIDEOF": "Submit of the back side of {pid}",
+    "SUBMIT_RELATED_ISTHUMBNAILFOR": "Submit of a thumbnail for {pid}",
+    "SUBMIT_RELATED_HASSUCCESSOR": "Submit of a new version of {pid}",
+    "SUBMIT_RELATED_ISALTERNATIVEFORMATOF": "Submit of an alternative format of {pid}",
+    "SUBMIT_RELATED_ISALTERNATIVEVERSIONOF": "Submit of an alternative version of {pid}",
+    "SUBMIT_RELATED_HASCOLLECTIONMEMBER": "Submit of a new member of collection {pid}",
+    "SUBMIT_RELATED_HASMEMBER": "Submit of new member of container {pid}"
   }
   

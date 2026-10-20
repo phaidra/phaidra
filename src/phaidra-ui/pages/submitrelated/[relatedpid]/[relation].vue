@@ -28,32 +28,30 @@
     </v-alert>
     <v-card>
       <v-card-title class="text-title-large font-weight-light text-white">
-        <span class="mr-1">{{ $t("Submit of") }}</span>
         <span v-if="relation === 'references'">{{
-            $t("an object referencing")
+            $t("SUBMIT_RELATED_REFERENCES", { pid: relatedpid })
         }}</span>
         <span v-if="relation === 'isbacksideof'">{{
-            $t("the back side of")
+            $t("SUBMIT_RELATED_ISBACKSIDEOF", { pid: relatedpid })
         }}</span>
         <span v-if="relation === 'isthumbnailfor'">{{
-            $t("a thumbnail for")
+            $t("SUBMIT_RELATED_ISTHUMBNAILFOR", { pid: relatedpid })
         }}</span>
         <span v-if="relation === 'hassuccessor'">{{
-            $t("a new version of")
+            $t("SUBMIT_RELATED_HASSUCCESSOR", { pid: relatedpid })
         }}</span>
         <span v-if="relation === 'isalternativeformatof'">{{
-            $t("an alternative format of")
+            $t("SUBMIT_RELATED_ISALTERNATIVEFORMATOF", { pid: relatedpid })
         }}</span>
         <span v-if="relation === 'isalternativeversionof'">{{
-            $t("an alternative version of")
+            $t("SUBMIT_RELATED_ISALTERNATIVEVERSIONOF", { pid: relatedpid })
         }}</span>
         <span v-if="relation === 'hascollectionmember'">{{
-            $t("a new member of collection")
+            $t("SUBMIT_RELATED_HASCOLLECTIONMEMBER", { pid: relatedpid })
         }}</span>
         <span v-if="relation === 'hasmember'">{{
-            $t("new member of container")
+            $t("SUBMIT_RELATED_HASMEMBER", { pid: relatedpid })
         }}</span>
-        <span class="ml-1">{{ relatedpid }}</span>
       </v-card-title>
       <v-card-text v-if="!transferringMembership" class="mt-8">
         <p-i-form 
