@@ -30,6 +30,17 @@ bots:
     path_regex: ^/api/object/o:(\d+)/iiifmanifest
     action: ALLOW
 
+  - name: replayweb_viewer
+    path_regex: ^/api/replayweb/
+    action: ALLOW
+
+  - name: replayweb_worker
+    expression:
+      all:
+        - '"Referer" in headers'
+        - 'headers["Referer"].startsWith("https://phaidra.univie.ac.at/api/replayweb/")'
+    action: ALLOW
+
   - name: tengnagel
     expression:
       all:
