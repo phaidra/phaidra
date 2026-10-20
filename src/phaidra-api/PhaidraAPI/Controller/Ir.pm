@@ -1297,7 +1297,7 @@ sub openpolicyfinder {
 
   my @filter;
   push @filter, ['title', 'contains word', $title] if $title;
-  push @filter, ['issn', 'equals', $issn] if $issn;
+  push @filter, ['issn',  'equals',        $issn]  if $issn;
   $url->query->param('item-type' => 'publication');
   $url->query->param(format      => 'Json');
   $url->query->param(limit       => $limit);
@@ -1305,9 +1305,7 @@ sub openpolicyfinder {
   $url->query->param(filter      => encode_json(\@filter));
 
   my $response;
-  eval {
-    $response = $self->ua->get($url => {Accept => 'application/json', 'x-api-key' => $apikey})->result;
-  };
+  eval {$response = $self->ua->get($url => {Accept => 'application/json', 'x-api-key' => $apikey})->result;};
   if ($@ or !$response) {
     $self->app->log->error('Open Policy Finder request failed: ' . ($@ || 'no response'));
     $self->render(json => {alerts => [{type => 'error', msg => 'Open Policy Finder request failed'}]}, status => 502);
