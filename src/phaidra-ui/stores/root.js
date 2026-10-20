@@ -616,7 +616,7 @@ export const useRootStore = defineStore('root', {
           disabled: true
         }
       )
-    } else if (transition.to.path.includes('submit')) {
+    } else if (transition.to.path.includes('submit') && !transition.to.path.includes('submitrelated')) {
       this.breadcrumbs.push(
         {
           text: 'Upload',
