@@ -20,10 +20,6 @@ export default {
       ror: {
         baseurl: 'api.ror.org/v2'
       },
-      sherparomeo: {
-        url: 'https://v2.sherpa.ac.uk/romeo/api/search',
-        key: 'V9cjsv6PTJE'
-      },
       vocserver: {
         ns: 'https://vocab.phaidra.org/vocabulary/',
         url: 'https://vocab.phaidra.org/fuseki/',
