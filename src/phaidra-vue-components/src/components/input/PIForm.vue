@@ -37,17 +37,17 @@
       </template>
     </v-alert>
     <v-tabs v-model="activetab" align-tabs="title">
-      <v-tab value="metadata" class="text-title-large font-weight-light text-capitalize">{{ $t('Metadata') }}<template v-if="targetpid">&nbsp;-&nbsp;<span class="text-lowercase">{{ targetpid }}</span></template></v-tab>
-      <v-tab v-if="debug" value="jsonld" @click="metadatapreview = getMetadata()" class="text-title-large font-weight-light text-capitalize">{{ $t('JSON-LD') }}</v-tab>
-      <v-tab v-if="templating" value="templates" @click="loadTemplates()" class="text-title-large font-weight-light text-capitalize">{{ $t('Templates') }}</v-tab>
-      <v-tab v-if="importing" value="import" class="text-title-large font-weight-light text-capitalize">{{ $t('Import') }}</v-tab>
-      <v-tab v-if="enablerights" value="rights" class="text-title-large font-weight-light text-capitalize">{{ $t('Access rights') }}</v-tab>
-      <v-tab v-if="enablerelationships" value="relationships" class="text-title-large font-weight-light text-capitalize">{{ $t('Relationships') }}</v-tab>
-      <v-tab v-if="(submittype !== 'container') && enablepreview" value="preview" @click="updateJsonld()" class="text-title-large font-weight-light text-capitalize">{{ $t('Preview') }}</v-tab>
-      <v-tab v-if="help" value="help" class="text-title-large font-weight-light text-capitalize">{{ $t('Help') }}</v-tab>
-      <v-tab v-if="feedback" value="feedback" class="text-title-large font-weight-light text-capitalize">{{ $t('Feedback') }}</v-tab>
-      <v-tab v-if="doiImport" value="doiImport" class="text-title-large font-weight-light text-capitalize">{{ $t('DOI Import') }}</v-tab>
-      <v-tab v-if="catalogImport" value="catalogImport" class="text-title-large font-weight-light text-capitalize">{{ $t('Catalog import') }}</v-tab>
+      <v-tab value="metadata" class="text-title-large font-weight-light">{{ $t('Metadata') }}<template v-if="targetpid">&nbsp;-&nbsp;<span class="text-lowercase">{{ targetpid }}</span></template></v-tab>
+      <v-tab v-if="debug" value="jsonld" @click="metadatapreview = getMetadata()" class="text-title-large font-weight-light">{{ $t('JSON-LD') }}</v-tab>
+      <v-tab v-if="templating" value="templates" @click="loadTemplates()" class="text-title-large font-weight-light">{{ $t('Templates') }}</v-tab>
+      <v-tab v-if="importing" value="import" class="text-title-large font-weight-light">{{ $t('Import') }}</v-tab>
+      <v-tab v-if="enablerights" value="rights" class="text-title-large font-weight-light">{{ $t('Access rights') }}</v-tab>
+      <v-tab v-if="enablerelationships" value="relationships" class="text-title-large font-weight-light">{{ $t('Relationships') }}</v-tab>
+      <v-tab v-if="(submittype !== 'container') && enablepreview" value="preview" @click="updateJsonld()" class="text-title-large font-weight-light">{{ $t('Preview') }}</v-tab>
+      <v-tab v-if="help" value="help" class="text-title-large font-weight-light">{{ $t('Help') }}</v-tab>
+      <v-tab v-if="feedback" value="feedback" class="text-title-large font-weight-light">{{ $t('Feedback') }}</v-tab>
+      <v-tab v-if="doiImport" value="doiImport" class="text-title-large font-weight-light">{{ $t('DOI Import') }}</v-tab>
+      <v-tab v-if="catalogImport" value="catalogImport" class="text-title-large font-weight-light">{{ $t('Catalog import') }}</v-tab>
     </v-tabs>
 
     <v-window v-model="activetab">
