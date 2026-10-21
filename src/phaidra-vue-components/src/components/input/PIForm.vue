@@ -46,7 +46,7 @@
       <v-tab v-if="(submittype !== 'container') && enablepreview" value="preview" @click="updateJsonld()" class="text-title-large font-weight-light">{{ $t('Preview') }}</v-tab>
       <v-tab v-if="help" value="help" class="text-title-large font-weight-light">{{ $t('Help') }}</v-tab>
       <v-tab v-if="feedback" value="feedback" class="text-title-large font-weight-light">{{ $t('Feedback') }}</v-tab>
-      <v-tab v-if="doiImport" value="doiImport" class="text-title-large font-weight-light">{{ $t('DOI Import') }}</v-tab>
+      <v-tab v-if="doiImport" value="doiImport" class="text-title-large font-weight-light">{{ $t('DOI import') }}</v-tab>
       <v-tab v-if="catalogImport" value="catalogImport" class="text-title-large font-weight-light">{{ $t('Catalog import') }}</v-tab>
     </v-tabs>
 
