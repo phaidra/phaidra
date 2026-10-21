@@ -7,17 +7,18 @@ use Mojo::URL;
 use Mojo::UserAgent;
 use Log::Log4perl;
 
-
 $ENV{MOJO_INACTIVITY_TIMEOUT} = 36000;
 
-Log::Log4perl::init(\q(
+Log::Log4perl::init(
+  \q(
   log4perl.category.MyLogger        = INFO, Screen
   log4perl.appender.Screen          = Log::Log4perl::Appender::Screen
   log4perl.appender.Screen.stderr   = 0
   log4perl.appender.Screen.layout   = Log::Log4perl::Layout::PatternLayout
   log4perl.appender.Screen.layout.ConversionPattern=%d %m%n
   log4perl.appender.Screen.utf8     = 1
-));
+)
+);
 my $log = Log::Log4perl::get_logger('MyLogger');
 
 my $list = shift @ARGV;
@@ -27,7 +28,7 @@ unless ($list && -f $list) {
 }
 
 open my $fh, '<', $list or die "Cannot read $list: $!";
-chomp(my @pids = grep { /^o:\d+$/ } map { s/^\s+|\s+$//r } <$fh>);
+chomp(my @pids = grep {/^o:\d+$/} map {s/^\s+|\s+$//r} <$fh>);
 close $fh;
 unless (@pids) {
   $log->error("No page PIDs in $list");
@@ -35,8 +36,7 @@ unless (@pids) {
 }
 
 my $ua  = Mojo::UserAgent->new;
-my $api = Mojo::URL->new->scheme('http')->host($ENV{PHAIDRA_API_HOST})->port(3000)
-  ->userinfo($ENV{PHAIDRA_ADMIN_USER} . ':' . $ENV{PHAIDRA_ADMIN_PASSWORD});
+my $api = Mojo::URL->new->scheme('http')->host($ENV{PHAIDRA_API_HOST})->port(3000)->userinfo($ENV{PHAIDRA_ADMIN_USER} . ':' . $ENV{PHAIDRA_ADMIN_PASSWORD});
 
 my $failed = 0;
 for my $pid (@pids) {
@@ -52,10 +52,12 @@ for my $pid (@pids) {
     $failed++;
     next;
   }
-  my $res = $ua->post($api->clone->path("/object/$pid/datastream/ALTO") => form => {
-    mimetype  => 'application/xml',
-    dscontent => {content => $alto, filename => 'alto.xml'},
-  })->result;
+  my $res = $ua->post(
+    $api->clone->path("/object/$pid/datastream/ALTO") => form => {
+      mimetype  => 'application/xml',
+      dscontent => {content => $alto, filename => 'alto.xml'},
+    }
+  )->result;
   if ($res->code != 200) {
     my $msg = $res->json && $res->json->{alerts} ? $res->json->{alerts}[0]{msg} : $res->message;
     $log->error("pid[$pid] save ALTO failed HTTP " . $res->code . " $msg");
@@ -84,18 +86,15 @@ sub ocrtext_to_alto {
   for my $word ($dom->find('ocrword')->each) {
     my $text = $word->attr('word');
     next unless defined $text && $text =~ /\S/;
-    my ($x1, $x2, $y1, $y2) = map { coord_num($_) } (
-      $word->attr('x1'), $word->attr('x2'), $word->attr('y1'), $word->attr('y2')
-    );
+    my ($x1, $x2, $y1, $y2) = map {coord_num($_)} ($word->attr('x1'), $word->attr('x2'), $word->attr('y1'), $word->attr('y2'));
     next unless defined $x1 && defined $x2 && defined $y1 && defined $y2;
     my ($hpos, $vpos) = ($x1 < $x2 ? $x1 : $x2, $y1 < $y2 ? $y1 : $y2);
     my ($width, $height) = (abs($x2 - $x1) || 1, abs($y2 - $y1) || 1);
-    $page_w = $hpos + $width  if $hpos + $width  > $page_w;
+    $page_w = $hpos + $width  if $hpos + $width > $page_w;
     $page_h = $vpos + $height if $vpos + $height > $page_h;
     $text =~ s/([&<>"])/$1 eq '&' ? '&amp;' : $1 eq '<' ? '&lt;' : $1 eq '>' ? '&gt;' : '&quot;'/ge;
     $i++;
-    $strings .= sprintf qq{          <String ID="w_%d" CONTENT="%s" HPOS="%d" VPOS="%d" WIDTH="%d" HEIGHT="%d"/>\n},
-      $i, $text, $hpos, $vpos, $width, $height;
+    $strings .= sprintf qq{          <String ID="w_%d" CONTENT="%s" HPOS="%d" VPOS="%d" WIDTH="%d" HEIGHT="%d"/>\n}, $i, $text, $hpos, $vpos, $width, $height;
   }
   return undef unless $i;
 
