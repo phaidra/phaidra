@@ -21,9 +21,22 @@ Log::Log4perl::init(
 );
 my $log = Log::Log4perl::get_logger('MyLogger');
 
-my $list = shift @ARGV;
+my $overwrite = 0;
+my $list;
+for my $arg (@ARGV) {
+  if ($arg eq '--overwrite') {
+    $overwrite = 1;
+  }
+  elsif (!$list) {
+    $list = $arg;
+  }
+  else {
+    $log->error('Usage: ocrtextToAlto.pl [--overwrite] /path/to/page-pids.txt');
+    exit 1;
+  }
+}
 unless ($list && -f $list) {
-  $log->error('Usage: ocrtextToAlto.pl /path/to/page-pids.txt');
+  $log->error('Usage: ocrtextToAlto.pl [--overwrite] /path/to/page-pids.txt');
   exit 1;
 }
 
@@ -46,6 +59,14 @@ for my $pid (@pids) {
     $failed++;
     next;
   }
+  my $had_alto = get_ds($pid, 'ALTO') ? 1 : 0;
+  if ($had_alto) {
+    unless ($overwrite) {
+      $log->info("pid[$pid] OCRTEXT and ALTO both present, skipped");
+      next;
+    }
+    $log->info("pid[$pid] OCRTEXT and ALTO both present, overwriting ALTO");
+  }
   my $alto = ocrtext_to_alto($ocr);
   unless ($alto) {
     $log->error("pid[$pid] OCRTEXT has no ocrword");
@@ -59,12 +80,12 @@ for my $pid (@pids) {
     }
   )->result;
   if ($res->code != 200) {
-    my $msg = $res->json && $res->json->{alerts} ? $res->json->{alerts}[0]{msg} : $res->message;
+    my $msg = $res->json && $res->json->{alerts} ? $res->json->{alerts}[0]{msg} : ($res->message // '');
     $log->error("pid[$pid] save ALTO failed HTTP " . $res->code . " $msg");
     $failed++;
     next;
   }
-  $log->info("pid[$pid] ALTO saved");
+  $log->info($had_alto ? "pid[$pid] ALTO overwritten" : "pid[$pid] ALTO saved");
 }
 exit($failed ? 1 : 0);
 
