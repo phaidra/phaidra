@@ -1,6 +1,6 @@
 <template>
     <v-row no-gutters>
-      <v-col md="9" cols="12" class="pr-2">
+      <v-col md="9" cols="12" class="results-column pr-2">
         <v-row align="start" class="pt-2 pb-4">
           <v-col md="6" cols="12">
             <p-search-autocomplete
@@ -52,7 +52,7 @@
             />
           </v-col>
         </v-row>
-        <v-row class="hidden-md-and-up">
+        <v-row class="d-md-none">
           <v-bottom-sheet v-model="filterdialog" scrollable>
             <template v-slot:activator="{ props }">
               <v-btn class="ml-4 mb-6" color="primary" v-bind="props">{{ $t('Filters') }}</v-btn>
@@ -119,8 +119,7 @@
           v-if="total>pagesize" v-bind:length="totalPages" total-visible="10" v-model="page" class="mb-3" />
         </v-row>
       </v-col>
-      <v-divider vertical class="divider hidden-sm-and-down"></v-divider>
-      <v-col cols="3" class="pa-3 pt-2 hidden-sm-and-down">
+      <v-col cols="3" class="d-none d-md-block pa-3 pt-2">
         <h2 id="filters" class="h5 font-weight-light">{{ $t('Filters') }}</h2>
         <v-divider class="mt-3 divider"></v-divider>
         <p-search-filters
@@ -575,6 +574,12 @@ export default {
 </script>
 
 <style scoped>
+@media (min-width: 960px) {
+  .results-column {
+    border-right: 1px solid #bdbdbd;
+  }
+}
+
 .divider {
   opacity: 1 !important;
   border-color: #bdbdbd !important;
