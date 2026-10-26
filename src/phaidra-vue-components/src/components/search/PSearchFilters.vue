@@ -8,7 +8,10 @@
     <v-row>
       <v-col cols="12">
         <ul class="main-ul searchFilters">
-          <li v-for="(f, i) in facetQueries" :key="i">
+          <li v-for="f in includeExcludeFacetQueries" :key="'include-exclude-' + f.id">
+            <p-search-filters-include-exclude :search="search" :facet="f" />
+          </li>
+          <li v-for="(f, i) in listedFacetQueries" :key="i">
             <v-checkbox v-model="f.show" @change="showFacet(f)" :label="$t(f.label ? f.label.toString() : '')"
               class="facet-label" color="primary" hide-details density="compact" :aria-expanded="f.show"
               :aria-controls="'facet-content-' + i" :id="'facet-control-' + i"></v-checkbox>
@@ -203,15 +206,17 @@
 import { useHostRootStore as useRootStore } from '../../stores/host-root'
 import { useVocabularyStore } from '../../stores/vocabulary'
 import { marcRoles } from './filters'
-import { toggleFacet, showFacet } from './facets'
+import { toggleFacet, showFacet, deactivateFacetQueries, hasSelectedFacetQuery } from './facets'
 import UserSearchDialog from '../select/UserSearchDialog'
+import PSearchFiltersIncludeExclude from './PSearchFiltersIncludeExclude'
 import { vocabulary } from '../../mixins/vocabulary'
 
 export default {
   name: 'p-search-filters',
   mixins: [vocabulary],
   components: {
-    UserSearchDialog
+    UserSearchDialog,
+    PSearchFiltersIncludeExclude
   },
   props: {
     search: {
@@ -255,14 +260,19 @@ export default {
     instance: function () {
       return useRootStore().instanceconfig
     },
+    searchFiltersIncludeExclude: function () {
+      return this.instance?.search_filters_include_exclude === true
+    },
+    includeExcludeFacetQueries: function () {
+      return this.searchFiltersIncludeExclude ? this.facetQueries.filter(f => f.includeExclude) : []
+    },
+    listedFacetQueries: function () {
+      return this.searchFiltersIncludeExclude ? this.facetQueries.filter(f => !f.includeExclude) : this.facetQueries
+    },
     filtersActive() {
       for (let fq of this.facetQueries) {
-        if (fq.resetable !== false && fq.queries) {
-          for (let q of fq.queries) {
-            if (q.active) {
-              return true
-            }
-          }
+        if (fq.resetable !== false && hasSelectedFacetQuery(fq.queries)) {
+          return true
         }
       }
       if (this.owner ||
@@ -430,14 +440,7 @@ export default {
     resetFilters: function () {
       for (const fq of this.facetQueries) {
         if (fq.resetable !== false && fq.queries) {
-          for (const q of fq.queries) {
-            if (q.active) {
-              q.active = false
-            }
-          }
-          if (fq.exclusive) {
-            fq.selectedRadioValue = null
-          }
+          deactivateFacetQueries(fq)
         }
       }
       this.owner = ''

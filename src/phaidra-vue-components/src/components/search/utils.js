@@ -1,4 +1,4 @@
-export function buildSearchDef ({ sortdef, q, page, pagesize, facetQueries, corpAuthors, persAuthors, roles, owner, inCollection: collection, baseAnds, accessibilityControl, accessibilityFeature, accessibilityHazard }) {
+export function buildSearchDef ({ sortdef, q, page, pagesize, facetQueries, corpAuthors, persAuthors, roles, owner, inCollection: collection, baseAnds, accessibilityControl, accessibilityFeature, accessibilityHazard, searchFiltersIncludeExclude }) {
   let searchdefarr = []
 
   for (let i = 0; i < sortdef.length; i++) {
@@ -17,6 +17,10 @@ export function buildSearchDef ({ sortdef, q, page, pagesize, facetQueries, corp
 
   let ands = []
   for (let i = 0; i < facetQueries.length; i++) {
+    if (searchFiltersIncludeExclude && facetQueries[i].includeExclude) {
+      addIncludeExcludeFacet(facetQueries[i], ands, searchdefarr)
+      continue
+    }
     let ors = []
     for (let j = 0; j < facetQueries[i].queries.length; j++) {
       if (facetQueries[i].queries[j].active) {
@@ -147,7 +151,37 @@ export function buildSearchDef ({ sortdef, q, page, pagesize, facetQueries, corp
   return { searchdefarr, ands }
 }
 
-export function buildParams ({ q, page, pagesize, sortdef, lang, facetQueries }, ands) {
+function addIncludeExcludeFacet (facet, ands, searchdefarr) {
+  const ors = []
+  const walk = (queries) => {
+    for (const query of queries || []) {
+      if (query.active) {
+        ors.push(query.query)
+        searchdefarr.push('fq=' + facet.id + '_' + query.id)
+      }
+      if (query.excluded) {
+        ands.push('NOT (' + (query.query.trim().charAt(0) === '-' ? '*:* AND ' : '') + query.query + ')')
+        searchdefarr.push('fq=' + facet.id + '_-' + query.id)
+      }
+      walk(query.childFacet && query.childFacet.queries)
+    }
+  }
+  walk(facet.queries)
+  if (ors.length > 1) {
+    ands.push('(' + ors.join(' OR ') + ')')
+  } else if (ors.length === 1) {
+    ands.push(ors[0])
+  }
+}
+
+function addFacetQueryCounts (queries, params) {
+  for (const query of queries || []) {
+    params['facet.query'].push(query.query)
+    addFacetQueryCounts(query.childFacet && query.childFacet.queries, params)
+  }
+}
+
+export function buildParams ({ q, page, pagesize, sortdef, lang, facetQueries, searchFiltersIncludeExclude }, ands) {
   let params = {
     q,
     'q.op': 'AND',
@@ -178,7 +212,9 @@ export function buildParams ({ q, page, pagesize, sortdef, lang, facetQueries },
 
   // TODO: new fn: serializefacetQueries (careful, current implementation might be using mutation)
   for (let i = 0; i < facetQueries.length; i++) {
-    if (facetQueries[i].show) {
+    if (searchFiltersIncludeExclude && facetQueries[i].includeExclude) {
+      addFacetQueryCounts(facetQueries[i].queries, params)
+    } else if (facetQueries[i].show) {
       for (let j = 0; j < facetQueries[i].queries.length; j++) {
         // exclude '{!ex=' + state.facetQueries[i].id + '}' +
         if (facetQueries[i].queries[j].active && facetQueries[i].queries[j].childFacet) {

@@ -23,16 +23,18 @@ export const state = () => ({
       ]
     },
     {
-      label: 'Type',
+      label: 'Resource type',
       field: 'resourcetype',
       id: 'resourcetype',
       resetable: true,
       show: true,
+      includeExclude: true,
       queries: [
         {
           id: 'image',
           query: 'resourcetype:image',
-          label: 'Image'
+          label: 'Image',
+          resourcetype: 'https://pid.phaidra.org/vocabulary/44TN-P1S0'
         },
         {
           id: 'book',
@@ -47,17 +49,8 @@ export const state = () => ({
         {
           id: 'text',
           query: 'resourcetype:text',
-          label: 'Text'
-        },
-        {
-          id: 'educationalresource',
-          query: 'oer:true',
-          label: 'Educational resource'
-        },
-        {
-          id: 'openeducationalresource',
-          query: 'oer:true AND (dc_license:"CC BY 4.0 International" OR dc_license:http\\:\\/\\/creativecommons.org\\/licenses\\/by\\/4.0\\/ OR "CC BY-SA 4.0 International" OR dc_license:http\\:\\/\\/creativecommons.org\\/licenses\\/by-sa\\/4.0\\/ OR "CC BY-NC 4.0 International" OR dc_license:http\\:\\/\\/creativecommons.org\\/licenses\\/by-nc\\/4.0\\/ OR "CC BY-NC-SA 4.0 International" OR dc_license:http\\:\\/\\/creativecommons.org\\/licenses\\/by-nc-sa\\/4.0\\/)',
-          label: 'Open educational resource'
+          label: 'Text',
+          resourcetype: 'https://pid.phaidra.org/vocabulary/69ZZ-2KGX'
         },
         {
           id: 'collection',
@@ -67,22 +60,19 @@ export const state = () => ({
         {
           id: 'video',
           query: 'resourcetype:video',
-          label: 'Video'
+          label: 'Video',
+          resourcetype: 'https://pid.phaidra.org/vocabulary/B0Y6-GYT8'
         },
         {
           id: 'other',
           query: 'resourcetype:other',
-          label: 'Data'
+          label: 'Data',
+          resourcetype: 'https://pid.phaidra.org/vocabulary/7AVS-Y482'
         },
         {
           id: 'dataset',
           query: 'resourcetype:dataset',
           label: 'Container'
-        },
-        {
-          id: 'map',
-          query: 'resourcetype:map',
-          label: 'Map'
         },
         {
           id: 'resource',
@@ -92,7 +82,8 @@ export const state = () => ({
         {
           id: 'sound',
           query: 'resourcetype:sound',
-          label: 'Sound'
+          label: 'Sound',
+          resourcetype: 'https://pid.phaidra.org/vocabulary/8YB5-1M0J'
         }
       ]
     },

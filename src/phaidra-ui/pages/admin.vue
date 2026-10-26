@@ -723,6 +723,15 @@
                 </v-row>
                 <v-row>
                   <v-col>
+                    <v-checkbox
+                      :label="$t('Include/exclude search filters')"
+                      v-model="parsedPublicConfigData.search_filters_include_exclude"
+                    ></v-checkbox>
+                  </v-col>
+                  <v-col cols="3" class="mt-4">{{ $t("Use include/exclude controls for facets marked includeExclude in facet queries") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
                     <v-textarea
                       :label="$t('Affiliations')"
                       v-model="data_affiliations_text"

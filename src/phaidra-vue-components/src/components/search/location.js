@@ -38,12 +38,27 @@ export function setSearchParams (self, { q, page, pagesize, sortdef, owner, coll
       let fqa = fq[n].split('_')
       let facetId = fqa[0]
       let queryId = fqa[1]
+      let excluded = !!queryId && queryId.charAt(0) === '-'
+      if (excluded) {
+        queryId = queryId.substring(1)
+      }
       for (let j = 0; j < self.facetQueries.length; j++) {
         if (self.facetQueries[j].id === facetId) {
+          const includeExclude = self.searchFiltersIncludeExclude && self.facetQueries[j].includeExclude
+          if (excluded && !includeExclude) {
+            continue
+          }
+          const markQuery = function (query) {
+            if (excluded) {
+              query.excluded = true
+            } else {
+              query.active = true
+            }
+          }
           self.facetQueries[j].show = true
           for (let k = 0; k < self.facetQueries[j].queries.length; k++) {
             if (self.facetQueries[j].queries[k].id === queryId) {
-              self.facetQueries[j].queries[k].active = true
+              markQuery(self.facetQueries[j].queries[k])
               if (self.facetQueries[j].exclusive) {
                 self.facetQueries[j].selectedRadioValue = queryId
               }
@@ -52,16 +67,20 @@ export function setSearchParams (self, { q, page, pagesize, sortdef, owner, coll
               let lvl1 = self.facetQueries[j].queries[k].childFacet
               for (let l = 0; l < lvl1.queries.length; l++) {
                 if (lvl1.queries[l].id === queryId) {
-                  lvl1.queries[l].active = true
-                  self.facetQueries[j].queries[k].active = true
+                  markQuery(lvl1.queries[l])
+                  if (!includeExclude) {
+                    self.facetQueries[j].queries[k].active = true
+                  }
                 }
                 if (lvl1.queries[l].childFacet) {
                   let lvl2 = lvl1.queries[l].childFacet
                   for (let m = 0; m < lvl2.queries.length; m++) {
                     if (lvl2.queries[m].id === queryId) {
-                      lvl2.queries[m].active = true
-                      lvl1.queries[l].active = true
-                      self.facetQueries[j].queries[k].active = true
+                      markQuery(lvl2.queries[m])
+                      if (!includeExclude) {
+                        lvl1.queries[l].active = true
+                        self.facetQueries[j].queries[k].active = true
+                      }
                     }
                   }
                 }

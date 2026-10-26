@@ -89,6 +89,7 @@ export const useRootStore = defineStore('root', {
       'infoBannerStartDate',
       'infoBannerEndDate',
       'data_i18n',
+      'search_filters_include_exclude',
       'customJavaScript',
       'downloadabledatastreams',
       'disableChecksum',

@@ -166,7 +166,7 @@ import '@/compiled-icons/fontello-sort-number-down'
 import '@/compiled-icons/material-content-link'
 import '@/compiled-icons/material-action-bookmark'
 import '@/compiled-icons/material-toggle-check-box-outline-blank'
-import { buildDateFacet, updateFacetQueries, persAuthors, corpAuthors, deactivateFacetQueries, buildAccessibilityFacet } from './facets'
+import { buildDateFacet, updateFacetQueries, persAuthors, corpAuthors, deactivateFacetQueries, buildAccessibilityFacet, buildObjectTypeFacet } from './facets'
 import { buildParams, buildSearchDef, sortdef } from './utils'
 import { setSearchParams } from './location'
 import { vocabulary } from '../../mixins/vocabulary'
@@ -200,6 +200,9 @@ export default {
     },
     instance: function () {
       return useRootStore()?.instanceconfig ?? {}
+    },
+    searchFiltersIncludeExclude: function () {
+      return this.instance?.search_filters_include_exclude === true
     },
     appconfig: function () {
       return useRootStore()?.appconfig ?? {}
@@ -560,6 +563,12 @@ export default {
         // Build association facet if configured in admin panel
         const tree = this.vocabularies['orgunits']['treeUnsorted']
         element.queries = tree?.length ? this.constructAssociationQueries(tree) : []
+      }
+      for (const q of element.queries || []) {
+        if (q.resourcetype && !q.childFacet) {
+          const terms = useVocabularyStore().getObjectTypeForResourceType(q.resourcetype, this.$i18n.locale)
+          q.childFacet = buildObjectTypeFacet(q, terms, id => this.getLocalizedTermLabel('objecttype', id))
+        }
       }
       return element
     });
