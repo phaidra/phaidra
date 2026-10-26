@@ -3860,7 +3860,7 @@ export default {
   color: rgba(0, 0, 0, 0.87);
 }
 
-.theme--dark .not-found-alert ::v-deep .v-alert__content {
+.v-theme--dark .not-found-alert ::v-deep .v-alert__content {
   color: rgba(255, 255, 255, 1);
 }
 
