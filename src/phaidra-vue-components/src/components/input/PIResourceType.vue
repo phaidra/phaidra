@@ -4,11 +4,9 @@
       <v-col cols="12">
         <v-btn-toggle
           v-model="toggleResourcetypeModel"
-          
           divided
           border
-          color="primary"
-          base-color="grey-lighten-4"
+          color="primary"          
           mandatory="force"
           @update:model-value="onResourceTypeChange"
         >
