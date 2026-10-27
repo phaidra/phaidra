@@ -1,5 +1,10 @@
 <template>
-  <v-overlay :value="!isLoggedIn" absolute>
+  <v-overlay
+    :model-value="!isLoggedIn"
+    contained
+    persistent
+    class="align-center justify-center"
+  >
     <v-card class="pa-6 text-center" theme="light">
       <v-icon size="64" class="mb-4">mdi-account-lock</v-icon>
       <h2 class="text-h5">{{ $t('Please log in to continue') }}</h2>

@@ -420,5 +420,27 @@ export const fieldSettings = {
     allowedSources: ['csv-column'],
     csvDisplayValue: (value) => value,
     csvAPIValue: (value) => value
+  },
+  'Mimetype': {
+    required: false,
+    fieldType: 'single-field',
+    allowedSources: ['csv-column'],
+    csvDisplayValue: (value) => value,
+    csvAPIValue: (value) => value
+  },
+  'Checksum': {
+    required: false,
+    fieldType: 'single-field',
+    allowedSources: ['csv-column'],
+    csvDisplayValue: (value) => value,
+    csvAPIValue: (value) => value
+  },
+  'Checksum type': {
+    required: false,
+    fieldType: 'single-field',
+    allowedSources: ['csv-column'],
+    csvColumnAliases: ['checksumtype'],
+    csvDisplayValue: (value) => value,
+    csvAPIValue: (value) => value
   }
 }
