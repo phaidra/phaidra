@@ -99,7 +99,7 @@ export default {
       const lang = currentLocale === 'deu' ? 'de' : currentLocale === 'ita' ? 'it' : 'en'
       const titlePart = nuxtApp.$i18n?.t ? nuxtApp.$i18n.t(instanceconfig.title) : (instanceconfig.title || '')
       const institutionPart = nuxtApp.$i18n?.t ? nuxtApp.$i18n.t(instanceconfig.institution) : (instanceconfig.institution || '')
-      const title = `${titlePart} - ${institutionPart}`.trim()
+      const defaultTitle = `${titlePart} - ${institutionPart}`.trim()
 
       const dark = nuxtApp.$vuetify?.theme?.global?.current?.value?.dark
       const themeColor = dark ? runtime.public.darkPrimaryColor : runtime.public.primaryColor
@@ -135,7 +135,7 @@ export default {
 
       return {
         htmlAttrs: { lang },
-        title,
+        titleTemplate: (title) => title || defaultTitle,
         meta,
         script,
         style
