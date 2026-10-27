@@ -368,7 +368,7 @@ export default {
   background-color: #e6f7ff;
 }
 
-.theme--dark .flash-bg {
+.v-theme--dark .flash-bg {
   background-color: #000000;
 }
 </style>

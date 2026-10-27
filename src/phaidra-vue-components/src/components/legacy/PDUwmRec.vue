@@ -661,7 +661,7 @@ export default {
   border-color: rgba(0, 0, 0, 0.12);
 }
 
-.theme--dark .uwm-border-left {
+.v-theme--dark .uwm-border-left {
   border-left: 1px solid;
   border-color: rgba(255, 255, 255, 0.25);
 }
