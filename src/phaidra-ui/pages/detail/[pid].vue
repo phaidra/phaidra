@@ -2459,7 +2459,7 @@
 <script>
 import { useRootStore } from '~/stores/root'
 import { useVocabularyStore } from 'phaidra-vue-components/src/stores/vocabulary'
-import { getCurrentInstance, nextTick } from 'vue'
+import { getCurrentInstance, nextTick, ref } from 'vue'
 import { useAsyncData, useNuxtApp, useRoute, useState } from '#app'
 import { context } from "../../mixins/context";
 import { config } from "../../mixins/config";
@@ -2477,8 +2477,8 @@ export default {
     const instance = getCurrentInstance()
     /** Survives SSR when `instance.proxy` is not ready yet; drives the same UI as `notFound` in data(). */
     const detailPageNotFound = useState('detail-page-not-found', () => false)
-
-    useHead(() => instance?.proxy?.detailsMetaInfo || {})
+    const detailsMetaInfo = ref(null)
+    useHead(() => detailsMetaInfo.value || {})
 
     /**
      * Load via Vuex/axios (works SSR + client). Do not depend on `instance.proxy` for the fetch:
@@ -2532,6 +2532,7 @@ export default {
           const status = error?.response?.status ?? error?.statusCode ?? error?.status
           if (Number(status) === 404) {
             useRootStore().setObjectInfo(null)
+            detailsMetaInfo.value = null
             detailPageNotFound.value = true
             await nextTick()
             const proxy = instance?.proxy
@@ -2610,7 +2611,7 @@ export default {
       }
     )
 
-    return { detailPageNotFound }
+    return { detailPageNotFound, detailsMetaInfo }
   },
   validate({ params }) {
     return /^o:\d+$/.test(params.pid);
@@ -3219,7 +3220,6 @@ export default {
       fullJsonLd: "",
       membersPage: 1,
       membersPageSize: 10,
-      detailsMetaInfo: null,
       collectionHelpDialog: false,
       collMembersCurrentPage: 1,
       collMembersPagesize: 10,
@@ -3771,6 +3771,7 @@ export default {
         detail: '-'
       }
       this.checksums = []
+      this.detailsMetaInfo = null
     },
     addToCollection: async function (collection) {
       if (collection.pid === this.objectInfo.pid) {
