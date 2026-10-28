@@ -41,28 +41,21 @@
 </template>
 
 <script setup>
+import { usePageDocumentTitle } from '../mixins/config'
+
 definePageMeta({
   middleware: 'auth'
 })
+usePageDocumentTitle('Manage templates')
 </script>
 
 <script>
 import { useRootStore } from '~/stores/root'
 import { context } from "../mixins/context";
-import { config, useDocumentTitle } from "../mixins/config";
+import { config } from "../mixins/config";
 
 export default {
   mixins: [context, config],
-  setup() {
-    const nuxtApp = useNuxtApp()
-    const documentTitle = useDocumentTitle()
-    useHead(() => {
-      const t = nuxtApp.$i18n?.t || ((v) => v)
-      return {
-        title: documentTitle(t('Manage templates'))
-      }
-    })
-  },
   watch: {
   },
   methods: {

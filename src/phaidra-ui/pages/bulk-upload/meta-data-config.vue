@@ -166,6 +166,15 @@
   </v-container>
 </template>
 
+<script setup>
+import { usePageDocumentTitle } from '../../mixins/config'
+
+definePageMeta({
+  middleware: 'bulk-upload'
+})
+usePageDocumentTitle('Bulk Upload')
+</script>
+
 <script>
 import { useBulkUploadStore } from '~/stores/bulk-upload'
 import { useVocabularyStore } from 'phaidra-vue-components/src/stores/vocabulary'
@@ -176,7 +185,6 @@ import { fieldSettings } from '../../config/bulk-upload/field-settings'
 import CSVColumnSelector from '../../components/bulk-upload/CSVColumnSelector.vue'
 import SourceSelector from '../../components/bulk-upload/SourceSelector.vue'
 import PhaidraFieldSelector from '../../components/bulk-upload/PhaidraFieldSelector.vue'
-
 export default {
   name: 'MetaDataConfig',
 

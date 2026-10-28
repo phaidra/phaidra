@@ -125,14 +125,16 @@
 </template>
 
 <script setup>
+import { usePageDocumentTitle } from '../../mixins/config'
+
 definePageMeta({
   middleware: 'auth'
 })
+usePageDocumentTitle('OpenCast submit title')
 </script>
 
 <script>
 import { context } from '../../mixins/context'
-import { useDocumentTitle } from '../../mixins/config'
 import { vocabulary } from 'phaidra-vue-components/src/mixins/vocabulary'
 import {
   buildSubmitDeepLinkSummary,
@@ -144,16 +146,6 @@ import {
 export default {
   layout: 'main',
   mixins: [context, vocabulary],
-  setup () {
-    const nuxtApp = useNuxtApp()
-    const documentTitle = useDocumentTitle()
-    useHead(() => {
-      const t = nuxtApp.$i18n?.t || ((v) => v)
-      return {
-        title: documentTitle(t('OpenCast submit title'))
-      }
-    })
-  },
   computed: {
     deepLinkSummary () {
       return buildSubmitDeepLinkSummary(this.$route.query)

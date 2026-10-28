@@ -290,28 +290,27 @@
 </template>
 
 <script setup>
+import { useRootStore } from '~/stores/root'
+import { usePageDocumentTitle } from '../mixins/config'
+
 definePageMeta({
   middleware: 'auth'
+})
+usePageDocumentTitle((t) => {
+  const store = useRootStore()
+  return (store.user?.isadmin || store.canManageInactiveObjects)
+    ? t('Inactive objects')
+    : t('My inactive objects')
 })
 </script>
 
 <script>
 import { useRootStore } from '~/stores/root'
 import { context } from '../mixins/context'
-import { config, useDocumentTitle } from '../mixins/config'
+import { config } from '../mixins/config'
 
 export default {
   mixins: [context, config],
-  setup() {
-    const nuxtApp = useNuxtApp()
-    const documentTitle = useDocumentTitle()
-    useHead(() => {
-      const t = nuxtApp.$i18n?.t || ((v) => v)
-      const store = useRootStore()
-      const title = (store.user?.isadmin || store.canManageInactiveObjects) ? t('Inactive objects') : t('My inactive objects')
-      return { title: documentTitle(title) }
-    })
-  },
   data() {
     return {
       loading: false,

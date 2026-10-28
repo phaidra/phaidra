@@ -103,9 +103,12 @@
 </template>
 
 <script setup>
+import { usePageDocumentTitle } from '../../../mixins/config'
+
 definePageMeta({
   middleware: 'auth'
 })
+usePageDocumentTitle('Submit related')
 </script>
 
 <script>

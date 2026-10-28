@@ -100,9 +100,12 @@
 </template>
 
 <script setup>
+import { usePageDocumentTitle } from '../../mixins/config'
+
 definePageMeta({
   middleware: 'bulk-upload'
 })
+usePageDocumentTitle('Bulk Upload')
 </script>
 
 <script>
