@@ -72,7 +72,8 @@ export const state = () => ({
         {
           id: 'dataset',
           query: 'resourcetype:dataset',
-          label: 'Container'
+          label: 'Container',
+          resourcetype: 'https://pid.phaidra.org/vocabulary/8MY0-BQDQ'
         },
         {
           id: 'resource',

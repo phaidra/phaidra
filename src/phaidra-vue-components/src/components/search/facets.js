@@ -85,27 +85,30 @@ export function buildAccessibilityFacet () {
   }
 }
 
+function facetQueryKey (q) {
+  return q.countQuery || q.query
+}
+
 export function updateFacetQueries (facetQueriesSolr, facetQueries) {
-  // called by the `search` function
   if (facetQueriesSolr) {
     Object.keys(facetQueriesSolr).forEach(function (key) {
       for (let i = 0; i < facetQueries.length; i++) {
         for (let j = 0; j < facetQueries[i].queries.length; j++) {
-          if (facetQueries[i].queries[j].query === key) {
+          if (facetQueryKey(facetQueries[i].queries[j]) === key) {
             const updatedQuery = { ...facetQueries[i].queries[j], count: facetQueriesSolr[key] }
             facetQueries[i].queries[j] = updatedQuery
           }
           if (facetQueries[i].queries[j].childFacet) {
             let lvl1 = facetQueries[i].queries[j].childFacet
             for (let k = 0; k < lvl1.queries.length; k++) {
-              if (lvl1.queries[k].query === key) {
+              if (facetQueryKey(lvl1.queries[k]) === key) {
                 const updatedLvl1Query = { ...lvl1.queries[k], count: facetQueriesSolr[key] }
                 lvl1.queries[k] = updatedLvl1Query
               }
               if (lvl1.queries[k].childFacet) {
                 let lvl2 = lvl1.queries[k].childFacet
                 for (let l = 0; l < lvl2.queries.length; l++) {
-                  if (lvl2.queries[l].query === key) {
+                  if (facetQueryKey(lvl2.queries[l]) === key) {
                     const updatedLvl2Query = { ...lvl2.queries[l], count: facetQueriesSolr[key] }
                     lvl2.queries[l] = updatedLvl2Query
                   }
@@ -190,10 +193,12 @@ export function buildObjectTypeFacet (parent, terms, labelOf) {
     queries: terms.map(term => {
       const id = term['@id'].substring(term['@id'].lastIndexOf('/') + 1)
       const ids = [term['@id']].concat((uwmObjectTypes[id] || []).map(uwmId => uwmObjectTypePrefix + uwmId))
+      const objectTypeQuery = 'object_type_id:(' + ids.map(v => '"' + v + '"').join(' OR ') + ')'
       return {
         id: parent.id + '.' + id,
         label: labelOf(term['@id']),
-        query: '(' + parent.query + ') AND object_type_id:(' + ids.map(v => '"' + v + '"').join(' OR ') + ')'
+        query: objectTypeQuery,
+        countQuery: '(' + parent.query + ') AND (' + objectTypeQuery + ')'
       }
     })
   }

@@ -151,22 +151,35 @@ export function buildSearchDef ({ sortdef, q, page, pagesize, facetQueries, corp
   return { searchdefarr, ands }
 }
 
+function notClause (query) {
+  return 'NOT (' + (query.trim().charAt(0) === '-' ? '*:* AND ' : '') + query + ')'
+}
+
 function addIncludeExcludeFacet (facet, ands, searchdefarr) {
   const ors = []
-  const walk = (queries) => {
-    for (const query of queries || []) {
-      if (query.active) {
-        ors.push(query.query)
-        searchdefarr.push('fq=' + facet.id + '_' + query.id)
-      }
-      if (query.excluded) {
-        ands.push('NOT (' + (query.query.trim().charAt(0) === '-' ? '*:* AND ' : '') + query.query + ')')
-        searchdefarr.push('fq=' + facet.id + '_-' + query.id)
-      }
-      walk(query.childFacet && query.childFacet.queries)
+  for (const parent of facet.queries || []) {
+    const children = (parent.childFacet && parent.childFacet.queries) || []
+    const includes = children.filter(c => c.active)
+    const excludes = children.filter(c => c.excluded)
+    const hasChildSelection = includes.length > 0 || excludes.length > 0
+    if (!parent.active && !hasChildSelection) {
+      continue
     }
+
+    const parts = [parent.query]
+    searchdefarr.push('fq=' + facet.id + '_' + parent.id)
+    if (includes.length > 0) {
+      parts.push(includes.length > 1 ? '(' + includes.map(c => c.query).join(' OR ') + ')' : includes[0].query)
+      for (const c of includes) {
+        searchdefarr.push('fq=' + facet.id + '_' + c.id)
+      }
+    }
+    for (const c of excludes) {
+      parts.push(notClause(c.query))
+      searchdefarr.push('fq=' + facet.id + '_-' + c.id)
+    }
+    ors.push(parts.length > 1 ? '(' + parts.join(' AND ') + ')' : parts[0])
   }
-  walk(facet.queries)
   if (ors.length > 1) {
     ands.push('(' + ors.join(' OR ') + ')')
   } else if (ors.length === 1) {
@@ -176,7 +189,7 @@ function addIncludeExcludeFacet (facet, ands, searchdefarr) {
 
 function addFacetQueryCounts (queries, params) {
   for (const query of queries || []) {
-    params['facet.query'].push(query.query)
+    params['facet.query'].push(query.countQuery || query.query)
     addFacetQueryCounts(query.childFacet && query.childFacet.queries, params)
   }
 }

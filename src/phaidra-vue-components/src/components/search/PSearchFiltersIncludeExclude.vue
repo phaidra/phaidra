@@ -14,7 +14,7 @@
         :aria-label="chipAriaLabel(item)"
         @click:close="clearSelected(item)"
       >
-        {{ item.excluded ? '−' : '+' }} {{ item.label }}
+        <template v-if="item.level === 'object'">{{ item.excluded ? '−' : '+' }} </template>{{ item.label }}
       </v-chip>
     </div>
     <v-text-field
@@ -30,38 +30,36 @@
     <ul class="searchFilters">
       <li v-for="(q, j) in facet.queries" v-show="isVisible(q, [])" :key="keyOf(q, j)">
         <div class="facet-row">
+          <v-checkbox
+            v-model="q.active"
+            class="facet-label"
+            color="primary"
+            hide-details
+            density="compact"
+            :aria-label="labelOf(q)"
+            @update:model-value="toggleResourceType(q)"
+          >
+            <template #label>
+              <span class="facet-label text-primary">{{ labelOf(q) }}</span>
+              <span class="facet-count text-secondary font-weight-medium" v-if="q.count > 0">({{ q.count }})</span>
+            </template>
+          </v-checkbox>
           <v-btn
-            icon="mdi-plus"
-            size="x-small"
-            variant="text"
-            :color="q.active ? 'primary' : undefined"
-            :aria-pressed="q.active === true"
-            :aria-label="actionLabel('Include', q)"
-            @click="includeQuery(q)"
-          />
-          <v-btn
-            icon="mdi-minus"
-            size="x-small"
-            variant="text"
-            :color="q.excluded ? 'error' : undefined"
-            :aria-pressed="q.excluded === true"
-            :aria-label="actionLabel('Exclude', q)"
-            @click="excludeQuery(q)"
-          />
-          <button
             v-if="hasChildren(q)"
-            type="button"
-            class="facet-toggle"
+            :icon="isExpanded(keyOf(q, j)) ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+            size="x-small"
+            variant="text"
             :aria-expanded="isExpanded(keyOf(q, j))"
             :aria-controls="treeId(keyOf(q, j))"
+            :aria-label="labelOf(q)"
             @click="toggle(keyOf(q, j))"
-          >
-            {{ labelOf(q) }}
-          </button>
-          <span v-else>{{ labelOf(q) }}</span>
-          <span class="facet-count text-secondary font-weight-medium" v-if="q.count > 0">({{ q.count }})</span>
+          />
         </div>
-        <ul v-if="hasChildren(q) && isExpanded(keyOf(q, j))" :id="treeId(keyOf(q, j))">
+        <ul
+          v-if="hasChildren(q) && isExpanded(keyOf(q, j))"
+          :id="treeId(keyOf(q, j))"
+          class="object-type-list"
+        >
           <li v-for="(q1, k) in q.childFacet.queries" v-show="isVisible(q1, [q])" :key="keyOf(q1, k)">
             <div class="facet-row">
               <v-btn
@@ -71,7 +69,7 @@
                 :color="q1.active ? 'primary' : undefined"
                 :aria-pressed="q1.active === true"
                 :aria-label="actionLabel('Include', q1)"
-                @click="includeQuery(q1)"
+                @click="includeObjectType(q, q1)"
               />
               <v-btn
                 icon="mdi-minus"
@@ -80,7 +78,7 @@
                 :color="q1.excluded ? 'error' : undefined"
                 :aria-pressed="q1.excluded === true"
                 :aria-label="actionLabel('Exclude', q1)"
-                @click="excludeQuery(q1)"
+                @click="excludeObjectType(q, q1)"
               />
               <button
                 v-if="hasChildren(q1)"
@@ -105,7 +103,7 @@
                     :color="q2.active ? 'primary' : undefined"
                     :aria-pressed="q2.active === true"
                     :aria-label="actionLabel('Include', q2)"
-                    @click="includeQuery(q2)"
+                    @click="includeObjectType(q, q2)"
                   />
                   <v-btn
                     icon="mdi-minus"
@@ -114,7 +112,7 @@
                     :color="q2.excluded ? 'error' : undefined"
                     :aria-pressed="q2.excluded === true"
                     :aria-label="actionLabel('Exclude', q2)"
-                    @click="excludeQuery(q2)"
+                    @click="excludeObjectType(q, q2)"
                   />
                   <span>{{ labelOf(q2) }}</span>
                   <span class="facet-count text-secondary font-weight-medium" v-if="q2.count > 0">({{ q2.count }})</span>
@@ -129,7 +127,7 @@
 </template>
 
 <script>
-import { hasSelectedFacetQuery } from './facets'
+import { hasSelectedFacetQuery, deactivateFacetQueries } from './facets'
 
 export default {
   name: 'p-search-filters-include-exclude',
@@ -152,21 +150,28 @@ export default {
   computed: {
     selectedFilters () {
       const selected = []
-      const walk = (queries, path, labels) => {
-        (queries || []).forEach((query, index) => {
-          const key = path + '/' + this.keyOf(query, index)
-          const label = labels.concat(this.labelOf(query))
-          if (query.active || query.excluded) {
-            selected.push({ key, query, label: label.join(' → '), excluded: query.excluded === true })
+      for (const [index, query] of (this.facet.queries || []).entries()) {
+        const key = this.keyOf(query, index)
+        const label = this.labelOf(query)
+        if (query.active && !hasSelectedFacetQuery(query.childFacet && query.childFacet.queries)) {
+          selected.push({ key, query, label, level: 'resource', excluded: false })
+        }
+        for (const [childIndex, child] of ((query.childFacet && query.childFacet.queries) || []).entries()) {
+          if (child.active || child.excluded) {
+            selected.push({
+              key: key + '/' + this.keyOf(child, childIndex),
+              query: child,
+              label: label + ' → ' + this.labelOf(child),
+              level: 'object',
+              excluded: child.excluded === true
+            })
           }
-          walk(query.childFacet && query.childFacet.queries, key, label)
-        })
+        }
       }
-      walk(this.facet.queries, '', [])
       return selected
     },
     includedCount () {
-      return this.selectedFilters.filter(item => !item.excluded).length
+      return this.selectedFilters.filter(item => item.level === 'object' && !item.excluded).length
     },
     excludedCount () {
       return this.selectedFilters.filter(item => item.excluded).length
@@ -188,6 +193,9 @@ export default {
       return this.$t(action) + ' ' + this.labelOf(query)
     },
     chipAriaLabel: function (item) {
+      if (item.level === 'resource') {
+        return this.labelOf(item.query)
+      }
       return this.$t(item.excluded ? 'Exclude' : 'Include') + ': ' + item.label
     },
     keyOf: function (query, index) {
@@ -228,18 +236,28 @@ export default {
     runSearch: function () {
       this.search({ currentPage: 1 })
     },
-    includeQuery: function (query) {
+    toggleResourceType: function (query) {
+      if (!query.active && query.childFacet) {
+        deactivateFacetQueries(query.childFacet)
+      }
+      query.excluded = false
+      this.runSearch()
+      this.$forceUpdate()
+    },
+    includeObjectType: function (parent, query) {
       query.active = !query.active
       if (query.active) {
         query.excluded = false
+        parent.active = true
       }
       this.runSearch()
       this.$forceUpdate()
     },
-    excludeQuery: function (query) {
+    excludeObjectType: function (parent, query) {
       query.excluded = !query.excluded
       if (query.excluded) {
         query.active = false
+        parent.active = true
       }
       this.runSearch()
       this.$forceUpdate()
@@ -247,6 +265,9 @@ export default {
     clearSelected: function (item) {
       item.query.active = false
       item.query.excluded = false
+      if (item.level === 'resource' && item.query.childFacet) {
+        deactivateFacetQueries(item.query.childFacet)
+      }
       this.runSearch()
       this.$forceUpdate()
       this.$nextTick(() => this.$refs.summary && this.$refs.summary.focus())
@@ -274,6 +295,13 @@ export default {
   display: flex;
   align-items: center;
   gap: 0.25em;
+}
+
+.object-type-list {
+  max-height: 16rem;
+  overflow-y: auto;
+  margin: 0 0 0.5em;
+  padding-left: 1.5em;
 }
 
 .facet-toggle {

@@ -68,9 +68,7 @@ export function setSearchParams (self, { q, page, pagesize, sortdef, owner, coll
               for (let l = 0; l < lvl1.queries.length; l++) {
                 if (lvl1.queries[l].id === queryId) {
                   markQuery(lvl1.queries[l])
-                  if (!includeExclude) {
-                    self.facetQueries[j].queries[k].active = true
-                  }
+                  self.facetQueries[j].queries[k].active = true
                 }
                 if (lvl1.queries[l].childFacet) {
                   let lvl2 = lvl1.queries[l].childFacet
