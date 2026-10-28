@@ -44,6 +44,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     },
     theme: {
       defaultTheme,
+      transition: { origin: '100% 0%' },
       themes: {
         light: {
           dark: false,
