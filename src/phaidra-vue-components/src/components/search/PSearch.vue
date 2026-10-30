@@ -565,7 +565,7 @@ export default {
         element.queries = tree?.length ? this.constructAssociationQueries(tree) : []
       }
       for (const q of element.queries || []) {
-        if (q.resourcetype && !q.childFacet) {
+        if (this.searchFiltersIncludeExclude && q.resourcetype && !q.childFacet) {
           const terms = useVocabularyStore().getObjectTypeForResourceType(q.resourcetype, this.$i18n.locale)
           q.childFacet = buildObjectTypeFacet(q, terms, id => this.getLocalizedTermLabel('objecttype', id))
         }
