@@ -13,9 +13,12 @@
 </template>
 
 <script setup>
+import { usePageDocumentTitle } from '../../mixins/config'
+
 definePageMeta({
   middleware: 'auth'
 })
+usePageDocumentTitle('Relationships')
 </script>
 
 <script>

@@ -96,10 +96,12 @@ import PreviewTableHeader from '../../components/bulk-upload/PreviewTableHeader.
 import PreviewTableCell from '../../components/bulk-upload/PreviewTableCell.vue'
 import { fieldSettings } from '../../config/bulk-upload/field-settings'
 import { parseCsv } from '../../mixins/csvParser'
+import { usePageDocumentTitle } from '../../mixins/config'
 
 definePageMeta({
   middleware: 'bulk-upload'
 })
+usePageDocumentTitle('Bulk Upload')
 
 const { $i18n: i18n, $router: router, $initBulkUpload } = useNuxtApp()
 

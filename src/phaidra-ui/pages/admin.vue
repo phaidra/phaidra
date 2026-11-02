@@ -1573,9 +1573,12 @@
 </template>
 
 <script setup>
+import { usePageDocumentTitle } from '../mixins/config'
+
 definePageMeta({
   middleware: ['auth', 'admin']
 })
+usePageDocumentTitle('Admin')
 </script>
 
 <script>
@@ -1584,22 +1587,12 @@ import FaviconMixin from '../mixins/favicon'
 import PRepostat from '../components/Repostat.vue';
 import AdminUsers from '../components/admin/AdminUsers.vue';
 import AdminTermsOfUse from '../components/admin/AdminTermsOfUse.vue';
-import { config, useDocumentTitle } from "../mixins/config";
+import { config } from "../mixins/config";
 import { encodeUtf8ToBase64 } from '@/utils/encode-base64'
 
 export default {
   mixins: [FaviconMixin, config],
   components: { PRepostat, AdminUsers, AdminTermsOfUse },
-  setup() {
-    const nuxtApp = useNuxtApp()
-    const documentTitle = useDocumentTitle()
-    useHead(() => {
-      const t = nuxtApp.$i18n?.t || ((v) => v)
-      return {
-        title: documentTitle(t('Admin'))
-      }
-    })
-  },
   computed: {
     configAsJSON: {
       get: function () {

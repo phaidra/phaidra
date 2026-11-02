@@ -2,26 +2,19 @@
 <Submit></Submit>
 </template>
 <script setup>
+import { usePageDocumentTitle } from '../../mixins/config'
+
 definePageMeta({
   middleware: 'auth'
 })
+usePageDocumentTitle('Submit')
 </script>
 
 <script>
-import { config, useDocumentTitle } from "../../mixins/config";
+import { config } from "../../mixins/config";
 import Submit from "../../components/Submit.vue";
 
 export default {
-  mixins: [config],
-  setup() {
-    const nuxtApp = useNuxtApp()
-    const documentTitle = useDocumentTitle()
-    useHead(() => {
-      const t = nuxtApp.$i18n?.t || ((v) => v)
-      return {
-        title: documentTitle(t('Submit'))
-      }
-    })
-  }
+  mixins: [config]
 }
 </script>

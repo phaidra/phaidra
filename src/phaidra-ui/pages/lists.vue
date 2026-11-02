@@ -4,24 +4,17 @@
 </client-only>
 </template>
 <script setup>
+import { usePageDocumentTitle } from '../mixins/config'
+
 definePageMeta({
   middleware: 'auth'
 })
+usePageDocumentTitle('Manage object lists')
 </script>
 
 <script>
-import { config, useDocumentTitle } from "../mixins/config";
+import { config } from "../mixins/config";
 export default {
-  mixins: [config],
-  setup() {
-    const nuxtApp = useNuxtApp()
-    const documentTitle = useDocumentTitle()
-    useHead(() => {
-      const t = nuxtApp.$i18n?.t || ((v) => v)
-      return {
-        title: documentTitle(t('Manage object lists'))
-      }
-    })
-  }
+  mixins: [config]
 }
 </script>

@@ -31,9 +31,12 @@
 </template>
 
 <script setup>
+import { usePageDocumentTitle } from '../../mixins/config'
+
 definePageMeta({
   middleware: 'auth'
 })
+usePageDocumentTitle('Upload')
 </script>
 
 <script>
@@ -42,7 +45,7 @@ import { useVocabularyStore } from 'phaidra-vue-components/src/stores/vocabulary
 import arrays from "phaidra-vue-components/src/utils/arrays"
 import fields from "phaidra-vue-components/src/utils/fields"
 import { context } from "../../mixins/context"
-import { config, useDocumentTitle } from "../../mixins/config"
+import { config } from "../../mixins/config"
 import { vocabulary } from "phaidra-vue-components/src/mixins/vocabulary"
 import { submitDeepLink } from "../../mixins/submitDeepLink"
 import { resolveInitialResourceType, parseResourceTypeFromQuery } from "../../utils/submitDeepLinkParams"
@@ -52,14 +55,6 @@ export default {
   layout: "main",
   mixins: [context, config, vocabulary, submitDeepLink],
   setup() {
-    const nuxtApp = useNuxtApp()
-    const documentTitle = useDocumentTitle()
-    useHead(() => {
-      const t = nuxtApp.$i18n?.t || ((v) => v)
-      return {
-        title: documentTitle(t('Upload'))
-      }
-    })
     const goTo = useGoTo()
     return { goTo }
   },

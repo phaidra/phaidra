@@ -9,9 +9,12 @@
 </template>
 
 <script setup>
+import { usePageDocumentTitle } from '../../mixins/config'
+
 definePageMeta({
   middleware: 'auth'
 })
+usePageDocumentTitle('Bulk Upload')
 </script>
 
 <script>
