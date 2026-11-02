@@ -58,7 +58,7 @@ nav:
       - Technical Docs:
           - docs/architecture.md
           - docs/digital-object.md
-          - docs/metadata.md
+          - Metadata: https://phaidra.univie.ac.at/metadata-fields-help
           - docs/vocabularies.md
           - docs/index.md
           - Docked Applications: docs/docked.md
