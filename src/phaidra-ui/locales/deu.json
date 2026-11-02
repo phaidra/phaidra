@@ -1604,5 +1604,13 @@
   "The information about the file format can be relevant to determine the equipment needed to display or operate a resource (e.g. if the described resource has format PDF, you need a PDF reader to use it). <br> Once you upload the file, the value is pre-selected by the system. Check if this value fits your digital object. If not, choose the right one from the drop-down menu. <br><b>Note:</b> If possible, before uploading the file consider file formats that are widely used and supported by the most commonly used software and tools.": "Die Information zum Dateiformat kann relevant sein, um die für die Anzeige oder Nutzung einer Ressource erforderliche Ausstattung zu bestimmen (z. B. benötigen Sie bei einer beschriebenen Ressource im PDF-Format einen PDF-Reader). <br> Nach dem Hochladen der Datei wird der Wert vom System vorausgewählt. Prüfen Sie, ob dieser Wert zu Ihrem digitalen Objekt passt. Falls nicht, wählen Sie den richtigen Wert aus dem Ausklappmenü. <br><b>Hinweis:</b> Berücksichtigen Sie nach Möglichkeit vor dem Hochladen Dateiformate, die weit verbreitet sind und von den gängigsten Programmen und Werkzeugen unterstützt werden.",
   "<a href=\"https://www.iana.org/assignments/media-types/media-types.xhtml\">Internet Media Types (IMT)</a>": "<a href=\"https://www.iana.org/assignments/media-types/media-types.xhtml\">Internet-Medientypen (IMT)</a>",
   "<a href=\"https://vocab.phaidra.org/vocabulary/7E4S-MA30\">Resource type PHAIDRA Vocabulary</a>": "<a href=\"https://vocab.phaidra.org/vocabulary/7E4S-MA30\">PHAIDRA-Vokabular für Ressourcentypen</a>",
-  "<a href=\"https://creativecommons.org/licenses/\">Creative Commons licenses</a>": "<a href=\"https://creativecommons.org/licenses/\">Creative-Commons-Lizenzen</a>"
+  "<a href=\"https://creativecommons.org/licenses/\">Creative Commons licenses</a>": "<a href=\"https://creativecommons.org/licenses/\">Creative-Commons-Lizenzen</a>",
+  "This vocabulary defines the unit type, not the value.": "Dieses Vokabular definiert die Einheit, nicht den Wert.",
+  "Supported values": "Unterstützte Werte",
+  "Currently supported types": "Derzeit unterstützte Typen",
+  "Type ID": "Typ-ID",
+  "Definition": "Definition",
+  "Label": "Bezeichnung",
+  "Class": "Klasse",
+  "Comment": "Kommentar"
 }

@@ -4467,41 +4467,6 @@ const metadataFieldsOverview = [
         "url": "http://purl.org/vra/"
       }
     ]
-  },
-  {
-    "title": "Resources",
-    "open": false,
-    "fields": [],
-    "items": [
-      {
-        "label": "Samvera MODS to RDF Working Group: MODS to RDF Mapping Recommendations",
-        "url": "https://goo.gl/SGCfev"
-      },
-      {
-        "label": "Predicate decision tree",
-        "url": "https://docs.google.com/document/d/1oMvVlGuBwD5U1251oxNmTZn7WgkNTj6tF-k1hOYjnac/edit"
-      },
-      {
-        "label": "Notes to BIBFRAME title use",
-        "url": "https://www.loc.gov/bibframe/docs/pdf/bf2-titles-march2017.pdf"
-      },
-      {
-        "label": "VRA Core",
-        "url": "http://www.core.vraweb.org/"
-      },
-      {
-        "label": "imageOf example",
-        "url": "http://core.vraweb.org/examples/html/example029_full.html"
-      },
-      {
-        "label": "TTL example",
-        "url": "https://github.com/mixterj/VRA-RDF-Project/blob/master/data/sample/ttl/record2.ttl"
-      },
-      {
-        "label": "Mapping of fcrepo3 attributes",
-        "url": "https://github.com/fcrepo4-exts/migration-utils"
-      }
-    ]
   }
 ]
 

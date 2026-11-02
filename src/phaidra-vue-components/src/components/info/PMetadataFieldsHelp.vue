@@ -37,14 +37,6 @@
             :active="selectedView === 'namespaces'"
             @click.prevent="selectView('namespaces', true)"
           />
-          <v-list-item
-            class="text-primary"
-            :title="$t('Resources')"
-            value="resources"
-            href="#resources"
-            :active="selectedView === 'resources'"
-            @click.prevent="selectView('resources', true)"
-          />
         </v-list>
       </v-col>
       <v-col cols="12" md="9" class="px-3">
@@ -54,7 +46,7 @@
           </div>
           <v-alert v-if="selectedParentField" type="info" variant="tonal" class="mt-4">
             {{ $t('This field is a type of') }}
-            <a :href="'#' + fieldAnchor(selectedParentField)" @click.prevent="selectField(selectedParentField, true)">{{ selectedParentField.title }}</a>.
+            <a :href="'#' + fieldAnchor(selectedParentField)" @click.prevent="selectField(selectedParentField, true)">{{ $t(selectedParentField.title) }}</a>.
           </v-alert>
           <div v-for="(section, i) in selectedField.sections" :key="i" :id="'sec' + i">
             <template v-if="hasSectionContent(section)">
@@ -77,7 +69,7 @@
             </template>
           </div>
           <template v-if="selectedVocabulary">
-            <div class="font-weight-light text-headline-medium mt-8 mb-4">Vocabulary</div>
+            <div class="font-weight-light text-headline-medium mt-8 mb-4">{{ $t('Vocabulary') }}</div>
             <v-data-table
               :headers="vocabularyHeaders"
               :items="selectedVocabularyTerms"
@@ -92,21 +84,26 @@
                 <span v-html="item.definition" />
               </template>
             </v-data-table>
-            <div v-if="selectedField.vocabularyNote" class="text-medium-emphasis mt-2">{{ selectedField.vocabularyNote }}</div>
+            <div v-if="selectedField.vocabularyNote" class="text-medium-emphasis mt-2">{{ $t(selectedField.vocabularyNote) }}</div>
           </template>
           <template v-if="selectedFieldReference">
             <div v-for="list in referenceLists" :key="list.name" class="mt-8">
-              <div class="font-weight-light text-headline-medium mb-4">{{ list.name }}</div>
+              <div class="font-weight-light text-headline-medium mb-4">{{ $t(list.name) }}</div>
               <v-table density="compact">
+                <thead>
+                  <tr>
+                    <th v-for="(value, cell) in list.entries[0]" :key="cell" class="font-weight-bold">{{ $t(value) }}</th>
+                  </tr>
+                </thead>
                 <tbody>
-                  <tr v-for="(entry, index) in list.entries" :key="index">
-                    <td v-for="(value, cell) in entry" :key="cell">{{ value }}</td>
+                  <tr v-for="(entry, index) in list.entries.slice(1)" :key="index">
+                    <td v-for="(value, cell) in entry" :key="cell">{{ $t(value) }}</td>
                   </tr>
                 </tbody>
               </v-table>
             </div>
             <v-expansion-panels v-if="selectedFieldReference.jsonLdExample" class="mt-6">
-              <v-expansion-panel title="JSON-LD example">
+              <v-expansion-panel :title="$t('JSON-LD example')">
                 <v-expansion-panel-text>
                   <pre class="metadata-example"><code>{{ selectedFieldReference.jsonLdExample }}</code></pre>
                 </v-expansion-panel-text>
@@ -127,15 +124,6 @@
               </tr>
             </tbody>
           </v-table>
-        </template>
-
-        <template v-else-if="selectedView === 'resources'">
-          <div id="resources" class="text-display-small font-weight-light mb-6">Resources</div>
-          <v-list>
-            <v-list-item v-for="resource in resources" :key="resource.url" :href="resource.url" target="_blank" rel="noopener">
-              <v-list-item-title>{{ resource.label }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
         </template>
       </v-col>
     </v-row>
@@ -160,17 +148,13 @@ export default {
     namespaces: function () {
       return this.metadataOverview.find(category => category.title === 'Namespaces')?.items || []
     },
-    resources: function () {
-      return this.metadataOverview.find(category => category.title === 'Resources')?.items || []
-    },
     mobileNavigationItems: function () {
       return [
         ...this.categories.flatMap(category => category.fields).map(field => ({
           title: this.$t(field.title),
           value: this.fieldAnchor(field)
         })),
-        { title: 'Namespaces', value: 'namespaces' },
-        { title: 'Resources', value: 'resources' }
+        { title: 'Namespaces', value: 'namespaces' }
       ]
     },
     mobileNavigationValue: {
@@ -208,11 +192,11 @@ export default {
     },
     vocabularyHeaders: function () {
       const headers = [
-        { title: 'Term', key: 'label' },
-        { title: 'Code', key: 'code' }
+        { title: this.$t('Term'), key: 'label' },
+        { title: this.$t('Code'), key: 'code' }
       ]
       if (this.selectedVocabularyTerms.some(term => term.definition)) {
-        headers.push({ title: 'Help', key: 'definition' })
+        headers.push({ title: this.$t('Help'), key: 'definition' })
       }
       return headers
     },
@@ -264,7 +248,7 @@ export default {
       if (linkedField) {
         this.selectedField = linkedField
         this.selectedView = 'field'
-      } else if (hash === 'namespaces' || hash === 'resources') {
+      } else if (hash === 'namespaces') {
         this.selectedView = hash
       } else if (!hash) {
         this.selectedField = this.categories[0].fields[0]

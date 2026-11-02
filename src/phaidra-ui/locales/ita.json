@@ -1674,5 +1674,13 @@
   "<a href=\"https://vocab.phaidra.org/vocabulary/FDVS-NMG1\">DC Format PHAIDRA Vocabulary</a>": "<a href=\"https://vocab.phaidra.org/vocabulary/FDVS-NMG1\">Vocabolario PHAIDRA del formato DC</a>",
   "The information about the file format can be relevant to determine the equipment needed to display or operate a resource (e.g. if the described resource has format PDF, you need a PDF reader to use it). <br> Once you upload the file, the value is pre-selected by the system. Check if this value fits your digital object. If not, choose the right one from the drop-down menu. <br><b>Note:</b> If possible, before uploading the file consider file formats that are widely used and supported by the most commonly used software and tools.": "Le informazioni sul formato del file possono essere rilevanti per stabilire l’attrezzatura necessaria a visualizzare o utilizzare una risorsa (ad es. se la risorsa descritta è in formato PDF, è necessario un lettore PDF). <br> Dopo il caricamento del file, il valore viene preselezionato dal sistema. Verificare che corrisponda all’oggetto digitale. In caso contrario, scegliere quello corretto dal menu a discesa. <br><b>Nota:</b> se possibile, prima di caricare il file considerare formati ampiamente utilizzati e supportati dai software e strumenti più comuni.",
   "<a href=\"https://www.iana.org/assignments/media-types/media-types.xhtml\">Internet Media Types (IMT)</a>": "<a href=\"https://www.iana.org/assignments/media-types/media-types.xhtml\">Tipi di media Internet (IMT)</a>",
-  "<a href=\"https://vocab.phaidra.org/vocabulary/7E4S-MA30\">Resource type PHAIDRA Vocabulary</a>": "<a href=\"https://vocab.phaidra.org/vocabulary/7E4S-MA30\">Vocabolario PHAIDRA del tipo di risorsa</a>"
+  "<a href=\"https://vocab.phaidra.org/vocabulary/7E4S-MA30\">Resource type PHAIDRA Vocabulary</a>": "<a href=\"https://vocab.phaidra.org/vocabulary/7E4S-MA30\">Vocabolario PHAIDRA del tipo di risorsa</a>",
+  "This vocabulary defines the unit type, not the value.": "Questo vocabolario definisce il tipo di unità, non il valore.",
+  "Supported values": "Valori supportati",
+  "Currently supported types": "Tipi attualmente supportati",
+  "Type ID": "ID del tipo",
+  "Definition": "Definizione",
+  "Label": "Etichetta",
+  "Class": "Classe",
+  "Comment": "Commento"
 }
