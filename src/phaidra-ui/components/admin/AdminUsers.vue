@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card variant="outlined">
     <v-card-title class="d-flex align-center text-title-large font-weight-light text-white">
       {{ $t('Users') }}
       <v-spacer />
