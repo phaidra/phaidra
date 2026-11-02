@@ -1081,7 +1081,7 @@ sub get_study_terms {
   }
 
   if (defined($spl) && $spl ne '') {
-    my @filtered = grep { ($_->{uri} // '') eq $spl } @{$termarraySpl};
+    my @filtered = grep {($_->{uri} // '') eq $spl} @{$termarraySpl};
     return \@filtered;
   }
 
