@@ -1164,19 +1164,24 @@ sub _get {
     return $fres;
   }
 
-  # skip inactive objects
+  # skip inactive/deleted objects unless ignorestatus=1
   my $state = $fres->{state};
   if ($state ne 'Active') {
-    my $errmsg = "[_get index] $pid is $state, deleting from index.";
-    $c->app->log->warn($errmsg);
-    push @{$res->{alerts}}, {type => 'error', msg => $errmsg};
-    if ($state eq 'Deleted') {
-      $res->{status} = 410;
+    if ($ignorestatus && ($ignorestatus eq '1')) {
+      $c->app->log->debug("[_get index] ignorestatus=$ignorestatus");
     }
-    if ($state eq 'Inactive') {
-      $res->{status} = 403;
+    else {
+      my $errmsg = "[_get index] $pid is $state, deleting from index.";
+      $c->app->log->warn($errmsg);
+      push @{$res->{alerts}}, {type => 'error', msg => $errmsg};
+      if ($state eq 'Deleted') {
+        $res->{status} = 410;
+      }
+      if ($state eq 'Inactive') {
+        $res->{status} = 403;
+      }
+      return $res;
     }
-    return $res;
   }
   $index{owner}    = $fres->{owner};
   $index{cmodel}   = $fres->{cmodel};
