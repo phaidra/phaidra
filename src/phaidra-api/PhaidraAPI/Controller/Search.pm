@@ -24,6 +24,7 @@ sub get_pids {
   my $sr           = $search_model->get_pids($self, $query);
   if ($sr->{status} ne 200) {
     $self->render(json => $sr, status => $sr->{status});
+    return;
   }
 
   $self->render(json => {pids => $sr->{pids}}, status => $sr->{status});

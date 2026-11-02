@@ -123,14 +123,14 @@ sub process_pids {
     if ($skipexisting && ($skipexisting eq 1)) {
       my $res1 = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'tika'}, {}, {"sort" => {"created" => -1}});
       if ($res1->{pid}) {
-        $self->render(json => {alerts => [{type => 'info', msg => "Job for pid[$pid] already created"}], job => $res1}, status => 200);
+        push @results, {pid => $pid, alerts => [{type => 'info', msg => "Job for pid[$pid] already created"}], job => $res1};
         next;
       }
     }
 
     my $cmodelr = $search_model->get_cmodel($self, $pid);
     if ($cmodelr->{status} ne 200) {
-      $self->render(json => $cmodelr->{json}, status => $cmodelr->{status});
+      push @results, {pid => $pid, status => $cmodelr->{status}, alerts => ($cmodelr->{alerts} // [])};
       next;
     }
     my $cmodel = $cmodelr->{cmodel};
