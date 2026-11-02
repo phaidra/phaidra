@@ -1,7 +1,7 @@
 <template>
     <v-row justify="center">
         <v-col>
-        <v-card tile>
+        <v-card variant="outlined">
             <v-card-title class="text-title-large font-weight-light text-white">{{
             $t("Repository statistics")
             }}</v-card-title>
@@ -13,7 +13,7 @@
                 :items-per-page="1"
                 :loading="storageLoading"
                 :no-data-text="$t('No data available')"
-                class="elevation-1 my-4"
+                class="border-thin my-4"
                 disable-sort
                 hide-default-footer
             >
@@ -30,7 +30,7 @@
                 :items-per-page="1"
                 :loading="imgLoading"
                 :no-data-text="$t('No data available')"
-                class="elevation-1 my-4"
+                class="border-thin my-4"
                 disable-sort
                 hide-default-footer
             >
@@ -45,7 +45,7 @@
                 :items-per-page="1000"
                 :sort-by="sortByTotalDesc"
                 hide-default-footer
-                class="elevation-1 my-8"
+                class="border-thin my-8"
                 :no-data-text="$t('No data available')"
             ></v-data-table>
             <v-data-table
@@ -54,7 +54,7 @@
                 :items-per-page="1000"
                 :sort-by="sortByTotalDesc"
                 hide-default-footer
-                class="elevation-1 my-8"
+                class="border-thin my-8"
                 :no-data-text="$t('No data available')"
             ></v-data-table>
             <v-data-table
@@ -63,7 +63,7 @@
                 :items-per-page="1000"
                 :sort-by="sortByTotalDesc"
                 hide-default-footer
-                class="elevation-1 my-8"
+                class="border-thin my-8"
                 :no-data-text="$t('No data available')"
             ></v-data-table>
             <v-data-table
@@ -72,7 +72,7 @@
                 :items-per-page="1000"
                 :sort-by="sortByTotalDesc"
                 hide-default-footer
-                class="elevation-1 my-8"
+                class="border-thin my-8"
                 :no-data-text="$t('No data available')"
             ></v-data-table>
             </v-card-text>

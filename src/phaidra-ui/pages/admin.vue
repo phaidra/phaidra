@@ -184,7 +184,7 @@
                           {{ $t("Select submit template") }}
                         </v-btn>
                       </template>
-                      <v-card>
+                      <v-card variant="outlined">
                         <v-card-title class="text-title-large font-weight-light text-white">{{ $t("Select submit template") }}</v-card-title>
                         <v-card-text>
                           <p-templates class="mt-4" ref="templates" :items-per-page="5" :id-only="true" :isDefaultSelect="true"
@@ -869,7 +869,7 @@
                 </v-row>
                 <v-row>
                   <v-col>
-                    <v-card>
+                    <v-card variant="outlined">
                       <v-card-title class="text-title-large font-weight-light text-white">{{ $t("Handle") }}</v-card-title>
                       <v-card-text>
                         <v-row>
@@ -916,7 +916,7 @@
                 </v-row>
                 <v-row>
                   <v-col>
-                    <v-card>
+                    <v-card variant="outlined">
                       <v-card-title class="text-title-large font-weight-light text-white">{{ $t("SMTP") }}</v-card-title>
                       <v-card-text>
                         <v-row class="mt-4">
@@ -968,7 +968,7 @@
                 </v-row>
                 <v-row>
                   <v-col>
-                    <v-card>
+                    <v-card variant="outlined">
                       <v-card-title class="text-title-large font-weight-light text-white">{{ $t("External LDAP") }}</v-card-title>
                       <v-card-text>
                         <v-row class="mt-4">
@@ -1055,7 +1055,7 @@
                 </v-row>
                 <v-row>
                   <v-col>
-                    <v-card>
+                    <v-card variant="outlined">
                       <v-card-title class="text-title-large font-weight-light text-white">{{ $t("JWT") }}</v-card-title>
                       <v-card-text>
                         <v-row class="mt-4">
@@ -1133,7 +1133,7 @@
                 </v-row>
                 <v-row>
                   <v-col>
-                    <v-card>
+                    <v-card variant="outlined">
                       <v-card-title class="text-title-large font-weight-light text-white">{{ $t("Reporting") }}</v-card-title>
                       <v-card-text>
                         <v-row class="mt-4">
@@ -1209,7 +1209,7 @@
                     </v-window-item>
                     <v-window-item value="priv-apis" class="pa-8">
                       <v-container>
-                        <v-card>
+                        <v-card variant="outlined">
                           <v-card-title class="text-title-large font-weight-light text-white">{{ $t('Open Policy Finder') }}</v-card-title>
                           <v-card-text>
                             <v-row class="mt-4">
@@ -1246,6 +1246,7 @@
                           v-for="emailTemplate in emailTemplateDefinitions.filter(template => !template.ir)"
                           :key="emailTemplate.key"
                           class="mb-6 email-template-card"
+                          variant="outlined"
                         >
                           <v-card-title class="text-title-large font-weight-light text-white email-template-card__title">{{ $t(emailTemplate.title) }}</v-card-title>
                           <v-card-text>
@@ -1291,7 +1292,7 @@
               <v-container>
                 <v-row>
                   <v-col>
-                    <v-card>
+                    <v-card variant="outlined">
                       <v-card-title class="text-title-large font-weight-light text-white">{{ $t("General") }}</v-card-title>
                       <v-card-text>
                         <v-row class="mt-4">
@@ -1310,7 +1311,7 @@
 
                 <v-row>
                   <v-col>
-                  <v-card>
+                  <v-card variant="outlined">
                     <v-card-title class="text-title-large font-weight-light text-white">{{ $t("SMTP") }}</v-card-title>
                     <v-card-text>
                       <v-row class="mt-4">
@@ -1363,7 +1364,7 @@
 
                 <v-row>
                   <v-col>
-                    <v-card>
+                    <v-card variant="outlined">
                       <v-card-title class="text-title-large font-weight-light text-white">{{ $t("Bulk upload") }}</v-card-title>
                       <v-card-text>
                         <v-row>
@@ -1400,7 +1401,7 @@
 
                 <v-row>
                   <v-col>
-                    <v-card>
+                    <v-card variant="outlined">
                       <v-card-title class="text-title-large font-weight-light text-white">{{ $t('Email templates') }}</v-card-title>
                       <v-card-text>
                         <div
@@ -1435,7 +1436,7 @@
 
                 <v-row>
                   <v-col>
-                  <v-card>
+                  <v-card variant="outlined">
                     <v-card-title class="text-title-large font-weight-light text-white">{{ $t("Pure") }}</v-card-title>
                     <v-card-text>
                       <v-row class="mt-4">
