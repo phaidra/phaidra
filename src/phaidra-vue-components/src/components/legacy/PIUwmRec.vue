@@ -272,7 +272,7 @@
         </v-col>
       </template>
       <template v-else-if="ch.input_type === 'node'">
-        <v-card class="ma-3" :width="'100%'">
+        <v-card :width="'100%'" variant="outlined">
           <v-card-title class="font-weight-light text-white">
             <span>{{ ch.labels[alpha2locale] }}</span>
             <v-spacer></v-spacer>
