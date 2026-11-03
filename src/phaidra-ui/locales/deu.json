@@ -1612,5 +1612,8 @@
   "Definition": "Definition",
   "Label": "Bezeichnung",
   "Class": "Klasse",
-  "Comment": "Kommentar"
+  "Comment": "Kommentar",
+  "Include": "Einschließen",
+  "Exclude": "Ausschließen",
+  "Find type": "Typ suchen"
 }
