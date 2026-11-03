@@ -85,27 +85,30 @@ export function buildAccessibilityFacet () {
   }
 }
 
+function facetQueryKey (q) {
+  return q.countQuery || q.query
+}
+
 export function updateFacetQueries (facetQueriesSolr, facetQueries) {
-  // called by the `search` function
   if (facetQueriesSolr) {
     Object.keys(facetQueriesSolr).forEach(function (key) {
       for (let i = 0; i < facetQueries.length; i++) {
         for (let j = 0; j < facetQueries[i].queries.length; j++) {
-          if (facetQueries[i].queries[j].query === key) {
+          if (facetQueryKey(facetQueries[i].queries[j]) === key) {
             const updatedQuery = { ...facetQueries[i].queries[j], count: facetQueriesSolr[key] }
             facetQueries[i].queries[j] = updatedQuery
           }
           if (facetQueries[i].queries[j].childFacet) {
             let lvl1 = facetQueries[i].queries[j].childFacet
             for (let k = 0; k < lvl1.queries.length; k++) {
-              if (lvl1.queries[k].query === key) {
+              if (facetQueryKey(lvl1.queries[k]) === key) {
                 const updatedLvl1Query = { ...lvl1.queries[k], count: facetQueriesSolr[key] }
                 lvl1.queries[k] = updatedLvl1Query
               }
               if (lvl1.queries[k].childFacet) {
                 let lvl2 = lvl1.queries[k].childFacet
                 for (let l = 0; l < lvl2.queries.length; l++) {
-                  if (lvl2.queries[l].query === key) {
+                  if (facetQueryKey(lvl2.queries[l]) === key) {
                     const updatedLvl2Query = { ...lvl2.queries[l], count: facetQueriesSolr[key] }
                     lvl2.queries[l] = updatedLvl2Query
                   }
@@ -136,18 +139,68 @@ export function deactivateFacetQueries (f) {
   }
   for (var i = 0; i < f.queries.length; i++) {
     f.queries[i].active = false
+    f.queries[i].excluded = false
     if (f.queries[i].childFacet) {
       var lvl1 = f.queries[i].childFacet
       for (var j = 0; j < lvl1.queries.length; j++) {
         lvl1.queries[j].active = false
+        lvl1.queries[j].excluded = false
         if (lvl1.queries[j].childFacet) {
           var lvl2 = lvl1.queries[j].childFacet
           for (var k = 0; k < lvl2.queries.length; k++) {
             lvl2.queries[k].active = false
+            lvl2.queries[k].excluded = false
           }
         }
       }
     }
+  }
+}
+
+export function hasSelectedFacetQuery (queries) {
+  if (!queries) {
+    return false
+  }
+  return queries.some(q => q.active || q.excluded || hasSelectedFacetQuery(q.childFacet && q.childFacet.queries))
+}
+
+const uwmObjectTypePrefix = 'http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization/voc_17/'
+const uwmObjectTypes = {
+  '47QB-8QF1': ['1552257'],
+  'QKDF-E5HA': ['1556237'],
+  'PYRE-RAWJ': ['1552260'],
+  '1PHE-7VMS': ['1742'],
+  'MF25-FDGW': ['1552253'],
+  '9ZSV-CVJH': ['1743'],
+  '489N-Y6VX': ['1556239'],
+  'JJKV-B1CG': ['1556236'],
+  'N35H-PDEE': ['1556242'],
+  'KW6N-2VTP': ['1557090'],
+  'P2YP-BMND': ['1739'],
+  'XA52-09WA': ['1556235'],
+  '9E94-E3F8': ['1740'],
+  'T023-BGTD': ['1556240'],
+  '62DN-RZ7V': ['1552258'],
+  'ST05-F6SP': ['1741'],
+  'Z3K6-SWVD': ['1738'],
+  'F4JN-ZST0': ['1552262'],
+  'JMAV-7F3R': ['1556241'],
+  'YA8R-1M0D': ['1562801']
+}
+
+export function buildObjectTypeFacet (parent, terms, labelOf) {
+  return {
+    queries: terms.map(term => {
+      const id = term['@id'].substring(term['@id'].lastIndexOf('/') + 1)
+      const ids = [term['@id']].concat((uwmObjectTypes[id] || []).map(uwmId => uwmObjectTypePrefix + uwmId))
+      const objectTypeQuery = 'object_type_id:(' + ids.map(v => '"' + v + '"').join(' OR ') + ')'
+      return {
+        id: parent.id + '.' + id,
+        label: labelOf(term['@id']),
+        query: objectTypeQuery,
+        countQuery: '(' + parent.query + ') AND (' + objectTypeQuery + ')'
+      }
+    })
   }
 }
 

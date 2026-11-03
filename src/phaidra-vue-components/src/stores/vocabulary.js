@@ -2116,7 +2116,10 @@ export const useVocabularyStore = defineStore('vocabulary', {
           mappingSource = ot4rt
         }
       }
-      const mapping = mappingSource[rtId]
+      let mapping = mappingSource[rtId]
+      if (rtId === ns + '8MY0-BQDQ' && !Array.isArray(mapping)) {
+        mapping = state.vocabularies['objecttype'].terms.map(t => t['@id'])
+      }
       if (rtId !== ns + 'GXS7-ENXJ' && Array.isArray(mapping)) {
         for (let otId of mapping) {
           for (let term of state.vocabularies['objecttype'].terms) {
