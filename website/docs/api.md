@@ -483,6 +483,11 @@ You can add "relationships" to "metadata" where you can define a specific relati
         "s": "member_foo", 
         "p": "http://phaidra.org/XML/V1.0/relations#isThumbnailFor", 
         "o": "container"
+    },
+    { 
+        "s": "member_foo", 
+        "p": "http://phaidra.org/XML/V1.0/relations#isPreviewFor", 
+        "o": "container"
     } 
 ]
 ```

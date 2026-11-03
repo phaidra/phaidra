@@ -133,6 +133,48 @@ sub get_is_thumbnail_for {
 
 }
 
+sub get_is_preview_for {
+  my $self = shift;
+  my $pid  = shift;
+
+  my $urlget = Mojo::URL->new;
+  $urlget->scheme($self->app->config->{solr}->{scheme});
+  $urlget->host($self->app->config->{solr}->{host});
+  $urlget->port($self->app->config->{solr}->{port});
+  if ($self->app->config->{solr}->{path}) {
+    $urlget->path("/" . $self->app->config->{solr}->{path} . "/solr/" . $self->app->config->{solr}->{core} . "/select");
+  }
+  else {
+    $urlget->path("/solr/" . $self->app->config->{solr}->{core} . "/select");
+  }
+  $urlget->query(q => "*:*", fq => "ispreviewfor:\"$pid\"", rows => "1", wt => "json");
+  my $ua     = Mojo::UserAgent->new;
+  my $getres = $ua->get($urlget)->result;
+  if ($getres->is_success) {
+    for my $d (@{$getres->json->{response}->{docs}}) {
+      $self->app->log->info($d->{pid} . " is preview for $pid");
+      return $d->{pid};
+    }
+  }
+  else {
+    $self->app->log->debug("error searching for ispreviewfor: " . $getres->code . " " . $getres->message);
+  }
+
+  $urlget->path("/solr/" . $self->app->config->{solr}->{core_pages} . "/select");
+  $urlget->query(q => "*:*", fq => "ispreviewfor:\"$pid\"", rows => "1", wt => "json");
+  $getres = $ua->get($urlget)->result;
+  if ($getres->is_success) {
+    for my $d (@{$getres->json->{response}->{docs}}) {
+      $self->app->log->info($d->{pid} . " is preview for $pid");
+      return $d->{pid};
+    }
+  }
+  else {
+    $self->app->log->debug("error searching for ispreviewfor: " . $getres->code . " " . $getres->message);
+  }
+
+}
+
 sub setNoCacheHeaders {
   my $self = shift;
 
@@ -446,6 +488,11 @@ sub preview {
   my $pid = $self->stash('pid');
 
   my $force = $self->param('force');
+
+  my $previewPid = $self->get_is_preview_for($pid);
+  if ($previewPid) {
+    $pid = $previewPid;
+  }
 
   my $authz_model = PhaidraAPI::Model::Authorization->new;
   my $resro       = $authz_model->check_rights($self, $pid, 'read');

@@ -10630,6 +10630,10 @@
                             "isThumbnailFor": {
                                 "value": "http://phaidra.org/XML/V1.0/relations#isThumbnailFor",
                                 "summary": "isThumbnailFor"
+                            },
+                            "isPreviewFor": {
+                                "value": "http://phaidra.org/XML/V1.0/relations#isPreviewFor",
+                                "summary": "isPreviewFor"
                             }
                         }
                     },
@@ -10751,6 +10755,10 @@
                             "isThumbnailFor": {
                                 "value": "http://phaidra.org/XML/V1.0/relations#isThumbnailFor",
                                 "summary": "isThumbnailFor"
+                            },
+                            "isPreviewFor": {
+                                "value": "http://phaidra.org/XML/V1.0/relations#isPreviewFor",
+                                "summary": "isPreviewFor"
                             }
                         }
                     },

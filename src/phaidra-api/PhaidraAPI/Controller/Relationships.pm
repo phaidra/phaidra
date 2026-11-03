@@ -42,6 +42,11 @@ sub get {
       push @{$rels{isthumbnailfor}}, $v;
     }
   }
+  if ($fres->{ispreviewfor}) {
+    for my $v (@{$fres->{ispreviewfor}}) {
+      push @{$rels{ispreviewfor}}, $v;
+    }
+  }
   if ($fres->{hassuccessor}) {
     for my $v (@{$fres->{hassuccessor}}) {
       push @{$rels{hassuccessor}}, $v;

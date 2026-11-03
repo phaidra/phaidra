@@ -34,7 +34,7 @@ my %prefix2ns = (
   # references, identifier
   "http://purl.org/dc/terms/" => "dcterms",
 
-  # isBackSideOf, isAlternativeFormatOf, isAlternativeVersionOf, isThumbnailFor
+  # isBackSideOf, isAlternativeFormatOf, isAlternativeVersionOf, isThumbnailFor, isPreviewFor
   "http://phaidra.org/XML/V1.0/relations#" => "porgrels",
 
   # hasSuccessor
@@ -170,6 +170,7 @@ sub getObjectProperties {
   $res->{references}             = $self->getJsonldValue($c, $props, 'http://purl.org/dc/terms/references');
   $res->{isbacksideof}           = $self->getJsonldValue($c, $props, 'http://phaidra.org/XML/V1.0/relations#isBackSideOf');
   $res->{isthumbnailfor}         = $self->getJsonldValue($c, $props, 'http://phaidra.org/XML/V1.0/relations#isThumbnailFor');
+  $res->{ispreviewfor}           = $self->getJsonldValue($c, $props, 'http://phaidra.org/XML/V1.0/relations#isPreviewFor');
   $res->{hassuccessor}           = $self->getJsonldValue($c, $props, 'http://phaidra.univie.ac.at/XML/V1.0/relations#hasSuccessor');
   $res->{isalternativeformatof}  = $self->getJsonldValue($c, $props, 'http://phaidra.org/XML/V1.0/relations#isAlternativeFormatOf');
   $res->{isalternativeversionof} = $self->getJsonldValue($c, $props, 'http://phaidra.org/XML/V1.0/relations#isAlternativeVersionOf');

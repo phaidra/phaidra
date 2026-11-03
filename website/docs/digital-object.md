@@ -125,7 +125,11 @@ Use to point to an object containing an alternative version of an object (eg to 
 
 ### http://phaidra.org/XML/V1.0/relations#isThumbnailFor
 
-Used to make this object's preview a preview for another object (eg says this container member should be used as the thumbnail for the whole container).
+Used to make this object's thumbnail a thumbnail for another object (eg says this container member should be used as the thumbnail for the whole container).
+
+### http://phaidra.org/XML/V1.0/relations#isPreviewFor
+
+Used to make this object's preview a preview for another object (eg says this container member should be used as the preview for the whole container). If `o:1` isPreviewFor `o:2`, then `/object/o:2/preview` forwards to the preview of `o:1`.
 
 ### http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#hasTrack
 
