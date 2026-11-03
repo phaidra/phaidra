@@ -53,18 +53,18 @@
               <div cols="12" class="font-weight-light text-headline-medium mt-8 mb-4">{{ $t(section.title) }}</div>
               <template v-if="typeof section.content === 'object'">
                 <div class="font-weight-light text-title-medium mt-6 mb-2" v-if="section.content.level2">{{ $t('Basic usage notes') }}</div>
-                <div v-html="$t(section.content.level1)"></div>
+                <div v-html="translateContent(section.content.level1)"></div>
                 <template v-if="section.content.level2">
                   <div class="font-weight-light text-title-medium mt-6 mb-2">{{ $t('Improve your metadata quality') }}</div>
-                  <div v-html="$t(section.content.level2)"></div>
+                  <div v-html="translateContent(section.content.level2)"></div>
                 </template>
                 <template v-if="section.content.level3">
                   <div class="font-weight-light text-title-medium mt-6 mb-2">{{ $t('Fairify your data') }}</div>
-                  <div v-html="$t(section.content.level3)"></div>
+                  <div v-html="translateContent(section.content.level3)"></div>
                 </template>
               </template>
               <template v-else>
-                <div v-html="$t(section.content)"></div>
+                <div v-html="translateContent(section.content)"></div>
               </template>
             </template>
           </div>
@@ -73,6 +73,7 @@
             <v-data-table
               :headers="vocabularyHeaders"
               :items="selectedVocabularyTerms"
+              :sort-by="[{ key: 'label', order: 'asc' }]"
               density="compact"
               hide-default-footer
               :items-per-page="-1"
@@ -132,6 +133,7 @@
 
 <script>
 import { useInfoStore } from '../../stores/info'
+import { useRootStore } from '../../stores/root'
 import { useVocabularyStore } from '../../stores/vocabulary'
 import languages from '../../utils/lang'
 import { vuetifyGoTo } from '../../utils/vuetifyGoToCompat'
@@ -139,6 +141,9 @@ import { vuetifyGoTo } from '../../utils/vuetifyGoToCompat'
 export default {
   name: 'p-metadata-fields-help',
   computed: {
+    supportEmail: function () {
+      return useRootStore().instanceconfig.email || ''
+    },
     metadataOverview: function () {
       return useInfoStore().metadataFieldsOverview
     },
@@ -208,6 +213,9 @@ export default {
     }
   },
   methods: {
+    translateContent: function (content) {
+      return this.$t(content, { supportEmail: this.supportEmail })
+    },
     localizedVocabularyValue: function (value) {
       if (!value) return ''
       if (typeof value === 'string') return value

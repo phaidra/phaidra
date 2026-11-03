@@ -71,7 +71,7 @@
               <span v-if="$i18n.locale === 'deu'">Bei allen Fragen zu PHAIDRA steht Ihnen unsere Support-Adresse zur
                 Verfügung</span>
               <span v-else>If you have any questions about Phaidra, please contact support</span> <a
-                href="mailto:support.phaidra@univie.ac.at">support.phaidra@univie.ac.at</a>
+                :href="'mailto:' + instanceconfig.email">{{ instanceconfig.email }}</a>
             </v-row>
             <v-row class="pl-2 mb-6 mt-4">
               <a v-if="$i18n.locale === 'deu'" href="https://phaidra.univie.ac.at/o:1430148" target="_self">Guidelines

@@ -896,7 +896,7 @@ const metadataFieldsOverview = [
             "id": "usagenotes",
             "title": "Usage notes",
             "content": {
-              "level1": "This field expresses the storage medium of the physical source. <br>Select a value from the drop-down list. In case the value you want to select is not in the list, choose <i>Other</i> and notify the metadata administrators.",
+              "level1": "This field expresses the storage medium of the physical source. <br>Select a value from the drop-down list. In case the value you want to select is not in the list, choose <i>Other</i> and notify the metadata administrators. <a href=\"mailto:{supportEmail}\">{supportEmail}</a>",
               "level2": "",
               "level3": ""
             }
@@ -1742,7 +1742,7 @@ const metadataFieldsOverview = [
             "id": "usagenotes",
             "title": "Usage notes",
             "content": {
-              "level1": "In some cases, as for example a music album, a specification of the genre (e.g. &#34;pop&#34;) may be helpful to provide a more granular context to the resource. <br> Select the value from the drop-down list. If this is not in the list, choose <i>Other</i> and notify the metadata administrators.",
+              "level1": "In some cases, as for example a music album, a specification of the genre (e.g. &#34;pop&#34;) may be helpful to provide a more granular context to the resource. <br> Select the value from the drop-down list. If this is not in the list, choose <i>Other</i> and notify the metadata administrators. <a href=\"mailto:{supportEmail}\">{supportEmail}</a>",
               "level2": "",
               "level3": ""
             }
@@ -2473,7 +2473,7 @@ const metadataFieldsOverview = [
             "id": "usagenotes",
             "title": "Usage notes",
             "content": {
-              "level1": "These controlled terms are useful for filtering search results. <br> Select a value from the drop-down list. If the resource involves more than one type, duplicate the field. In case the term you want to select is not in the list, choose <i>Other</i> and notify the metadata administrators. <br> If you are describing an audio or video resource, take into consideration also the <i>Carrier type</i> field.",
+              "level1": "These controlled terms are useful for filtering search results. <br> Select a value from the drop-down list. If the resource involves more than one type, duplicate the field. In case the term you want to select is not in the list, choose <i>Other</i> and notify the metadata administrators. <a href=\"mailto:{supportEmail}\">{supportEmail}</a> <br> If you are describing an audio or video resource, take into consideration also the <i>Carrier type</i> field.",
               "level2": "",
               "level3": ""
             }
@@ -3314,7 +3314,7 @@ const metadataFieldsOverview = [
             "id": "usagenotes",
             "title": "Usage notes",
             "content": {
-              "level1": "This field makes use of many subject classifications available in the Web, as for example the <i>GND (Gemeinsame Normdatei)</i>, a national authority file used by German-speaking libraries, museums and archives. <br> Use the suggester on this field to find the suitable terms that best describe the object. Choose as many terms as necessary by duplicating the field.",
+              "level1": "This field makes use of many subject classifications available in the Web, as for example the <a href=\"https://gnd.network\" target=\"_blank\" rel=\"noopener\"><i>GND (Gemeinsame Normdatei)</i></a>, a national authority file used by German-speaking libraries, museums and archives. <br> Use the suggester on this field to find the suitable terms that best describe the object. Choose as many terms as necessary by duplicating the field.",
               "level2": "The use of controlled vocabularies provides greater consistency helping your data to be searched and integrated with other resources in the <i>Linked Open Data</i> network. As best practice, fill in this field with as many terms as needed.",
               "level3": "Controlled vocabularies with globally unique and persistent identifiers are one of the keys to machine-understandability of (meta)data, which is what FAIR guidelines are all about. Metadata expressed in this format is unequivocably read and processed by computers, enabling your resource to be linked with other data, accessed or/and shared. Provide a meaningful classification filling in this field so that you can ensure a broad interoperability of your resource."
             }
@@ -3322,7 +3322,7 @@ const metadataFieldsOverview = [
           {
             "id": "vocabulary",
             "title": "Vocabulary",
-            "content": "<b>Internal PHAIDRA vocabularies</b>: <ul><li>ÖFOS</li><li>Thema</li><li>BIC (deprecated)</li></ul><b>External vocabularies</b>: <ul><li>GND (Gemeinsame Normdatei)</li><li>Basisklassifikation</li></ul>"
+            "content": "<b>Internal PHAIDRA vocabularies</b>: <ul><li><a href=\"https://www.statistik.at/en/databases/classification-database\" target=\"_blank\" rel=\"noopener\">ÖFOS</a></li><li><a href=\"https://www.editeur.org/151/thema\" target=\"_blank\" rel=\"noopener\">Thema</a></li><li>BIC (deprecated)</li></ul><b>External vocabularies</b>: <ul><li><a href=\"https://gnd.network\" target=\"_blank\" rel=\"noopener\">GND (Gemeinsame Normdatei)</a></li><li><a href=\"https://basisklassifikation.eu/\" target=\"_blank\" rel=\"noopener\">Basisklassifikation</a></li></ul>"
           },
           {
             "id": "obligation",

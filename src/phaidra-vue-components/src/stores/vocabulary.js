@@ -1893,12 +1893,12 @@ const vocabularies = {
   },
   'audience': {
     terms: [
-      { '@id': ns + 'TEPR-J4EZ', 'skos:prefLabel': { 'eng': 'FSK ab 0 freigegeben', 'ita': 'Approvato dagli 0 anni' } },
-      { '@id': ns + '7ANY-9744', 'skos:prefLabel': { 'eng': 'FSK ab 6 freigegeben', 'ita': 'Approvato dai 6 anni' } },
-      { '@id': ns + '4DQY-TNPT', 'skos:prefLabel': { 'eng': 'FSK ab 12 freigegeben', 'ita': 'Approvato dai 12 anni' } },
-      { '@id': ns + 'HSDH-MD0J', 'skos:prefLabel': { 'eng': 'FSK ab 16 freigegeben', 'ita': 'Approvato dai 16 anni' } },
-      { '@id': ns + 'F2VP-9Z07', 'skos:prefLabel': { 'eng': 'FSK ab 18 freigegeben', 'ita': 'Approvato dai 18 anni' } },
-      { '@id': ns + 'C2TK-3DTQ', 'skos:prefLabel': { 'eng': 'Freigegeben gemäß §14 JuSchG FSK', 'ita': 'Approvato ai sensi del §14 della Legge tedesca sulla protezione dei minori (FSK)' } }
+      { '@id': ns + 'TEPR-J4EZ', 'skos:prefLabel': { 'eng': 'Approved for ages 0 and over', 'ita': 'Adatto a tutte le età' } },
+      { '@id': ns + '7ANY-9744', 'skos:prefLabel': { 'eng': 'Approved for ages 6 and over', 'ita': 'Adatto dai 6 anni in su' } },
+      { '@id': ns + '4DQY-TNPT', 'skos:prefLabel': { 'eng': 'Approved for ages 12 and over', 'ita': 'Adatto dai 12 anni in su' } },
+      { '@id': ns + 'HSDH-MD0J', 'skos:prefLabel': { 'eng': 'Approved for ages 16 and over', 'ita': 'Adatto dai 16 anni in su' } },
+      { '@id': ns + 'F2VP-9Z07', 'skos:prefLabel': { 'eng': 'Approved for ages 18 and over', 'ita': 'Adatto dai 18 anni in su' } },
+      { '@id': ns + 'C2TK-3DTQ', 'skos:prefLabel': { 'eng': 'Approved under Section 14 of the German Youth Protection Act (FSK)', 'ita': 'Approvato ai sensi dell’articolo 14 della legge tedesca sulla protezione dei minori (FSK)' } }
     ],
     loaded: true
   },
