@@ -9,6 +9,12 @@ SOLR_BACKUP_COLLECTION="${SOLR_COLLECTION:-phaidra}"
 SOLR_BACKUP_BASE="/mnt/database-dumps"
 SOLR_BACKUP_LOCATION="${SOLR_BACKUP_BASE}/solr-backup-$(date +%F-%H-%M-%S)"
 
+if ! mkdir -p "${SOLR_BACKUP_LOCATION}" || ! chmod 0777 "${SOLR_BACKUP_LOCATION}"
+then
+    printf "### unable to prepare Solr backup directory: %s\n" "${SOLR_BACKUP_LOCATION}"
+    exit 1
+fi
+
 BACKUP_URL="http://${SOLR_BACKUP_HOST}:8983/solr/${SOLR_BACKUP_COLLECTION}/replication"
 
 printf "### calling: %s?command=backup&location=%s\n" "${BACKUP_URL}" "${SOLR_BACKUP_LOCATION}"
