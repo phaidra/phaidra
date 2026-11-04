@@ -416,6 +416,9 @@ export default {
       this.accessibilityHazard = []
       this.currentPage = 1
       this.pagesize = 10
+      for (let i = 0; i < this.sortdef.length; i++) {
+        this.sortdef[i].active = false
+      }
       console.log(this.facetQueries)
       for (let fq of this.facetQueries) {
         // resetable might be set to false in case this search should
@@ -476,7 +479,7 @@ export default {
       inCollection: this.collection,
       currentPage: 1,
       pagesize: 10,
-      sortdef,
+      sortdef: JSON.parse(JSON.stringify(sortdef)),
       lang: 'en',
       facetQueries: [],
       extracted_text: false,
