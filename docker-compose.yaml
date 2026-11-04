@@ -394,6 +394,7 @@ services:
       SOLR_SALT: "${SOLR_SALT:-phaidra}"
       SOLR_USER: "${SOLR_USER:-phaidra}"
       SOLR_PASS: "${SOLR_PASS:-phaidra}"
+      SOLR_OPTS: "-Dsolr.allowPaths=/mnt/database-dumps"
     profiles:
       ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "shib-local", "shib-s3"]
 
@@ -410,6 +411,7 @@ services:
       SOLR_SALT: "${SOLR_SALT:-phaidra}"
       SOLR_USER: "${SOLR_USER:-phaidra}"
       SOLR_PASS: "${SOLR_PASS:-phaidra}"
+      SOLR_OPTS: "-Dsolr.allowPaths=/mnt/database-dumps"
     entrypoint: ["bash", "/mnt/solr/solr_entrypoint.bash"]
     profiles:
       [

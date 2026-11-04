@@ -13,4 +13,5 @@ sed -i \
     /var/solr/data/security.json
 precreate-core phaidra /mnt/solr/phaidra_core
 precreate-core phaidra_pages /mnt/solr/phaidra_pages_core
+export SOLR_OPTS="${SOLR_OPTS:-} -Dsolr.allowPaths=/mnt/database-dumps"
 solr-foreground
