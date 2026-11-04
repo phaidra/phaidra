@@ -1,19 +1,17 @@
 <template>
-  <v-row>
-    <v-col cols="12">
-      <v-checkbox class="mt-0 check" v-model="checkbox" @click.capture="$emit('input', note)">
-        <template v-slot:label>
-          <i18n :path="labelMessageId" tag="span" class="text-black">
-            <a
-              @click.stop
-              :href="link"
-              target="_blank"
-              >{{ $t(linkLabelMessageId) }}</a
-            ></i18n>
-        </template>
-      </v-checkbox>
-    </v-col>
-  </v-row>
+  <v-col cols="12">
+    <v-checkbox class="mt-0 check" v-model="checkbox" @click.capture="$emit('input', note)">
+      <template v-slot:label>
+        <i18n :path="labelMessageId" tag="span" class="text-black ">
+          <a
+            @click.stop
+            :href="link"
+            target="_blank"
+            >{{ $t(linkLabelMessageId) }}</a
+          ></i18n>
+      </template>
+    </v-checkbox>
+  </v-col>
 </template>
 
 <script>

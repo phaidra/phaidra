@@ -1,9 +1,9 @@
 <template>
-  <v-row class="mx-1 mt-4">
-    <v-cols cols="10" class="pa-0">
-      <v-alert variant="text" type="info" color="black" v-html="content" ></v-alert>
-    </v-cols>
-  </v-row>
+  <v-col cols="12" class="px-1 mt-4">
+    <v-alert variant="text" type="info" color="black">
+      <div v-html="content"></div>
+    </v-alert>
+  </v-col>
 </template>
 
 <script>
