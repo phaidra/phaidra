@@ -1,10 +1,7 @@
 <template>
   <v-card variant="outlined">
-    <v-card-title class="d-flex align-center text-title-large font-weight-light text-white">
+    <v-card-title class="text-title-large font-weight-light text-white">
       {{ $t('Terms of use') }}
-      <v-spacer />
-      <v-btn color="primary" class="mr-2" @click="openAddLanguage">{{ $t('Add language') }}</v-btn>
-      <v-btn color="primary" @click="openCreateVersion">{{ $t('Create new version') }}</v-btn>
     </v-card-title>
     <v-card-text>
       <v-alert type="warning" variant="tonal" density="compact" class="mt-4 mb-4">
@@ -17,6 +14,13 @@
         :sort-by="[{ key: 'version', order: 'desc' }]"
         item-value="tid"
       >
+        <template #top>
+          <v-toolbar flat color="transparent" class="my-4">
+            <v-spacer />
+            <v-btn color="primary" class="mb-2 mr-2" @click="openAddLanguage">{{ $t('Add language') }}</v-btn>
+            <v-btn color="primary" class="mb-2" @click="openCreateVersion">{{ $t('Create new version') }}</v-btn>
+          </v-toolbar>
+        </template>
         <template #item.terms="{ item }">
           <span class="text-truncate d-inline-block" style="max-width: 420px">{{ preview(item.terms) }}</span>
         </template>
