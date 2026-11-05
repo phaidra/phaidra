@@ -3845,6 +3845,10 @@ export default {
   },
   mounted() {
     this.jsonLdMounted = true
+    const pid = this.$route.params.pid
+    if (pid && /^o:\d+$/.test(String(pid))) {
+      this.fetchUsageStats(this, pid)
+    }
     if (this.showCollectionTree) {
       this.fetchCollectionTree(this.$route.params.pid);
       setTimeout(() => {
