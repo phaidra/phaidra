@@ -1,18 +1,9 @@
 <template>
   <v-card variant="outlined">
-    <v-card-title class="d-flex align-center text-title-large font-weight-light text-white">
+    <v-card-title class="text-title-large font-weight-light text-white">
       {{ $t('Users') }}
-      <v-spacer />
-      <v-btn color="primary" @click="openCreate">{{ $t('Create user') }}</v-btn>
     </v-card-title>
     <v-card-text>
-      <v-text-field
-        v-model="search"
-        class="mt-4"
-        append-inner-icon="mdi-magnify"
-        :label="$t('Search...')"
-        hide-details
-      />
       <v-data-table
         :headers="headers"
         :items="users"
@@ -21,6 +12,19 @@
         :sort-by="[{ key: 'last_login_at', order: 'desc' }]"
         item-value="username"
       >
+        <template #top>
+          <v-toolbar flat color="transparent" class="my-4">
+            <v-text-field
+              v-model="search"
+              append-inner-icon="mdi-magnify"
+              :label="$t('Search...')"
+              single-line
+              hide-details
+            />
+            <v-spacer />
+            <v-btn color="primary" class="mb-2" @click="openCreate">{{ $t('Create user') }}</v-btn>
+          </v-toolbar>
+        </template>
         <template #item.name="{ item }">
           {{ [item.firstname, item.lastname].filter(Boolean).join(' ') }}
         </template>
