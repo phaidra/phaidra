@@ -2,14 +2,14 @@ import moment from 'moment'
 
 export function unixtime (value) {
   if (value) {
-    return moment.unix(String(value)).format('DD.MM.YYYY hh:mm:ss')
+    return moment.unix(String(value)).utc().format('DD.MM.YYYY hh:mm:ss') + ' UTC'
   }
   return ''
 }
 
 export function formatDate (value) {
   if (value) {
-    return moment(String(value)).format('DD.MM.YYYY')
+    return moment.utc(String(value)).format('DD.MM.YYYY')
   }
   return ''
 }

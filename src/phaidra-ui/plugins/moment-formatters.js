@@ -22,10 +22,10 @@ function formatGigabytes (bytes, precision) {
 
 export default defineNuxtPlugin((nuxtApp) => {
   const g = nuxtApp.vueApp.config.globalProperties
-  g.$filterDate = (value) => (value ? moment(String(value)).format('DD.MM.YYYY') : '')
+  g.$filterDate = (value) => (value ? moment.utc(String(value)).format('DD.MM.YYYY') : '')
   g.$filterDateTime = (value) => (value ? moment(String(value)).format('DD.MM.YYYY hh:mm:ss') : '')
   g.$filterDateTimeUtc = (value) => (value ? moment.utc(String(value)).format('DD.MM.YYYY HH:mm:ss') : '')
-  g.$filterUnixTime = (value) => (value ? moment.unix(String(value)).format('DD.MM.YYYY hh:mm:ss') : '')
+  g.$filterUnixTime = (value) => (value ? moment.unix(String(value)).utc().format('DD.MM.YYYY hh:mm:ss') + ' UTC' : '')
   g.$filterBytes = formatBytes
   g.$filterGigabytes = formatGigabytes
   g.$filterTruncate = (text, length, clamp) => {
