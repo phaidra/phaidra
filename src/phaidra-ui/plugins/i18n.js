@@ -29,7 +29,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     globalInjection: true,
     locale,
     fallbackLocale: 'eng',
-    fallbackFormat: true,
+    formatFallbackMessages: true,
     messages,
     silentTranslationWarn: true,
     silentFallbackWarn: true
