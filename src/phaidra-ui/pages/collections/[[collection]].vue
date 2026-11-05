@@ -68,21 +68,8 @@ export default {
                     if(response?.data?.template?.templateTitle) {
                         this.templateTitle = response?.data?.template?.templateTitle
                     }
-                    const title = this.templateTitle[this.$i18n.locale] || this.templateTitle.eng || 'Collection'
-                    let indexCollectionObject = {
-                        text: 'Collections',
-                        to: '/collections'
-                    }
                     if(response?.data?.template?.templateName !== 'index') {
-                        useRootStore().addBreadcrumb(indexCollectionObject)
-                        useRootStore().addBreadcrumb({
-                            text: title,
-                            to: this.$route.name,
-                            disabled: true
-                        })
-                    } else {
-                        indexCollectionObject.disabled = true
-                        useRootStore().addBreadcrumb(indexCollectionObject)
+                        this.updateBreadcrumbTitle()
                     }
                     this.loaded = true
                 })

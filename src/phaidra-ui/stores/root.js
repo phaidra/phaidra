@@ -23,6 +23,7 @@ export const useRootStore = defineStore('root', {
     canCreateObjects: false,
     groups: [],
     breadcrumbs: [],
+    collectionBreadcrumbTitle: null,
     loading: false
   }),
   actions: {
@@ -132,6 +133,35 @@ export const useRootStore = defineStore('root', {
           to: this.instanceconfig.institutionurl
         }
       )
+    }
+    if (transition.to.path.includes('/collections')) {
+      const collectionName = transition.to.params?.collection
+      if (collectionName) {
+        this.breadcrumbs.push(
+          {
+            text: 'Collections',
+            to: '/collections'
+          }
+        )
+        this.breadcrumbs.push(
+          {
+            text: this.collectionBreadcrumbTitle || 'Collection',
+            to: transition.to.name,
+            disabled: true
+          }
+        )
+      } else {
+        this.collectionBreadcrumbTitle = null
+        this.breadcrumbs.push(
+          {
+            text: 'Collections',
+            to: transition.to.name,
+            disabled: true
+          }
+        )
+      }
+    } else {
+      this.collectionBreadcrumbTitle = null
     }
     if (transition.to.path.includes('/bulk-upload')) {
       this.breadcrumbs.push(
@@ -630,6 +660,7 @@ export const useRootStore = defineStore('root', {
     this.breadcrumbs.push(breadcrumb)
   },
   updateCollectionBreadcrumb(title) {
+    this.collectionBreadcrumbTitle = title
     if (this.breadcrumbs.length > 0) {
       const lastBreadcrumb = this.breadcrumbs[this.breadcrumbs.length - 1]
       if (lastBreadcrumb && lastBreadcrumb.disabled) {
