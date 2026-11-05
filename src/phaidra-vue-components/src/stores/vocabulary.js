@@ -1874,14 +1874,14 @@ const vocabularies = {
       { '@id': ns + 'C36Q-N42M', 'skos:prefLabel': { 'eng': 'lantern slide', 'deu': 'Glasplattendia', 'ita': 'Lastra da lanterna magica' } },
       { '@id': ns + '431H-5YSA', 'skos:prefLabel': { 'eng': 'slide', 'deu': 'Diapositiv', 'ita': 'Diapositiva' } },
       { '@id': ns + '6KMM-SD3M', 'skos:prefLabel': { 'eng': 'dianegative', 'deu': 'Dianegativ', 'ita': 'Dianegativo' } },
-      { '@id': ns + 'NWNQ-GW5N', 'skos:prefLabel': { 'eng': 'Dianegativ mit Deckglas', 'deu': 'Dianegativ mit Deckglas' } },
-      { '@id': ns + '5418-GWAY', 'skos:prefLabel': { 'eng': 'Diapositiv mit Deckglas', 'deu': 'Diapositiv mit Deckglas' } },
-      { '@id': ns + 'HV4N-RC72', 'skos:prefLabel': { 'eng': 'Diapositiv mit Deckglas, dazwischen Folie', 'deu': 'Diapositiv mit Deckglas, dazwischen Folie' } },
-      { '@id': ns + 'NQF1-2T8V', 'skos:prefLabel': { 'eng': 'Diapositiv mit Deckglas, Zeichnung auf Papier', 'deu': 'Diapositiv mit Deckglas, Zeichnung auf Papier' } },
-      { '@id': ns + '45E3-JTA6', 'skos:prefLabel': { 'eng': 'Diapositiv mit Deckglas, Zeichnung auf Glas', 'deu': 'Diapositiv mit Deckglas, Zeichnung auf Glas' } },
-      { '@id': ns + '440Z-1BPF', 'skos:prefLabel': { 'eng': 'Diapositiv mit Zeichnung auf Glas', 'deu': 'Diapositiv mit Zeichnung auf Glas' } },
-      { '@id': ns + '2ESS-0GPG', 'skos:prefLabel': { 'eng': 'Diapositiv mit Folie', 'deu': 'Diapositiv mit Folie' } },
-      { '@id': ns + '7AS5-4Q5Q', 'skos:prefLabel': { 'eng': 'Diapositiv mit Zeichnung auf Papier', 'deu': 'Diapositiv mit Zeichnung auf Papier' } }
+      { '@id': ns + 'NWNQ-GW5N', 'skos:prefLabel': { 'eng': 'dianegative with cover glass', 'deu': 'Dianegativ mit Deckglas' } },
+      { '@id': ns + '5418-GWAY', 'skos:prefLabel': { 'eng': 'slide with cover glass', 'deu': 'Diapositiv mit Deckglas' } },
+      { '@id': ns + 'HV4N-RC72', 'skos:prefLabel': { 'eng': 'slide with cover glass, foil in between', 'deu': 'Diapositiv mit Deckglas, dazwischen Folie' } },
+      { '@id': ns + 'NQF1-2T8V', 'skos:prefLabel': { 'eng': 'slide with cover glass, drawing on paper', 'deu': 'Diapositiv mit Deckglas, Zeichnung auf Papier' } },
+      { '@id': ns + '45E3-JTA6', 'skos:prefLabel': { 'eng': 'slide with cover glass, drawing on glass', 'deu': 'Diapositiv mit Deckglas, Zeichnung auf Glas' } },
+      { '@id': ns + '440Z-1BPF', 'skos:prefLabel': { 'eng': 'slide with drawing on glass', 'deu': 'Diapositiv mit Zeichnung auf Glas' } },
+      { '@id': ns + '2ESS-0GPG', 'skos:prefLabel': { 'eng': 'slide with foil', 'deu': 'Diapositiv mit Folie' } },
+      { '@id': ns + '7AS5-4Q5Q', 'skos:prefLabel': { 'eng': 'slide with drawing on paper', 'deu': 'Diapositiv mit Zeichnung auf Papier' } }
     ],
     loaded: true
   },
