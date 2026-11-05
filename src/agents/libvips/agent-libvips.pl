@@ -307,7 +307,7 @@ sub process_image
       print scalar localtime(), " ", "copy_txt=[$cast_txt]\n";
       @cast_lines= x_lines ($cast_txt);
 
-      unless (-f $cast_img)
+      unless (-s $cast_img)
         {
           my $error_msg = "Could not save cast image using copy: $cast_txt";
           print scalar localtime(), " ", "ATTN: $error_msg\n";
@@ -323,8 +323,9 @@ sub process_image
       print scalar localtime(), " ", "vips_txt=[$vips_txt]\n";
       @vips_lines= x_lines ($vips_txt);
 
-      unless (-f $out_img)
+      unless (-s $out_img)
         {
+          unlink $out_img if -e $out_img;
           my $error_msg = "Could not save output TIFF using im_vips2tiff: $vips_txt";
           print scalar localtime(), " ", "ATTN: $error_msg\n";
           return { 'error_message' => $error_msg, 'vips_output' => $vips_txt };
@@ -358,7 +359,7 @@ sub process_image
         print scalar localtime(), " ", "convert_txt=[$convert_txt]\n";
         @cast_lines = x_lines ($convert_txt);
 
-        unless (-f $cast_img)
+        unless (-s $cast_img)
           {
             my $error_msg = "Could not convert [$tmp_img] to TIFF using ImageMagick: $convert_txt";
             print scalar localtime(), " ", "ATTN: $error_msg\n";
@@ -377,7 +378,7 @@ sub process_image
           my $tr_txt= `@tr 2>&1`;
           print scalar localtime(), " ", "tr_txt=[$tr_txt]\n";
           @tr_lines= x_lines ($tr_txt);
-          unless (-f $tr_img)
+          unless (-s $tr_img)
             {
               my $error_msg = "Could not save transformed image using icc_transform: $tr_txt";
               print scalar localtime(), " ", "ATTN: $error_msg\n";
@@ -394,7 +395,7 @@ sub process_image
         print scalar localtime(), " ", "cast_txt=[$cast_txt]\n";
         @cast_lines= x_lines ($cast_txt);
 
-        unless (-f $cast_img)
+        unless (-s $cast_img)
           {
             # If vips cannot read the format at all, fall back to ImageMagick convert
             if ($cast_txt =~ /not a known format/i) {
@@ -405,7 +406,7 @@ sub process_image
               print scalar localtime(), " ", "cast-fallback-convert_txt=[$convert_txt]\n";
               @cast_lines= (@cast_lines, x_lines($convert_txt));
 
-              if (-f $fallback_tif) {
+              if (-s $fallback_tif) {
                 $cast_img = $fallback_tif;
               } else {
                 my $error_msg = "Could not save cast image using im_msb, and fallback convert failed: $cast_txt | $convert_txt";
@@ -428,8 +429,9 @@ sub process_image
       print scalar localtime(), " ", "vips_txt=[$vips_txt]\n";
       @vips_lines= x_lines ($vips_txt);
 
-      unless (-f $out_img)
+      unless (-s $out_img)
         {
+          unlink $out_img if -e $out_img;
           my $error_msg = "Could not save output TIFF using im_vips2tiff: $vips_txt";
           print scalar localtime(), " ", "ATTN: $error_msg\n";
           return { 'error_message' => $error_msg, 'vips_output' => $vips_txt };
