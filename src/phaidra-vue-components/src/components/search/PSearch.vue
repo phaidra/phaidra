@@ -48,6 +48,7 @@
               :toggleSelection="toggleSelection"
               :selectioncheck="selectioncheck"
               :csvExport="csvExport"
+              :csvExporting="csvExporting"
               :signedin="signedin"
             />
           </v-col>
@@ -249,6 +250,7 @@ export default {
       // we only need count now
       params.rows = 0
 
+      this.csvExporting = true
       try {
         useRootStore().setLoading(true)
         let response = await this.$axios.request({
@@ -264,7 +266,7 @@ export default {
         params.wt = 'csv'
         params.fl = ['pid', 'dc_title', 'dc_creator', 'dc_contributor', 'dc_description', 'dc_language', 'dc_subject', 'dc_subject_eng', 'dc_subject_deu', 'dc_subject_ita', 'dc_rights', 'bib_published', 'dc_identifier', 'owner', 'dc_format', 'edm_hastype', 'resourcetype', 'created', 'modified', 'size', 'is_in_container:ismemberof', 'is_in_collection:ispartof']
         params['fl.alias'] = ''
-        this.$axios.request({
+        await this.$axios.request({
           method: 'POST',
           url: '/search/select',
           data: qs.stringify(params, { encodeValuesOnly: true, indices: false }),
@@ -285,6 +287,7 @@ export default {
         useRootStore().setAlerts([{ type: 'danger', msg: error }])
       } finally {
         useRootStore().setLoading(false)
+        this.csvExporting = false
       }
     },
     search: async function (options) {
@@ -478,6 +481,7 @@ export default {
       limitdialog: false,
       linkdialog: false,
       selectioncheck: false,
+      csvExporting: false,
       filterdialog: false,
       q: '',
       inCollection: this.collection,
