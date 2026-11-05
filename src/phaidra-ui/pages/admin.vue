@@ -1570,14 +1570,21 @@
         </v-window>
       </v-main>
     </v-layout>
-    <v-btn
+    <v-toolbar
       v-if="activetab === 'config'"
-      color="primary"
-      variant="elevated"
-      class="config-save-button"
-      :loading="loading"
-      @click="save()"
-    >{{ $t('Save') }}</v-btn>
+      class="config-save-toolbar px-4"
+      color="surface"
+      elevation="4"
+      density="comfortable"
+    >
+      <v-spacer />
+      <v-btn
+        color="primary"
+        variant="elevated"
+        :loading="loading"
+        @click="save()"
+      >{{ $t('Save') }}</v-btn>
+    </v-toolbar>
   </v-container>
 </template>
 
@@ -2046,10 +2053,11 @@ export default {
   min-height: max(800px, calc(100vh - 96px));
 }
 
-.config-save-button {
+.config-save-toolbar {
   position: fixed;
-  right: 24px;
-  bottom: 24px;
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: 1000;
 }
 </style>
