@@ -78,6 +78,7 @@
               <span v-t="s.title"></span>
               <v-spacer></v-spacer>
               <v-checkbox dark color="white" v-if="s.type === 'member'" v-model="previewMember" :label="$t('Container thumbnail')" :value="s.id"></v-checkbox>
+              <v-checkbox dark color="white" v-if="s.type === 'member'" v-model="previewForMember" :label="$t('Container preview')" :value="s.id"></v-checkbox>
               <v-spacer></v-spacer>
               <v-icon-btn theme="dark"
                 variant="text"
@@ -1336,6 +1337,7 @@ export default {
       templatedialog: false,
       templatename: '',
       previewMember: '',
+      previewForMember: '',
       searchfieldsinput: '',
       metadatapreview: {},
       license: null,
@@ -1575,6 +1577,16 @@ export default {
       }
       if (this.previewMember) {
         let rel = { s: 'member_' + this.previewMember, p: 'http://phaidra.org/XML/V1.0/relations#isThumbnailFor', o: 'self' }
+        if (md['metadata'].hasOwnProperty('relationships')) {
+          if (Array.isArray(md['metadata']['relationships'])) {
+            md['metadata']['relationships'].push(rel)
+          }
+        } else {
+          md['metadata']['relationships'] = [ rel ]
+        }
+      }
+      if (this.previewForMember) {
+        let rel = { s: 'member_' + this.previewForMember, p: 'http://phaidra.org/XML/V1.0/relations#isPreviewFor', o: 'self' }
         if (md['metadata'].hasOwnProperty('relationships')) {
           if (Array.isArray(md['metadata']['relationships'])) {
             md['metadata']['relationships'].push(rel)

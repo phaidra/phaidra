@@ -160,6 +160,7 @@
   <field name="ispartof" type="strings" multiValued="true" indexed="true" stored="false"/>
   <field name="isrestricted" type="boolean" multiValued="false" indexed="true" stored="true"/>
   <field name="isthumbnailfor" type="strings" multiValued="true" indexed="true" stored="false"/>
+  <field name="ispreviewfor" type="strings" multiValued="true" indexed="true" stored="false"/>
   <field name="journal_title" type="strings" multiValued="true" indexed="true" stored="true"/>
   <field name="language" type="string" indexed="true" stored="true"/>
   <field name="latlon" type="location_rpt" indexed="true" stored="true"/>
@@ -279,6 +280,7 @@
   <copyField source="ispartof" dest="_text_"/>
   <copyField source="isrestricted" dest="_text_"/>
   <copyField source="isthumbnailfor" dest="_text_"/>
+  <copyField source="ispreviewfor" dest="_text_"/>
   <copyField source="journal_title" dest="_text_"/>
   <copyField source="language" dest="_text_"/>
   <copyField source="latlon" dest="_text_"/>

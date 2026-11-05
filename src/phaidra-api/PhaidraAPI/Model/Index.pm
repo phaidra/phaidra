@@ -1207,6 +1207,11 @@ sub _get {
       push @{$index{isthumbnailfor}}, $self->removeInfoFedoraPrefix($c, $v);
     }
   }
+  if (ref($fres->{ispreviewfor}) eq 'ARRAY') {
+    for my $v (@{$fres->{ispreviewfor}}) {
+      push @{$index{ispreviewfor}}, $self->removeInfoFedoraPrefix($c, $v);
+    }
+  }
   if (ref($fres->{hassuccessor}) eq 'ARRAY') {
     for my $v (@{$fres->{hassuccessor}}) {
       push @{$index{hassuccessor}}, $self->removeInfoFedoraPrefix($c, $v);
@@ -1653,6 +1658,12 @@ sub _index_relsext {
     my $o = $e->attr('rdf:resource');
     $o =~ s/^info:fedora\/(.*)$/$1/;
     push @{$index->{isthumbnailfor}}, $o;
+  }
+
+  for my $e ($xml->find('isPreviewFor')->each) {
+    my $o = $e->attr('rdf:resource');
+    $o =~ s/^info:fedora\/(.*)$/$1/;
+    push @{$index->{ispreviewfor}}, $o;
   }
 
   for my $e ($xml->find('hasSuccessor')->each) {
@@ -2958,6 +2969,8 @@ sub get_relationships {
     isbacksideof           => [],
     isthumbnailfor         => [],
     hasthumbnail           => [],
+    ispreviewfor           => [],
+    haspreview             => [],
     hassuccessor           => [],
     isalternativeformatof  => [],
     isalternativeversionof => [],
@@ -3002,6 +3015,9 @@ sub get_relationships {
 
   #'http://phaidra.org/XML/V1.0/relations#isThumbnailFor'
   $self->add_indexed_and_reverse($c, $ua, $urlget, $idx, 'isthumbnailfor', 'hasthumbnail', $pid, $rels);
+
+  #'http://phaidra.org/XML/V1.0/relations#isPreviewFor'
+  $self->add_indexed_and_reverse($c, $ua, $urlget, $idx, 'ispreviewfor', 'haspreview', $pid, $rels);
 
   #'http://phaidra.univie.ac.at/XML/V1.0/relations#hasSuccessor'
   $self->add_indexed_and_reverse($c, $ua, $urlget, $idx, 'hassuccessor', 'issuccessorof', $pid, $rels);
