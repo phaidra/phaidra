@@ -319,6 +319,7 @@ sub approve {
   my $res_cmodel   = $search_model->get_cmodel($self, $pid);
   if ($res_cmodel->{status} ne 200) {
     $self->app->log->error("ERROR saving json-ld for object $pid, could not get cmodel:" . $self->app->dumper($res_cmodel));
+    $self->render(json => $res_cmodel, status => $res_cmodel->{status});
     return;
   }
   else {
@@ -329,11 +330,13 @@ sub approve {
   $res = $jsonld_model->get_object_jsonld_parsed($self, $pid, $self->stash->{basic_auth_credentials}->{username}, $self->stash->{basic_auth_credentials}->{password});
   if ($res->{status} ne 200) {
     $self->app->log->error("ERROR getting json-ld for object $pid:\n" . $self->app->dumper($res));
+    $self->render(json => $res, status => $res->{status});
     return;
   }
 
   if (exists($res->{'JSON-LD'}->{'phaidra:systemTag'})) {
     $self->app->log->error("ERROR phaidra:systemTag already exists");
+    $self->render(json => {alerts => [{type => 'error', msg => 'phaidra:systemTag already exists'}]}, status => 409);
     return;
   }
 
@@ -342,6 +345,7 @@ sub approve {
   my $saveres = $jsonld_model->save_to_object($self, $pid, $cmodel, $res->{'JSON-LD'}, $self->stash->{basic_auth_credentials}->{username}, $self->stash->{basic_auth_credentials}->{password}, 0);
   if ($saveres->{status} ne 200) {
     $self->app->log->error("ERROR saving json-ld for object $pid:\n" . $self->app->dumper($res));
+    $self->render(json => $saveres, status => $saveres->{status});
     return;
   }
   $self->app->log->debug("ir: approve: [$pid] adding tag...finished");

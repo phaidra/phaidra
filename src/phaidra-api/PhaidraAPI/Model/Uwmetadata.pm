@@ -1080,6 +1080,11 @@ sub get_study_terms {
     $termarraySpl = \@termarray;
   }
 
+  if (defined($spl) && $spl ne '') {
+    my @filtered = grep {($_->{uri} // '') eq $spl} @{$termarraySpl};
+    return \@filtered;
+  }
+
   return $termarraySpl;
 }
 
@@ -1106,15 +1111,8 @@ sub get_study_name {
   }
 
   for my $t (@{$termarraySpl}) {
-    if ($t->{'@id'} eq $spl) {
-      my %names;
-      my $lang_model   = PhaidraAPI::Model::Languages->new;
-      my %iso6393ToBCP = reverse %{$lang_model->get_iso639map()};
-      for my $lang (keys %{$t->{'skos:prefLabel'}}) {
-        my $alpha2lang = exists($iso6393ToBCP{$lang}) ? $iso6393ToBCP{$lang} : $lang;
-        $names{$alpha2lang} = $t->{'skos:prefLabel'}->{$lang};
-      }
-      return \%names;
+    if (defined($spl) && ($t->{uri} // '') eq $spl) {
+      return $t->{labels};
     }
   }
 

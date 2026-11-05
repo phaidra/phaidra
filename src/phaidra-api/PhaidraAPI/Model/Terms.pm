@@ -6,6 +6,7 @@ use v5.10;
 use base qw/Mojo::Base/;
 use PhaidraAPI::Model::Languages;
 use PhaidraAPI::Model::Directory;
+use PhaidraAPI::Model::Config;
 
 our $classification_ns = "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/classification";
 our $organization_ns   = "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization";
@@ -140,34 +141,39 @@ sub _get_vocab_labels {
 sub get_study_plans {
   my ($self, $c, $lang) = @_;
 
-  my $directory_model = PhaidraAPI::Model::Directory->new;
-
-  my $res;
-  my $cachekey = 'study_plans';
-  unless ($res = $c->app->chi->get($cachekey)) {
-    $c->app->log->debug("[cache miss] $cachekey");
-
-    my $dirres = $directory_model->get_study_plans($c, $lang);
-
-    if (exists($dirres->{alerts})) {
-      if ($dirres->{status} != 200) {
-
-        # there are only alerts
-        return {alerts => $dirres->{alerts}, status => $dirres->{status}};
-      }
-    }
-    else {
-      $dirres->{status} = 200;
-      $res = $dirres;
-    }
-
-    $c->app->chi->set($cachekey, $dirres, '1 day');
-
+  unless (defined($lang) && $lang ne '') {
+    my $langs = $c->app->config->{directory}->{study_plans_languages};
+    $lang = (ref($langs) eq 'ARRAY' && @{$langs}) ? $langs->[0] : 'de';
   }
-  else {
+
+  my $cachekey = 'study_plans_' . $lang;
+  if (my $cached = $c->app->chi->get($cachekey)) {
     $c->app->log->debug("[cache hit] $cachekey");
+    return $cached;
+  }
+  $c->app->log->debug("[cache miss] $cachekey");
+
+  my $confmodel = PhaidraAPI::Model::Config->new;
+  my $pubconfig = $confmodel->get_public_config($c);
+  my $terms     = $pubconfig->{data_vocabularies}->{studyplansuwm}->{terms} // [];
+
+  my $lang_model = PhaidraAPI::Model::Languages->new;
+  my %iso639map  = %{$lang_model->get_iso639map()};
+  my $lang3      = $iso639map{$lang} // $lang;
+
+  my @study_plans;
+  for my $t (@{$terms}) {
+    next unless defined($t->{'@id'}) && $t->{'@id'} =~ m{/([^/]+)$};
+    my $labels = $t->{'skos:prefLabel'} // {};
+    push @study_plans,
+      {
+      value => $1,
+      name  => ($labels->{$lang} // $labels->{$lang3} // ''),
+      };
   }
 
+  my $res = {alerts => [], status => 200, study_plans => \@study_plans};
+  $c->app->chi->set($cachekey, $res, '1 day');
   return $res;
 }
 
