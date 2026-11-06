@@ -24,10 +24,10 @@ $api->host($ENV{PHAIDRA_API_HOST});
 $api->port(3000);
 $api->userinfo($ENV{PHAIDRA_ADMIN_USER} . ':' . $ENV{PHAIDRA_ADMIN_PASSWORD});
 
-my $ua = Mojo::UserAgent->new;
+my $ua        = Mojo::UserAgent->new;
 my $page_size = 1000;
-my $migrated = 0;
-my $failed = 0;
+my $migrated  = 0;
+my $failed    = 0;
 my @pids;
 
 sub solr_escape_phrase {
@@ -41,20 +41,21 @@ sub request_failed {
   my $message = $response->message // 'Unknown error';
   if (my $json = $response->json) {
     if (my $alerts = $json->{alerts}) {
-      $message = join('; ', map { $_->{msg} // 'Unknown error' } @$alerts);
+      $message = join('; ', map {$_->{msg} // 'Unknown error'} @$alerts);
     }
   }
   warn "$context: HTTP " . ($response->code // 0) . " $message\n";
 }
 
 for (my $start = 0;; $start += $page_size) {
-  my $search_url = $api->clone->path('search/select')->query({
-    q     => '*:*',
-    fq    => 'owner:"' . solr_escape_phrase($old_username) . '"',
-    fl    => 'pid',
-    rows  => $page_size,
-    start => $start,
-  });
+  my $search_url = $api->clone->path('search/select')->query(
+    { q     => '*:*',
+      fq    => 'owner:"' . solr_escape_phrase($old_username) . '"',
+      fl    => 'pid',
+      rows  => $page_size,
+      start => $start,
+    }
+  );
   my $search_response = $ua->post($search_url)->result;
   if (!$search_response->is_success) {
     request_failed($search_response, 'Searching objects');
@@ -62,29 +63,28 @@ for (my $start = 0;; $start += $page_size) {
   }
 
   my $search_result = $search_response->json;
-  my $docs = ref($search_result) eq 'HASH' && ref($search_result->{response}) eq 'HASH'
+  my $docs
+    = ref($search_result) eq 'HASH' && ref($search_result->{response}) eq 'HASH'
     ? $search_result->{response}->{docs}
     : undef;
   if (ref($docs) ne 'ARRAY') {
     warn "Searching objects: response does not contain result documents\n";
     exit 1;
   }
-  push @pids, map { $_->{pid} } grep { defined $_->{pid} } @$docs;
+  push @pids, map {$_->{pid}} grep {defined $_->{pid}} @$docs;
   last if scalar(@$docs) < $page_size;
 }
 
 while (@pids) {
-  my @batch = splice @pids, 0, $page_size;
-  my @objects = map { {pid => $_, ownerid => $new_username} } @batch;
-  my $modify_url = $api->clone->path('/objects/' . $old_username . '/modify');
-  my $modify_response = $ua->post($modify_url => form => {
-    objects => encode_json({objects => \@objects}),
-  })->result;
+  my @batch           = splice @pids, 0, $page_size;
+  my @objects         = map {{pid => $_, ownerid => $new_username}} @batch;
+  my $modify_url      = $api->clone->path('/objects/' . $old_username . '/modify');
+  my $modify_response = $ua->post($modify_url => form => {objects => encode_json({objects => \@objects}),})->result;
 
   request_failed($modify_response, 'Changing object owners') if !$modify_response->is_success;
 
   my $modify_result = $modify_response->json;
-  my $results = ref($modify_result) eq 'HASH' ? $modify_result->{results} : undef;
+  my $results       = ref($modify_result) eq 'HASH' ? $modify_result->{results} : undef;
   if (ref($results) ne 'ARRAY') {
     warn "Changing object owners: response does not contain results\n";
     $failed += scalar @objects;
@@ -97,7 +97,7 @@ while (@pids) {
     }
     else {
       $failed++;
-      my $message = join('; ', map { $_->{msg} // 'Unknown error' } @{$result->{alerts} // []});
+      my $message = join('; ', map {$_->{msg} // 'Unknown error'} @{$result->{alerts} // []});
       warn "Changing owner failed: $message\n";
     }
   }
