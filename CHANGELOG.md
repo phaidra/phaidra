@@ -36,6 +36,14 @@ Adds missing Physics and Astronomy Classification Scheme (PACS) term labels to `
 docker exec -it phaidra-api-1 perl migrations/v3.5.0/03_add_pacs_term_labels.pl
 ```
 
+### Adding the `ispreviewfor` Solr field
+
+Adds the `ispreviewfor` field to the `phaidra` and `phaidra_pages` Solr cores. Run this migration on existing installations before indexing preview relationships.
+
+```
+docker exec -it phaidra-api-1 perl migrations/v3.5.0/05_add_ispreviewfor_solr_field.pl
+```
+
 # v3.4.0
 
 This release is the last release with Nuxt 2 framework in phaidra-ui.
