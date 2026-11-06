@@ -62,7 +62,7 @@ for my $core (@cores) {
     next;
   }
 
-  my $payload = JSON->new->utf8->encode({'add-field' => $field});
+  my $payload  = JSON->new->utf8->encode({'add-field' => $field});
   my $response = request(POST => "$base_url/fields" => $payload);
   if ($response->is_success) {
     $log->info("Added field '$field->{name}' to core '$core'");
