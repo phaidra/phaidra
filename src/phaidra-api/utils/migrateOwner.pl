@@ -6,7 +6,8 @@ use Mojo::URL;
 use Mojo::UserAgent;
 use Mojo::JSON qw(encode_json);
 
-# Usage: docker exec -it phaidra-api-1 perl /usr/local/phaidra/phaidra-api/utils/changeOwner.pl <old_username> <new_username>
+# This script migrates ownership from old_username to new_username for ALL objects of the old_username
+# Usage: docker exec -it phaidra-api-1 perl /usr/local/phaidra/phaidra-api/utils/migrateOwner.pl <old_username> <new_username>
 
 $ENV{MOJO_INACTIVITY_TIMEOUT} = 36000;
 
@@ -81,12 +82,12 @@ while (@pids) {
   my $modify_url      = $api->clone->path('/objects/' . $old_username . '/modify');
   my $modify_response = $ua->post($modify_url => form => {objects => encode_json({objects => \@objects}),})->result;
 
-  request_failed($modify_response, 'Changing object owners') if !$modify_response->is_success;
+  request_failed($modify_response, 'Modifying object owners') if !$modify_response->is_success;
 
   my $modify_result = $modify_response->json;
   my $results       = ref($modify_result) eq 'HASH' ? $modify_result->{results} : undef;
   if (ref($results) ne 'ARRAY') {
-    warn "Changing object owners: response does not contain results\n";
+    warn "Modifying object owners: response does not contain results\n";
     $failed += scalar @objects;
     next;
   }
@@ -98,7 +99,7 @@ while (@pids) {
     else {
       $failed++;
       my $message = join('; ', map {$_->{msg} // 'Unknown error'} @{$result->{alerts} // []});
-      warn "Changing owner failed: $message\n";
+      warn "Modifying owner failed: $message\n";
     }
   }
 }
