@@ -138,6 +138,71 @@ sub _getObjectProperties {
   return $res;
 }
 
+sub _getNTriplesValue {
+  my ($self, $c, $object) = @_;
+
+  if ($object =~ m/^<([^>]*)>$/) {
+    my $value = $1;
+    my $fp    = $self->getFedoraUrlPrefix($c);
+    $value =~ s/\Q$fp\E//g;
+    return $value;
+  }
+
+  if ($object =~ m/^"((?:[^"\\]|\\.)*)"(?:@[A-Za-z0-9-]+|\^\^<[^>]+>)?$/) {
+    my $literal = $1;
+    my $value   = eval {decode_json('"' . $literal . '"')};
+    return $@ ? $literal : $value;
+  }
+
+  return;
+}
+
+sub getObjectAuthorizationProperties {
+  my ($self, $c, $pid) = @_;
+
+  my $res = {alerts => [], status => 200};
+
+  unless ($pid =~ m/^o:\d+$/) {
+    unshift @{$res->{alerts}}, {type => 'error', msg => 'Invalid pid'};
+    $res->{status} = 400;
+    return $res;
+  }
+
+  my $url = $c->app->fedoraurl->path($pid);
+  $c->app->log->debug("GET $url");
+  my $getres = $c->ua->get($url => $self->wrapAtomic($c, {'Accept' => 'application/n-triples'}))->result;
+
+  unless ($getres->is_success) {
+    if ($getres->{code} == 410) {
+      $res->{tombstone} = $getres->body;
+    }
+    unshift @{$res->{alerts}}, {type => 'error', msg => $getres->message};
+    $res->{status} = $getres->{code};
+    return $res;
+  }
+
+  my %property_map = (
+    'info:fedora/fedora-system:def/model#ownerId' => 'owner',
+    'info:fedora/fedora-system:def/model#state'   => 'state',
+  );
+
+  for my $line (split /\n/, $getres->body) {
+    next unless $line =~ m/^\s*<[^>]*>\s+<([^>]*)>\s+(.+?)\s+\.\s*$/;
+
+    my ($predicate, $object) = ($1, $2);
+    next unless exists $property_map{$predicate};
+
+    my $value = $self->_getNTriplesValue($c, $object);
+    next unless defined $value;
+
+    my $key = $property_map{$predicate};
+    $res->{$key} = $value unless defined $res->{$key};
+    last if defined $res->{owner} && defined $res->{state};
+  }
+
+  return $res;
+}
+
 sub getObjectProperties {
   my ($self, $c, $pid) = @_;
 

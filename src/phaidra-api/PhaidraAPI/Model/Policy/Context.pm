@@ -220,7 +220,7 @@ sub _build_resource {
 
     unless ($c->stash->{policy_object_cache}->{$pid}) {
       my $fedora_model = PhaidraAPI::Model::Fedora->new;
-      my $fres         = $fedora_model->getObjectProperties($c, $pid);
+      my $fres         = $fedora_model->getObjectAuthorizationProperties($c, $pid);
       my $cache        = {fedora => $fres, rights => {}};
 
       if ($fres->{status} eq 200) {
