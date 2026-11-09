@@ -19,10 +19,10 @@
             </v-menu>
         </v-card-title>
         <v-divider></v-divider>
-        <v-card-text class="mt-4">
+        <v-card-text class="mt-4 pb-0">
           <v-row>
-            <v-col>
-              <v-row >
+            <v-col class="pa-0">
+              <v-row>
                 <v-col cols="10">
                   <v-text-field
                     :model-value="name"
