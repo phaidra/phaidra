@@ -225,3 +225,202 @@ export const constructDataCite = (dataciteData, that) => {
   }
   return doiImportData
 }
+
+export const constructCrossref = (crossrefData, that) => {
+  const trimText = (value) => {
+    if (typeof value !== 'string') return ''
+    return value.replace(/\s\s+/g, ' ').trim()
+  }
+
+  const firstOrValue = (value) => {
+    if (Array.isArray(value)) {
+      return value.length > 0 ? value[0] : null
+    }
+    return value
+  }
+
+  const doiImportData = {
+    title: '',
+    dateIssued: '',
+    authors: [],
+    publicationType: '',
+    publisher: '',
+    journalTitle: '',
+    journalISSN: '',
+    journalVolume: '',
+    journalIssue: '',
+    pageStart: '',
+    pageEnd: '',
+    descriptions: []
+  }
+
+  const title = trimText(firstOrValue(crossrefData?.title))
+  if (title) doiImportData.title = title
+
+  const subtitle = trimText(firstOrValue(crossrefData?.subtitle))
+  if (subtitle) doiImportData.subtitle = subtitle
+
+  const issuedYear = crossrefData?.issued?.['date-parts']?.[0]?.[0]
+  if (issuedYear) {
+    doiImportData.dateIssued = issuedYear.toString()
+  }
+
+  if (crossrefData?.language) {
+    if (crossrefData.language.length === 3) {
+      doiImportData.language = crossrefData.language
+    } else if (that?.lang2to3map?.[crossrefData.language]) {
+      doiImportData.language = that.lang2to3map[crossrefData.language]
+    }
+  }
+
+  if (Array.isArray(crossrefData?.author)) {
+    for (const author of crossrefData.author) {
+      if (author?.given || author?.family) {
+        const auth = {
+          type: 'schema:Person',
+          firstname: author.given ? trimText(author.given) : '',
+          lastname: author.family ? trimText(author.family) : ''
+        }
+        if (Array.isArray(author.affiliation)) {
+          auth.affiliation = []
+          for (const af of author.affiliation) {
+            auth.affiliation.push(af.name)
+          }
+        }
+        if (author.ORCID) {
+          auth.orcid = normalizeOrcid(author.ORCID)
+        }
+        doiImportData.authors.push(auth)
+      }
+      if (author?.name) {
+        doiImportData.authors.push({
+          type: 'schema:Organization',
+          name: author.name
+        })
+      }
+    }
+  }
+
+  if (Array.isArray(crossrefData?.subject)) {
+    doiImportData.keywords = []
+    for (const kw of crossrefData.subject) {
+      doiImportData.keywords.push(kw)
+    }
+  }
+
+  // https://github.com/citation-style-language/schema/blob/master/csl-types.rnc
+  // https://wiki.univie.ac.at/display/IR/Mapping+CrossRef-Erscheinungsformen
+  switch (crossrefData?.type) {
+    case 'article':
+    case 'journal-article':
+    case 'article-journal':
+      doiImportData.publicationType = 'article'
+      doiImportData.publicationTypeId = 'https://pid.phaidra.org/vocabulary/VKA6-9XTY'
+      break
+    case 'report':
+      doiImportData.publicationType = 'report'
+      doiImportData.publicationTypeId = 'https://pid.phaidra.org/vocabulary/JMAV-7F3R'
+      break
+    case 'book':
+    case 'monograph':
+    case 'reference-book':
+    case 'edited-book':
+      doiImportData.publicationType = 'book'
+      doiImportData.publicationTypeId = 'https://pid.phaidra.org/vocabulary/47QB-8QF1'
+      break
+    case 'book-chapter':
+    case 'book-part':
+    case 'book-section':
+      doiImportData.publicationType = 'book_part'
+      doiImportData.publicationTypeId = 'https://pid.phaidra.org/vocabulary/XA52-09WA'
+      break
+    case 'dissertation':
+      doiImportData.publicationType = 'doctoral_thesis'
+      doiImportData.publicationTypeId = 'https://pid.phaidra.org/vocabulary/1PHE-7VMS'
+      break
+    case 'proceedings-article':
+    case 'proceedings':
+      doiImportData.publicationType = 'conference_object'
+      doiImportData.publicationTypeId = 'https://pid.phaidra.org/vocabulary/QKDF-E5HA'
+      break
+    case 'dataset':
+      doiImportData.publicationType = 'research_data'
+      doiImportData.publicationTypeId = 'https://pid.phaidra.org/vocabulary/KW6N-2VTP'
+      break
+    case 'other':
+    case 'standard':
+    case 'standard-series':
+    case 'book-entry':
+    case 'book-series':
+    case 'book-set':
+    case 'book-track':
+    case 'component':
+    case 'journal-issue':
+    case 'journal-volume':
+    case 'journal':
+    case 'report-series':
+      doiImportData.publicationType = 'other'
+      doiImportData.publicationTypeId = 'https://pid.phaidra.org/vocabulary/PYRE-RAWJ'
+      break
+    default:
+      doiImportData.publicationType = 'other'
+      doiImportData.publicationTypeId = 'https://pid.phaidra.org/vocabulary/PYRE-RAWJ'
+  }
+
+  const publisher = trimText(firstOrValue(crossrefData?.publisher))
+  if (publisher) doiImportData.publisher = publisher
+
+  const journalTitle = trimText(firstOrValue(crossrefData?.['container-title']))
+  if (journalTitle) doiImportData.journalTitle = journalTitle
+
+  const journalISSN = trimText(firstOrValue(crossrefData?.ISSN))
+  if (journalISSN) doiImportData.journalISSN = journalISSN
+
+  const isbn = trimText(firstOrValue(crossrefData?.ISBN))
+  if (isbn) doiImportData.ISBN = isbn
+
+  const volume = trimText(crossrefData?.volume)
+  if (volume) doiImportData.journalVolume = volume
+
+  const issue = trimText(crossrefData?.issue)
+  if (issue) doiImportData.journalIssue = issue
+
+  if (crossrefData?.page) {
+    const page = crossrefData.page.split('-')
+    const regexnum = new RegExp('^[0-9]+$')
+    const startpage = page[0]
+    if (regexnum.test(startpage)) {
+      doiImportData.pageStart = startpage
+    }
+    if (page.length > 1) {
+      const endpage = page[1]
+      if (regexnum.test(endpage)) {
+        doiImportData.pageEnd = endpage
+      }
+    }
+  }
+
+  if (Array.isArray(crossrefData?.license)) {
+    for (const lic of crossrefData.license) {
+      if (lic?.URL) {
+        const normalizedUrl = normalizeLicenseUrl(lic.URL)
+        if (that?.getLocalizedTermLabel?.('alllicenses', normalizedUrl)) {
+          doiImportData.license = normalizedUrl
+        }
+      }
+    }
+  }
+
+  if (crossrefData?.abstract) {
+    const abstractText = cleanCrossrefAbstract(crossrefData.abstract)
+    if (abstractText) {
+      setDoiAbstract(
+        doiImportData,
+        [{ description: abstractText }],
+        doiImportData?.license
+      )
+    }
+  }
+
+  return doiImportData
+}
