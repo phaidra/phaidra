@@ -1455,7 +1455,7 @@ sub pureimport_reject {
   my $puremetadata;
   my $pure_api_base_url = $privconfig->{irpureurl};
   my $url               = Mojo::URL->new($pure_api_base_url . "/research-outputs/$uuid");
-  my $getres = $self->ua->get($url => {Accept => 'application/json', 'api-key' => $privconfig->{irpurekey}})->result;
+  my $getres            = $self->ua->get($url => {Accept => 'application/json', 'api-key' => $privconfig->{irpurekey}})->result;
   if ($getres->is_success) {
     $puremetadata = $getres->json;
     $self->app->log->debug("Pure metadata:\n" . $self->app->dumper($puremetadata));
@@ -1520,7 +1520,7 @@ sub createPureUpdate {
   my $puremetadata;
   my $pure_api_base_url = $privconfig->{irpureurl};
   my $url               = Mojo::URL->new($pure_api_base_url . "/research-outputs/$uuid");
-  my $getres = $self->ua->get($url => {Accept => 'application/json', 'api-key' => $privconfig->{irpurekey}})->result;
+  my $getres            = $self->ua->get($url => {Accept => 'application/json', 'api-key' => $privconfig->{irpurekey}})->result;
   if ($getres->is_success) {
     $puremetadata = $getres->json;
     $self->app->log->debug("Pure metadata:\n" . $self->app->dumper($puremetadata));
