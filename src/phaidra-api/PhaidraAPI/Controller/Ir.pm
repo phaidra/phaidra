@@ -854,8 +854,8 @@ sub submit {
       my $uuid = $self->param('uuid');
       $self->app->log->debug("pure import uuid[$uuid]");
       if ($uuid) {
-        my $urlget = Mojo::URL->new($privconfig->{irpureurl} . "/research-outputs/$uuid");
-        my $params = {apiKey => $privconfig->{irpurekey}};
+        my $pure_api_base_url = $privconfig->{irpureurl};
+        my $urlget            = Mojo::URL->new($pure_api_base_url . "/research-outputs/$uuid");
 
         my $pureUpdate = $self->createPureUpdate($mainObjectPid, $uuid, $metadata);
         $self->app->log->debug("pure update:\n" . $self->app->dumper($pureUpdate));
@@ -1224,15 +1224,8 @@ sub puresearch {
   my $size   = $self->param('size');
   my $offset = $self->param('offset');
 
-  # $self->app->log->debug("XXXXXXXXXXXXXXXXXXXX : " . $privconfig->{irpureurl} . '/research-outputs/search');
-  # HACK:
-  my $urlget;
-  if ($privconfig->{irpureurl} eq "https://ucris.univie.ac.at/ws/api/523/research-outputs") {
-    $urlget = Mojo::URL->new($privconfig->{irpureurl});
-  }
-  else {
-    $urlget = Mojo::URL->new($privconfig->{irpureurl} . '/research-outputs/search');
-  }
+  my $pure_api_base_url = $privconfig->{irpureurl};
+  my $urlget            = Mojo::URL->new($pure_api_base_url . '/research-outputs/filter');
 
   my $params = {"keywordUris" => ["/dk/atira/pure/keywords/ir_status/$ir_status"]};
   if ($size) {
@@ -1460,7 +1453,8 @@ sub pureimport_reject {
 
   # get pure metadata
   my $puremetadata;
-  my $url    = Mojo::URL->new($privconfig->{irpureurl} . "/research-outputs/$uuid");
+  my $pure_api_base_url = $privconfig->{irpureurl};
+  my $url               = Mojo::URL->new($pure_api_base_url . "/research-outputs/$uuid");
   my $getres = $self->ua->get($url => {Accept => 'application/json', 'api-key' => $privconfig->{irpurekey}})->result;
   if ($getres->is_success) {
     $puremetadata = $getres->json;
@@ -1524,7 +1518,8 @@ sub createPureUpdate {
 
   # get pure metadata
   my $puremetadata;
-  my $url    = Mojo::URL->new($privconfig->{irpureurl} . "/research-outputs/$uuid");
+  my $pure_api_base_url = $privconfig->{irpureurl};
+  my $url               = Mojo::URL->new($pure_api_base_url . "/research-outputs/$uuid");
   my $getres = $self->ua->get($url => {Accept => 'application/json', 'api-key' => $privconfig->{irpurekey}})->result;
   if ($getres->is_success) {
     $puremetadata = $getres->json;
