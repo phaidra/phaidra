@@ -748,7 +748,7 @@
                           <template v-if="f.component === 'p-note-checkbox-with-link'">
                             <p-i-note-checkbox-with-link
                               v-bind="f"
-                              v-on:input="f.value=$event"
+                              v-on:input="noteCheckboxWithLinkInput(f, $event)"
                               v-on:configure="editFieldProps(f)"
                               :configurable="enablefieldconfig || f.configurable"
                             ></p-i-note-checkbox-with-link>
@@ -1475,6 +1475,11 @@ export default {
     },
     updateJsonld: function () {
       this.jsonld = jsonLd.form2json(this.form)
+    },
+    noteCheckboxWithLinkInput: function (field, checkedState) {
+      const isChecked = checkedState === true || checkedState === field.note
+      field.checked = isChecked
+      field.value = isChecked ? field.note : ''
     },
     normalizeContributionIdentifier: function (identifierType, identifierText) {
       if (typeof identifierText !== 'string' || !identifierType) return identifierText

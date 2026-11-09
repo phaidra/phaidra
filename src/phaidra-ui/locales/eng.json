@@ -352,6 +352,7 @@
     "LICENSE_NOTE": "<b>Note:</b> If you choose the <i>All rights reserved</i> option, you can change it later and apply an <i>open</i> licence (Creative Commons, MIT, etc.). However, if you choose an <i>open</i> licence, it cannot be changed afterwards.",
     "OER_ACCESSIBILITY_CHECK_LABEL": "{0} principles considered",
     "OER_ACCESSIBILITY_CHECK_LINK_LABEL": "Accessibility",
+    "Required": "Required",
 
     "uwm_etheses": "E-Theses",
     "uwm_etheses_note_2": "Note 2",

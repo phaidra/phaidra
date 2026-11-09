@@ -4,6 +4,15 @@ const normalizeOrcid = (orcid) => {
   return orcid.replace(/^https?:\/\/(www\.)?orcid\.org\//i, '').trim()
 }
 
+const normalizeDataCiteAffiliations = (affiliations) => {
+  if (!Array.isArray(affiliations)) return []
+
+  return affiliations
+    .map(affiliation => typeof affiliation === 'string' ? affiliation : affiliation?.name)
+    .filter(affiliation => typeof affiliation === 'string' && affiliation.trim())
+    .map(affiliation => affiliation.replace(/\s\s+/g, ' ').trim())
+}
+
 export const normalizeLicenseUrl = (licUrl) => {
   if (!licUrl) return null
   let modifiedUrl = licUrl.replace(/^https/, 'http').replace(/\/$/, '')
@@ -64,13 +73,9 @@ export const constructDataCite = (dataciteData, that) => {
             firstname: author['givenName'] ? author['givenName'].replace(/\s\s+/g, ' ').trim() : '',
             lastname: author['familyName'] ? author['familyName'].replace(/\s\s+/g, ' ').trim() : ''
           }
-          if (author['affiliation']) {
-            if (Array.isArray(author['affiliation'])) {
-              auth.affiliation = []
-              for (let af of author['affiliation']) {
-                auth.affiliation.push(af['name'])
-              }
-            }
+          const affiliations = normalizeDataCiteAffiliations(author['affiliation'])
+          if (affiliations.length > 0) {
+            auth.affiliation = affiliations
           }
           if (author['ORCID']) {
             auth.orcid = normalizeOrcid(author['ORCID'])

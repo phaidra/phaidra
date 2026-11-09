@@ -61,6 +61,37 @@ export const formvalidation = {
         }
       }
     },
+    isNoteCheckboxWithLinkChecked(f) {
+      return f.checked === true || f.value === true || f.value === f.note
+    },
+    validateRequiredNoteCheckboxes() {
+      for (const s of this.form.sections) {
+        if (!s.fields) continue
+        for (const f of s.fields) {
+          if (f.component !== 'p-note-checkbox-with-link') {
+            continue
+          }
+          f.errorMessages = []
+          if (f.required !== true) {
+            continue
+          }
+          const fieldLabel = f.requiredFieldLabel || 'OER_ACCESSIBILITY_CHECK_LINK_LABEL'
+          const isChecked = this.isNoteCheckboxWithLinkChecked(f)
+
+          this.mandatoryFieldsFound[fieldLabel] = true
+          if (Object.prototype.hasOwnProperty.call(this.mandatoryFieldsValidated, fieldLabel)) {
+            this.mandatoryFieldsValidated[fieldLabel] = this.mandatoryFieldsValidated[fieldLabel] && isChecked
+          } else {
+            this.mandatoryFieldsValidated[fieldLabel] = isChecked
+          }
+
+          if (!isChecked) {
+            this.validationError = true
+            f.errorMessages.push(this.$t('Required'))
+          }
+        }
+      }
+    },
     applySchemaBasedRequired() {
       const groupFirstInstanceMarked = {}
       
@@ -492,6 +523,8 @@ export const formvalidation = {
         }
       }
 
+      this.validateRequiredNoteCheckboxes()
+
       for (const field in this.mandatoryFieldsFound) {
         if (!this.mandatoryFieldsFound[field]) {
           this.validationError = true
@@ -692,6 +725,8 @@ export const formvalidation = {
         }
       }
 
+      this.validateRequiredNoteCheckboxes()
+
       for (const field in this.mandatoryFieldsFound) {
         if (!this.mandatoryFieldsFound[field]) {
           this.validationError = true
@@ -883,6 +918,8 @@ export const formvalidation = {
         }
       }
 
+      this.validateRequiredNoteCheckboxes()
+
       if (!hasAut || !hasAdvisor) {
         this.validationError = true
         console.error('Author or advisor missing')
@@ -1051,6 +1088,8 @@ export const formvalidation = {
           }
         }
       }
+
+      this.validateRequiredNoteCheckboxes()
 
       for (const field in this.mandatoryFieldsFound) {
         if (!this.mandatoryFieldsFound[field]) {
@@ -1233,6 +1272,8 @@ export const formvalidation = {
           }
         }
       }
+
+      this.validateRequiredNoteCheckboxes()
 
       for (const field in this.mandatoryFieldsFound) {
         if (!this.mandatoryFieldsFound[field]) {

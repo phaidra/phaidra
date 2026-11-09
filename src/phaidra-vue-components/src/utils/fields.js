@@ -321,6 +321,9 @@ const fields = [
     component: 'p-note-checkbox-with-link',
     label: 'Note',
     value: '',
+    checked: false,
+    required: false,
+    requiredFieldLabel: '',
     language: '',
     definition: 'Information, usually in textual form, on attributes of a resource or some aspect of a resource.'
   },

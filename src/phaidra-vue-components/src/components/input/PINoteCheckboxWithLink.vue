@@ -1,14 +1,22 @@
 <template>
   <v-col cols="12">
-    <v-checkbox class="mt-0 check" v-model="checkbox" @click.capture="$emit('input', note)">
-      <template v-slot:label>
-        <i18n :path="labelMessageId" tag="span" class="text-black ">
+    <v-checkbox
+      class="mt-0 check"
+      v-model="isChecked"
+      :required="required"
+      :rules="required ? [ v => v === true || $t('Required')] : []"
+      :error-messages="errorMessages"
+    >
+      <template #label>
+        <i18n-t :keypath="labelMessageId" tag="span" class="text-black">
           <a
             @click.stop
             :href="link"
             target="_blank"
-            >{{ $t(linkLabelMessageId) }}</a
-          ></i18n>
+            rel="noopener noreferrer"
+          >{{ $t(linkLabelMessageId) }}</a>
+        </i18n-t>
+        <span v-if="required"> *</span>
       </template>
     </v-checkbox>
   </v-col>
@@ -39,16 +47,33 @@ export default {
       type: String,
       required: true
     },
+    checked: {
+      type: Boolean,
+      default: false
+    },
+    value: {
+      type: [String, Boolean],
+      default: ''
+    },
     errorMessages: {
       type: Array
     },
     language: {
       type: String
+    },
+    required: {
+      type: Boolean,
+      default: false
     }
   },
-  data () {
-    return {
-      checkbox: false
+  computed: {
+    isChecked: {
+      get () {
+        return this.checked === true || this.value === this.note || this.value === true
+      },
+      set (checked) {
+        this.$emit('input', checked === true)
+      }
     }
   }
 }

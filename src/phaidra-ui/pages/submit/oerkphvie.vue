@@ -307,8 +307,6 @@ export default {
 
       self.form.sections[0].fields.push(fields.getField("association"));
 
-      self.form.sections[0].fields.push(fields.getField("audience"));
-
       let lic = fields.getField("license");
       lic.showValueDefinition = true;
       lic.vocabulary = "oerlicenses";
@@ -318,6 +316,8 @@ export default {
       note.note = 'Grundsätze der Barrierearmut beachtet'
       note.labelMessageId = 'OER_ACCESSIBILITY_CHECK_LABEL'
       note.linkLabelMessageId = 'OER_ACCESSIBILITY_CHECK_LINK_LABEL'
+      note.required = true
+      note.requiredFieldLabel = 'OER_ACCESSIBILITY_CHECK_LINK_LABEL'
       note.link = 'https://hochschulforumdigitalisierung.de/wp-content/uploads/2023/09/HFD_AP_66_Leitfaden_Digitale_Barrierefreiheit-1.pdf'
       note.language = 'deu'
       self.form.sections[0].fields.push(note);
