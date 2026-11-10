@@ -1203,6 +1203,7 @@
   "Include": "Includi",
   "Exclude": "Escludi",
   "Find type": "Trova tipo",
+  "Only objects with a defined object type are shown": "Vengono mostrati solo gli oggetti con un tipo di oggetto definito",
   "Picture": "Immagine",
   "PDFDocument": "Documento PDF",
   "Audio": "Audio",

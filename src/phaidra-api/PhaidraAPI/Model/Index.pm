@@ -2554,6 +2554,15 @@ sub _add_uwm_index {
     }
   }
 
+  for my $section (
+    ["http://phaidra.univie.ac.at/XML/metadata/histkult/V1.0",      "histkult"],
+    ["http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0", "provenience"]
+  )
+  {
+    my ($xmlns, $xmlname) = @{$section};
+    $self->_index_uwm_resource_object_types($c, $index, $self->_find_first_uwm_node_rec($c, $xmlns, $xmlname, $uwm));
+  }
+
   my $curr = $self->_find_first_uwm_node_rec($c, "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization", "curriculum", $uwm);
   if ($curr) {
     if ($curr->{children}) {
@@ -2898,6 +2907,19 @@ sub _find_first_uwm_node_rec {
   }
 
   return $ret;
+}
+
+sub _index_uwm_resource_object_types {
+  my ($self, $c, $index, $node) = @_;
+  return unless $node;
+  if (($node->{xmlname} eq 'resource') && defined($node->{ui_value}) && ($node->{ui_value} ne '')) {
+    push @{$index->{"object_type_id"}}, $node->{ui_value};
+  }
+  if ($node->{children}) {
+    for my $ch (@{$node->{children}}) {
+      $self->_index_uwm_resource_object_types($c, $index, $ch);
+    }
+  }
 }
 
 sub get_haspart_size {

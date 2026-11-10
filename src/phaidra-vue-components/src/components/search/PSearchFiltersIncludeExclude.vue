@@ -1,7 +1,22 @@
 <template>
   <div>
     <h3 class="text-body-large">{{ labelOf(facet) }}</h3>
-    <p ref="summary" class="text-label-medium facet-summary" tabindex="-1">{{ includedCount }} {{ $t('Include') }} · {{ excludedCount }} {{ $t('Exclude') }}</p>
+    <p ref="summary" class="text-label-medium facet-summary" tabindex="-1">
+      <span>{{ includedCount }} {{ $t('Include') }} · {{ excludedCount }} {{ $t('Exclude') }}</span>
+      <v-tooltip location="bottom" max-width="280">
+        <template #activator="{ props: tipProps }">
+          <v-icon
+            v-bind="tipProps"
+            class="ms-1"
+            icon="mdi-information-outline"
+            size="small"
+            :aria-label="$t('Only objects with a defined object type are shown')"
+            tabindex="0"
+          />
+        </template>
+        <span>{{ $t('Only objects with a defined object type are shown') }}</span>
+      </v-tooltip>
+    </p>
     <div v-if="selectedFilters.length" class="selected-filters">
       <v-chip
         v-for="item in selectedFilters"
@@ -284,6 +299,8 @@ export default {
 }
 
 .facet-summary {
+  display: flex;
+  align-items: center;
   margin: 0.5em 0 0.5em;
 }
 
