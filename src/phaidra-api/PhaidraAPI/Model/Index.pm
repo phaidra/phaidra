@@ -2554,11 +2554,7 @@ sub _add_uwm_index {
     }
   }
 
-  for my $section (
-    ["http://phaidra.univie.ac.at/XML/metadata/histkult/V1.0",      "histkult"],
-    ["http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0", "provenience"]
-  )
-  {
+  for my $section (["http://phaidra.univie.ac.at/XML/metadata/histkult/V1.0", "histkult"], ["http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0", "provenience"]) {
     my ($xmlns, $xmlname) = @{$section};
     $self->_index_uwm_resource_object_types($c, $index, $self->_find_first_uwm_node_rec($c, $xmlns, $xmlname, $uwm));
   }
