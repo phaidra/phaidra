@@ -388,9 +388,7 @@
               <v-col cols="12" md="10" v-if="affiliationRadio === 'select'">
                 <v-autocomplete
                   :model-value="getTerm('orgunits', affiliation)"
-                  :required="required"
                   @update:model-value="handleInput($event, 'affiliationPath', 'input-affiliation-select')"
-                  :rules="required ? [ v => !!v || $t('Required')] : []"
                   :items="orgunits"
                   item-value="@id"
                   :item-title="orgunitItemTitle"
