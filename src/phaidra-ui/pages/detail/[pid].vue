@@ -820,7 +820,6 @@
                     :next-aria-label="$t('next')"
                     :current-page-aria-label="$t('currentPage')"
                     v-bind:length="collMembersTotalPages"
-                    total-visible="10"
                     v-model="collMembersPage"
                   ></v-pagination>
                 </v-col>
@@ -899,7 +898,6 @@
                 :next-aria-label="$t('next')"
                 :current-page-aria-label="$t('currentPage')" 
                 v-bind:length="collMembersTotalPages"
-                total-visible="10"
                 v-model="collMembersPage"
                 class="mt-4 mb-4"
                 @input="scrollToCollectionMembersTop"
