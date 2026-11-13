@@ -4,6 +4,10 @@ phaidra-ui was migrated to Nuxt 4.
 
 ## Upgrade
 
+### Include/exclude search filters and Uwmetadata
+
+If an institution enables include/exclude object-type filters and manages objects described by Uwmetadata, a **reindex** is required so histkult/provenience object types (`voc_24`) are written to Solr `object_type_id` and the filters work correctly for existing objects. Newly created or updated objects are indexed automatically.
+
 ### Adding inactive_objects table
 
 This table enables tracking registered objects in state Inactive so they can be shown to the users, curators, etc.

@@ -188,11 +188,42 @@ const uwmObjectTypes = {
   'YA8R-1M0D': ['1562801']
 }
 
+const uwmVoc24Prefixes = [
+  'http://phaidra.univie.ac.at/XML/metadata/histkult/V1.0/voc_24/',
+  'http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_24/'
+]
+const uwmObjectTypesVoc24 = {
+  '47QB-8QF1': ['1557194'],
+  'PYRE-RAWJ': ['1557206'],
+  'MF25-FDGW': ['1557192'],
+  '3VKA-1FW2': ['1557192'],
+  'XA52-09WA': ['1557193'],
+  'QM0R-ZTAA': ['1557151'],
+  'Q4Q5-3554': ['1557152'],
+  'WWS3-0ACP': ['1557153'],
+  '85QM-7TZ3': ['1557154'],
+  '7CAB-P987': ['1557155'],
+  'R4W3-ZQ76': ['1557156'],
+  '6EFK-BRQD': ['1557157'],
+  '7WYH-AZ8C': ['1557158'],
+  '431H-5YSA': ['1557162'],
+  '9W35-5Q94': ['1557163'],
+  '9J46-2X9E': ['1557174'],
+  'A52A-CWMM': ['1557175'],
+  'XTVH-3MG3': ['1557185'],
+  'KMRH-NFR9': ['1557195'],
+  'GY3Z-50FT': ['1557196'],
+  'GBWA-JJP8': ['1562632'],
+  'C36Q-N42M': ['1552077']
+}
+
 export function buildObjectTypeFacet (parent, terms, labelOf) {
   return {
     queries: terms.map(term => {
       const id = term['@id'].substring(term['@id'].lastIndexOf('/') + 1)
-      const ids = [term['@id']].concat((uwmObjectTypes[id] || []).map(uwmId => uwmObjectTypePrefix + uwmId))
+      const ids = [term['@id']]
+        .concat((uwmObjectTypes[id] || []).map(uwmId => uwmObjectTypePrefix + uwmId))
+        .concat((uwmObjectTypesVoc24[id] || []).flatMap(uwmId => uwmVoc24Prefixes.map(prefix => prefix + uwmId)))
       const objectTypeQuery = 'object_type_id:(' + ids.map(v => '"' + v + '"').join(' OR ') + ')'
       return {
         id: parent.id + '.' + id,
