@@ -311,6 +311,117 @@
             </v-row>
 
             <v-row
+              v-if="objectInfo.relationships.ispreviewfor && objectInfo.relationships.ispreviewfor.length > 0"
+              class="my-6"
+            >
+              <v-col class="pt-0">
+                <v-card tile>
+                  <v-card-title
+                    class="ph-box text-title-large font-weight-light text-white"
+                    >{{ $t("This object is preview for") }}</v-card-title
+                  >
+                  <v-card-text class="mt-4">
+                    <div
+                      v-for="(rel, i) in objectInfo.relationships
+                        .ispreviewfor" :key="'ispreviewfor' + i"
+                    >
+                      <v-row align="center">
+                        <v-col cols="12" md="5" class="preview-maxwidth">
+                          <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
+                            <p-img
+                              :src="instanceconfig?.api +
+                                '/object/' +
+                                rel.pid +
+                                '/thumbnail'
+                              "
+                              class="elevation-1 my-4"
+                              :alt="getObjectTitle(rel)"
+                            ></p-img>
+                          </nuxt-link>
+                        </v-col>
+                        <v-col cols="12" md="7">
+                          <nuxt-link
+                            v-if="rel['dc_title']"
+                            :to="localePath(`/detail/${rel.pid}`)"
+                            >{{ getObjectTitle(rel) }}</nuxt-link
+                          >
+                          <nuxt-link
+                            v-else
+                            :to="localePath(`/detail/${rel.pid}`)"
+                            >{{ rel.pid }}</nuxt-link
+                          >
+                        </v-col>
+                      </v-row>
+                      <v-divider
+                        :key="'ispreviewford' + i"
+                        v-if="
+                          i + 1 <
+                          objectInfo.relationships.ispreviewfor.length
+                        "
+                        class="my-4"
+                      ></v-divider>
+                    </div>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+
+            <v-row
+              v-if="objectInfo.relationships.haspreview && objectInfo.relationships.haspreview.length > 0"
+              class="my-6"
+            >
+              <v-col class="pt-0">
+                <v-card tile>
+                  <v-card-title
+                    class="ph-box text-title-large font-weight-light text-white"
+                    >{{ $t("This object has preview") }}</v-card-title
+                  >
+                  <v-card-text class="mt-4">
+                    <div
+                      v-for="(rel, i) in objectInfo.relationships
+                        .haspreview" :key="'haspreview' + i"
+                    >
+                      <v-row align="center">
+                        <v-col cols="12" md="5" class="preview-maxwidth">
+                          <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
+                            <p-img
+                              :src="instanceconfig?.api +
+                                '/object/' +
+                                rel.pid +
+                                '/thumbnail'
+                              "
+                              class="elevation-1 my-4"
+                              :alt="getObjectTitle(rel)"
+                            ></p-img>
+                          </nuxt-link>
+                        </v-col>
+                        <v-col cols="12" md="7">
+                          <nuxt-link
+                            v-if="rel['dc_title']"
+                            :to="localePath(`/detail/${rel.pid}`)"
+                            >{{ getObjectTitle(rel) }}</nuxt-link
+                          >
+                          <nuxt-link
+                            v-else
+                            :to="localePath(`/detail/${rel.pid}`)"
+                            >{{ rel.pid }}</nuxt-link
+                          >
+                        </v-col>
+                      </v-row>
+                      <v-divider
+                        :key="'haspreviewd' + i"
+                        v-if="
+                          i + 1 < objectInfo.relationships.haspreview.length
+                        "
+                        class="my-4"
+                      ></v-divider>
+                    </div>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+
+            <v-row
               v-if="objectInfo.relationships.references && objectInfo.relationships.references.length > 0"
               class="my-6"
             >
@@ -1833,6 +1944,107 @@
                     </v-card>
                   </li>
 
+                  <li v-if="objectInfo.relationships.ispreviewfor && objectInfo.relationships.ispreviewfor.length > 0" class="mb-6">
+                    <v-card tile>
+                      <v-card-title
+                        class="ph-box text-title-large font-weight-light text-white"
+                        >{{ $t("This object is preview for") }}</v-card-title
+                      >
+                      <v-card-text class="mt-4">
+                        <div
+                          v-for="(rel, i) in objectInfo.relationships
+                            .ispreviewfor" :key="'ispreviewfor' + i"
+                        >
+                          <v-row align="center">
+                            <v-col cols="12" md="5" class="preview-maxwidth">
+                              <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
+                                <p-img
+                                  :src="instanceconfig?.api +
+                                    '/object/' +
+                                    rel.pid +
+                                    '/thumbnail'
+                                  "
+                                  class="elevation-1 my-4"
+                                  :alt="getObjectTitle(rel)"
+                                ></p-img>
+                              </nuxt-link>
+                            </v-col>
+                            <v-col cols="12" md="7">
+                              <nuxt-link
+                                v-if="rel['dc_title']"
+                                :to="localePath(`/detail/${rel.pid}`)"
+                                >{{ getObjectTitle(rel) }}</nuxt-link
+                              >
+                              <nuxt-link
+                                v-else
+                                :to="localePath(`/detail/${rel.pid}`)"
+                                >{{ rel.pid }}</nuxt-link
+                              >
+                            </v-col>
+                          </v-row>
+                          <v-divider
+                            :key="'ispreviewford' + i"
+                            v-if="
+                              i + 1 <
+                              objectInfo.relationships.ispreviewfor.length
+                            "
+                            class="my-4"
+                          ></v-divider>
+                        </div>
+                      </v-card-text>
+                    </v-card>
+                  </li>
+
+                  <li v-if="objectInfo.relationships.haspreview && objectInfo.relationships.haspreview.length > 0" class="mb-6">
+                    <v-card tile>
+                      <v-card-title
+                        class="ph-box text-title-large font-weight-light text-white"
+                        >{{ $t("This object has preview") }}</v-card-title
+                      >
+                      <v-card-text class="mt-4">
+                        <div
+                          v-for="(rel, i) in objectInfo.relationships
+                            .haspreview" :key="'haspreview' + i"
+                        >
+                          <v-row align="center">
+                            <v-col cols="12" md="5" class="preview-maxwidth">
+                              <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
+                                <p-img
+                                  :src="instanceconfig?.api +
+                                    '/object/' +
+                                    rel.pid +
+                                    '/thumbnail'
+                                  "
+                                  class="elevation-1 my-4"
+                                  :alt="getObjectTitle(rel)"
+                                ></p-img>
+                              </nuxt-link>
+                            </v-col>
+                            <v-col cols="12" md="7">
+                              <nuxt-link
+                                v-if="rel['dc_title']"
+                                :to="localePath(`/detail/${rel.pid}`)"
+                                >{{ getObjectTitle(rel) }}</nuxt-link
+                              >
+                              <nuxt-link
+                                v-else
+                                :to="localePath(`/detail/${rel.pid}`)"
+                                >{{ rel.pid }}</nuxt-link
+                              >
+                            </v-col>
+                          </v-row>
+                          <v-divider
+                            :key="'haspreviewd' + i"
+                            v-if="
+                              i + 1 < objectInfo.relationships.haspreview.length
+                            "
+                            class="my-4"
+                          ></v-divider>
+                        </div>
+                      </v-card-text>
+                    </v-card>
+                  </li>
+
                   <li v-if="objectInfo.relationships.references && objectInfo.relationships.references.length > 0" class="mb-6">
                     <v-card tile>
                       <v-card-title
@@ -2666,6 +2878,10 @@ export default {
     },
     showPreview: function () {
       const is3DZip = this.mimetype === "application/zip" && this.is3DModelType;
+      const hasPreviewRelation =
+        this.objectInfo.relationships &&
+        this.objectInfo.relationships.haspreview &&
+        this.objectInfo.relationships.haspreview.length > 0;
       return (
         this.objectInfo.cmodel !== "Resource" &&
         this.objectInfo.cmodel !== "Collection" &&
@@ -2676,7 +2892,7 @@ export default {
               is3DZip ||
               this.mimetype === "application/x-wacz")
           )) &&
-        this.objectInfo.cmodel !== "Container" &&
+        (this.objectInfo.cmodel !== "Container" || hasPreviewRelation) &&
         this.objectInfo.readrights &&
         !(this.objectInfo.cmodel === "Video" && this.objectInfo.isrestricted)
       );

@@ -975,6 +975,8 @@
   "This object has a back side": "Bild ist Vorderseite von",
   "This object is thumbnail for": "Objekt ist Vorschaubild von",
   "This object has thumbnail": "Objekt hat Vorschaubild",
+  "This object is preview for": "Objekt ist Vorschau von",
+  "This object has preview": "Objekt hat Vorschau",
   "This object references": "Dieses Objekt bezieht sich auf folgende Objekte",
   "This object is referenced by": "Diese Objekte beziehen sich auf das Objekt",
   "Sort members": "Mitglieder sortieren",
