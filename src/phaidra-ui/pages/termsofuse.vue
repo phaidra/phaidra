@@ -19,6 +19,7 @@
 <script>
 import { useRootStore } from '~/stores/root'
 import { config, useTranslatedPageHead } from "../mixins/config";
+import { formatTermsForDisplay } from '../utils/formatTermsForDisplay'
 
 export default {
   mixins: [config],
@@ -57,7 +58,7 @@ export default {
         if (toures.data.alerts && toures.data.alerts.length > 0) {
           useRootStore().setAlerts(toures.data.alerts);
         }
-        this.tou = toures.data.terms;
+        this.tou = formatTermsForDisplay(toures.data.terms);
       } catch (err) {
         if (err?.response?.data?.alerts?.length > 0) {
           useRootStore().setAlerts(err.response.data.alerts);
