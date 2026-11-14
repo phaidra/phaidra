@@ -59,4 +59,5 @@
 
 .v-pagination__list {
   padding-left: 0 !important;
+  justify-content: flex-start !important;
 }
