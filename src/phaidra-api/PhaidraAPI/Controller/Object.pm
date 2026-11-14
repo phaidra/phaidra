@@ -710,8 +710,15 @@ sub preview {
         }
       }
 
-      my $page = $self->param('page');
-      $page = looks_like_number($page) ? $page : 1;
+      my $start = $self->param('start');
+      my $page  = $self->param('page');
+      if (looks_like_number($start)) {
+        $page = $start;
+        $self->stash(start => $start);
+      }
+      else {
+        $page = looks_like_number($page) ? $page : 1;
+      }
       $self->stash(page             => $page);
       $self->stash(baseurl          => $self->config->{baseurl});
       $self->stash(scheme           => $self->config->{scheme});

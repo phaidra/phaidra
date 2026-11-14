@@ -43,7 +43,7 @@
        id: 'mirador',
        windows: [{
          imageToolsEnabled: <%= stash('enableimagetools') ? 'true' : 'false' %>,
-         manifestId: 'https://<%= $baseurl %>/<%= $basepath %>/object/<%= $pid %>/iiifmanifest',
+         manifestId: 'https://<%= $baseurl %>/<%= $basepath %>/object/<%= $pid %>/iiifmanifest<%= stash('start') ? "?start=" . stash('start') : "" %>',
          canvasId: 'https://<%= $baseurl %>/<%= $basepath %>/iiif/<%= $pid %>/canvas/<%= $page %>'
        }],
        translations: {
