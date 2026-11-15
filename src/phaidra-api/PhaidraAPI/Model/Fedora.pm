@@ -21,7 +21,7 @@ my $s3_endpoint           = $ENV{S3_ENDPOINT};
 my $bucketname            = $ENV{S3_BUCKETNAME};
 
 my %prefix2ns = (
-
+ 
   # hasModel, state, ownerId
   "info:fedora/fedora-system:def/model#" => "fedora3",
 
@@ -157,7 +157,7 @@ sub _getNTriplesValue {
   return;
 }
 
-sub getObjectAuthorizationProperties {
+sub _getNTriplesObjectProperties {
   my ($self, $c, $pid) = @_;
 
   my $res = {alerts => [], status => 200};
@@ -181,23 +181,14 @@ sub getObjectAuthorizationProperties {
     return $res;
   }
 
-  my %property_map = (
-    'info:fedora/fedora-system:def/model#ownerId' => 'owner',
-    'info:fedora/fedora-system:def/model#state'   => 'state',
-  );
-
   for my $line (split /\n/, $getres->body) {
     next unless $line =~ m/^\s*<[^>]*>\s+<([^>]*)>\s+(.+?)\s+\.\s*$/;
 
     my ($predicate, $object) = ($1, $2);
-    next unless exists $property_map{$predicate};
-
     my $value = $self->_getNTriplesValue($c, $object);
     next unless defined $value;
 
-    my $key = $property_map{$predicate};
-    $res->{$key} = $value unless defined $res->{$key};
-    last if defined $res->{owner} && defined $res->{state};
+    push @{$res->{props}->{$predicate}}, $value;
   }
 
   return $res;
@@ -208,55 +199,50 @@ sub getObjectProperties {
 
   my $res = {alerts => [], status => 200};
 
-  my $propres = $self->_getObjectProperties($c, $pid);
+  my $propres = $self->_getNTriplesObjectProperties($c, $pid);
   if ($propres->{status} != 200) {
     return $propres;
   }
 
-  my $props = $propres->{props};
+  my $props               = $propres->{props} // {};
+  my %single_property_map = (
+    'info:fedora/fedora-system:def/model#state'                 => 'state',
+    'info:fedora/fedora-system:def/model#label'                 => 'label',
+    'http://fedora.info/definitions/v4/repository#created'      => 'created',
+    'http://fedora.info/definitions/v4/repository#lastModified' => 'modified',
+    'info:fedora/fedora-system:def/model#ownerId'               => 'owner',
+  );
+  my %multiple_property_map = (
+    'http://purl.org/dc/terms/identifier'                                  => 'identifier',
+    'http://purl.org/dc/terms/references'                                  => 'references',
+    'http://phaidra.org/XML/V1.0/relations#isBackSideOf'                   => 'isbacksideof',
+    'http://phaidra.org/XML/V1.0/relations#isThumbnailFor'                 => 'isthumbnailfor',
+    'http://phaidra.org/XML/V1.0/relations#isPreviewFor'                   => 'ispreviewfor',
+    'http://phaidra.univie.ac.at/XML/V1.0/relations#hasSuccessor'          => 'hassuccessor',
+    'http://phaidra.org/XML/V1.0/relations#isAlternativeFormatOf'          => 'isalternativeformatof',
+    'http://phaidra.org/XML/V1.0/relations#isAlternativeVersionOf'         => 'isalternativeversionof',
+    'http://phaidra.org/ontology/isInAdminSet'                             => 'isinadminset',
+    'info:fedora/fedora-system:def/relations-external#hasCollectionMember' => 'haspart',
+    'http://pcdm.org/models#hasMember'                                     => 'hasmember',
+    'http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#hasTrack'       => 'hastrack',
+    'http://www.w3.org/2002/07/owl#sameAs'                                 => 'sameas',
+  );
 
-  # $c->app->log->debug("XXXXXXXXXXXXXXX getObjectProperties propres:\n" . $c->app->dumper($props));
-
-  # cmodel
-  my $cmodel = $self->getFirstJsonldValue($c, $props, 'info:fedora/fedora-system:def/model#hasModel');
-  $cmodel =~ m/(\w+):(\w+)/g;
-  if ($1 eq 'cmodel' && defined($2) && ($2 ne '')) {
-    $res->{cmodel} = $2;
+  for my $predicate (keys %single_property_map) {
+    $res->{$single_property_map{$predicate}} = exists $props->{$predicate} ? $props->{$predicate}->[0] : undef;
   }
 
-  $res->{state}    = $self->getFirstJsonldValue($c, $props, 'info:fedora/fedora-system:def/model#state');
-  $res->{label}    = $self->getFirstJsonldValue($c, $props, 'info:fedora/fedora-system:def/model#label');
-  $res->{created}  = $self->getFirstJsonldValue($c, $props, 'http://fedora.info/definitions/v4/repository#created');
-  $res->{modified} = $self->getFirstJsonldValue($c, $props, 'http://fedora.info/definitions/v4/repository#lastModified');
-
-  # $res->{owner}                  = $self->getJsonldValue($c, $props, 'http://fedora.info/definitions/v4/repository#createdBy');
-  $res->{owner}                  = $self->getFirstJsonldValue($c, $props, 'info:fedora/fedora-system:def/model#ownerId');
-  $res->{identifier}             = $self->getJsonldValue($c, $props, 'http://purl.org/dc/terms/identifier');
-  $res->{references}             = $self->getJsonldValue($c, $props, 'http://purl.org/dc/terms/references');
-  $res->{isbacksideof}           = $self->getJsonldValue($c, $props, 'http://phaidra.org/XML/V1.0/relations#isBackSideOf');
-  $res->{isthumbnailfor}         = $self->getJsonldValue($c, $props, 'http://phaidra.org/XML/V1.0/relations#isThumbnailFor');
-  $res->{ispreviewfor}           = $self->getJsonldValue($c, $props, 'http://phaidra.org/XML/V1.0/relations#isPreviewFor');
-  $res->{hassuccessor}           = $self->getJsonldValue($c, $props, 'http://phaidra.univie.ac.at/XML/V1.0/relations#hasSuccessor');
-  $res->{isalternativeformatof}  = $self->getJsonldValue($c, $props, 'http://phaidra.org/XML/V1.0/relations#isAlternativeFormatOf');
-  $res->{isalternativeversionof} = $self->getJsonldValue($c, $props, 'http://phaidra.org/XML/V1.0/relations#isAlternativeVersionOf');
-  $res->{isinadminset}           = $self->getJsonldValue($c, $props, 'http://phaidra.org/ontology/isInAdminSet');
-  $res->{haspart}                = $self->getJsonldValue($c, $props, 'info:fedora/fedora-system:def/relations-external#hasCollectionMember');
-  $res->{hasmember}              = $self->getJsonldValue($c, $props, 'http://pcdm.org/models#hasMember');
-  $res->{hastrack}               = $self->getJsonldValue($c, $props, 'http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#hasTrack');
-  $res->{sameas}                 = $self->getJsonldValue($c, $props, 'http://www.w3.org/2002/07/owl#sameAs');
-
-  $res->{contains} = [];
-  for my $ob (ensure_array($props)) {
-    if (exists($ob->{'http://www.w3.org/ns/ldp#contains'})) {
-      for my $ob1 (@{$ob->{'http://www.w3.org/ns/ldp#contains'}}) {
-        if (exists($ob1->{'@id'})) {
-          push @{$res->{contains}}, (split '\/', $ob1->{'@id'})[-1];
-        }
-      }
-    }
+  for my $predicate (keys %multiple_property_map) {
+    $res->{$multiple_property_map{$predicate}} = $props->{$predicate} // [];
   }
 
-  # $c->app->log->debug("XXXXXXXXXXXXXXX getObjectProperties:\n" . $c->app->dumper($res));
+  my $cmodel = $props->{'info:fedora/fedora-system:def/model#hasModel'} ? $props->{'info:fedora/fedora-system:def/model#hasModel'}->[0] : undef;
+  if ($cmodel && $cmodel =~ m/cmodel:(\w+)$/) {
+    $res->{cmodel} = $1;
+  }
+
+  $res->{contains} = [map {(split '\/', $_)[-1]} @{$props->{'http://www.w3.org/ns/ldp#contains'} // []}];
+
   return $res;
 }
 
