@@ -1241,8 +1241,31 @@
                   <v-card tile>
                     <v-card-title
                       class="ph-box text-title-large font-weight-light text-white"
-                      >{{ $t("Content") }}</v-card-title
-                    >
+                      >{{ $t("Content") }}
+                      <v-spacer></v-spacer>
+                      <v-tooltip location="bottom">
+                        <template v-slot:activator="{ props: tipProps }">
+                          <v-btn
+                            v-bind="tipProps"
+                            v-if="objectInfo.cmodel === 'Collection'"
+                            icon
+                            variant="text"
+                            color="white"
+                            target="_blank"
+                            :href="
+                              instanceconfig?.api +
+                              '/collection/' +
+                              objectInfo.pid +
+                              '/rss'
+                            "
+                            :aria-label="$t('Show RSS Feed')"
+                          >
+                            <v-icon>mdi-rss</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>{{ $t('Show RSS Feed') }}</span>
+                      </v-tooltip>
+                    </v-card-title>
                     <v-card-text class="mt-4">
                       <v-row no-gutters class="pt-2" justify="start">
                         <v-btn
@@ -1273,30 +1296,6 @@
                             objectInfo.haspartsize
                           }})</v-btn
                         >
-                        <v-tooltip location="bottom">
-                          <template v-slot:activator="{ props: tipProps }">
-                            <v-btn
-                              v-bind="tipProps"
-                              class="ml-2"
-                              v-if="objectInfo.cmodel === 'Collection'"
-                              icon
-                              variant="text"
-                              color="primary"
-                              target="_blank"
-                              :href="
-                                instanceconfig?.api +
-                                '/collection/' +
-                                objectInfo.pid +
-                                '/rss'
-                              "
-                              :aria-label="$t('Show RSS Feed')"
-                            >
-                            <v-icon>mdi-rss</v-icon>
-                          </v-btn>
-                          </template>
-                          <span>{{ $t('Show RSS Feed') }}</span>
-                        </v-tooltip>
-                        
                         <v-btn
                           v-if="objectInfo.cmodel === 'Resource'"
                           :href="
