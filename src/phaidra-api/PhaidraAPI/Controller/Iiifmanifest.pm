@@ -9,7 +9,21 @@ use PhaidraAPI::Model::Object;
 use PhaidraAPI::Model::Search;
 use Mojo::ByteStream qw(b);
 use Mojo::JSON       qw(encode_json decode_json);
+use Scalar::Util     qw(looks_like_number);
 use Time::HiRes      qw/tv_interval gettimeofday/;
+
+sub _apply_start_override {
+  my ($self, $manifest, $pid) = @_;
+
+  my $start = $self->param('start');
+  return unless looks_like_number($start) && ref($manifest) eq 'HASH';
+
+  my $api_base = $self->app->config->{scheme} . '://' . $self->app->config->{baseurl} . ($self->app->config->{basepath} ? '/' . $self->app->config->{basepath} : '');
+  $manifest->{start} = {
+    id   => "$api_base/iiif/$pid/canvas/$start",
+    type => 'Canvas'
+  };
+}
 
 sub get_iiif_manifest {
   my $self = shift;
@@ -36,6 +50,7 @@ sub get_iiif_manifest {
       my $iiifm_model = PhaidraAPI::Model::Iiifmanifest->new;
       my $mr          = $iiifm_model->get_updated_manifest($self, $pid);
       if ($mr->{status} eq 200) {
+        $self->_apply_start_override($mr->{manifest}, $pid);
         $self->render(json => $mr->{manifest}, status => $res->{status});
         return;
       }
@@ -58,6 +73,7 @@ sub get_iiif_manifest {
         my $iiifm_model = PhaidraAPI::Model::Iiifmanifest->new;
         my $r           = $iiifm_model->generate_simple_manifest($self, $pid);
         if ($r->{status} == 200) {
+          $self->_apply_start_override($r->{manifest}, $pid);
           $self->render(json => $r->{manifest}, status => $res->{status});
           return;
         }
@@ -68,6 +84,7 @@ sub get_iiif_manifest {
         my $iiifm_model = PhaidraAPI::Model::Iiifmanifest->new;
         my $r           = $iiifm_model->generate_container_manifest($self, $pid);
         if ($r->{status} == 200) {
+          $self->_apply_start_override($r->{manifest}, $pid);
           $self->render(json => $r->{manifest}, status => $res->{status});
           return;
         }
