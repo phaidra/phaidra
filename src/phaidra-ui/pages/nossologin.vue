@@ -65,6 +65,7 @@
 import { useRootStore } from '~/stores/root'
 import { context } from '../mixins/context'
 import { config } from '../mixins/config'
+import { formatTermsForDisplay } from '../utils/formatTermsForDisplay'
 
 export default {
   mixins: [ context, config ],
@@ -126,7 +127,7 @@ export default {
           if (toures.data.alerts && toures.data.alerts.length > 0) {
             useRootStore().setAlerts(toures.data.alerts)
           }
-          this.tou = toures.data.terms
+          this.tou = formatTermsForDisplay(toures.data.terms)
           this.touVersion = toures.data.version
           this.showtou = true
           return
