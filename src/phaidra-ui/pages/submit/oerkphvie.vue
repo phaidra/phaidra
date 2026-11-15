@@ -254,7 +254,7 @@ export default {
       self.form.sections[0].fields.push(otoer);
 
       let ot = fields.getField("object-type");
-      ot.label = 'Learning object type'
+      ot.label = self.$t('Learning object type')
       ot.showLabel = true
       ot.vocabulary = 'oerobjecttype'
       self.form.sections[0].fields.push(ot);

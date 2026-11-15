@@ -1293,6 +1293,7 @@
   "Do you want to request a DOI for this object?": "Möchten Sie einen DOI für dieses Objekt anfordern?",
   "Open in new window": "In neuem Fenster öffnen",
   "Learning object": "Lernobjekt",
+  "Learning object type": "Typ des Lernobjekts",
   "AC number": "AC-Nummer",
   "Catalog import": "Katalogimport",
   "Fetch metadata": "Metadaten abrufen",
