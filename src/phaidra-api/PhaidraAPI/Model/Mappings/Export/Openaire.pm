@@ -374,16 +374,63 @@ sub _get_roles {
   return \@roles;
 }
 
+sub _identifier_value {
+  my ($self, $identifier) = @_;
+  return unless defined $identifier;
+  return $identifier->{'@value'} if ref($identifier) eq 'HASH';
+  return $identifier;
+}
+
+sub _is_ror_identifier {
+  my ($self, $identifier) = @_;
+  return unless defined $identifier;
+
+  my $value = $self->_identifier_value($identifier);
+  return unless $value;
+  return $value if (ref($identifier) eq 'HASH' && ($identifier->{'@type'} || '') eq 'ids:ror');
+  return $value if $value =~ m{^https?://ror\.org/}i;
+  return;
+}
+
+sub _is_doi_identifier {
+  my ($self, $identifier) = @_;
+  return unless defined $identifier;
+
+  my $value = $self->_identifier_value($identifier);
+  return unless $value;
+  return $value if (ref($identifier) eq 'HASH' && ($identifier->{'@type'} || '') eq 'ids:doi');
+  return $value if $value =~ m{^(?:doi:)?10\.\d{4,9}/\S+$}i;
+  return $value if $value =~ m{^https?://(?:dx\.)?doi\.org/10\.\d{4,9}/\S+$}i;
+  return;
+}
+
+sub _doi_resolver_uri {
+  my ($self, $doi) = @_;
+  return unless $doi;
+
+  $doi =~ s{^https?://(?:dx\.)?doi\.org/}{}i;
+  $doi =~ s{^doi:}{}i;
+  return 'https://doi.org/' . $doi;
+}
+
+sub _get_funder_identifier {
+  my ($self, $funder) = @_;
+  return unless $funder->{'skos:exactMatch'};
+
+  for my $identifier (@{$funder->{'skos:exactMatch'}}) {
+    my $ror = $self->_is_ror_identifier($identifier);
+    return $ror if $ror;
+  }
+  return;
+}
+
 sub _get_funding_references {
   my ($self, $c, $str) = @_;
 
   my @fundingReferences;
-
   my $arr = decode_json(b($str)->encode('UTF-8'));
   for my $obj (@$arr) {
-    my $funderName;
-    my $awardTitle;
-    my $awardNumber;
+    my ($funderName, $funderIdentifier, $awardTitle, $awardNumber, $awardURI);
     if ($obj->{'@type'} eq 'foaf:Project') {
       if (exists($obj->{'skos:prefLabel'})) {
         for my $l (@{$obj->{'skos:prefLabel'}}) {
@@ -393,8 +440,14 @@ sub _get_funding_references {
       }
       if (exists($obj->{'skos:exactMatch'})) {
         for my $id (@{$obj->{'skos:exactMatch'}}) {
-          $awardNumber = $id;
-          last;
+          my $identifier = $self->_identifier_value($id);
+          $awardNumber = $identifier if (!$awardNumber && $identifier);
+          my $doi = $self->_is_doi_identifier($id);
+          if ($doi) {
+            $awardNumber = $doi;
+            $awardURI    = $self->_doi_resolver_uri($doi);
+            last;
+          }
         }
       }
       if (exists($obj->{'frapo:hasFundingAgency'})) {
@@ -405,6 +458,8 @@ sub _get_funding_references {
               last;
             }
           }
+          $funderIdentifier = $self->_get_funder_identifier($fun);
+          last;
         }
       }
     }
@@ -415,11 +470,14 @@ sub _get_funding_references {
           last;
         }
       }
+      $funderIdentifier = $self->_get_funder_identifier($obj);
     }
     my %ref;
-    $ref{funderName}  = $funderName  if $funderName;
-    $ref{awardTitle}  = $awardTitle  if $awardTitle;
-    $ref{awardNumber} = $awardNumber if $awardNumber;
+    $ref{funderName}       = $funderName       if $funderName;
+    $ref{funderIdentifier} = $funderIdentifier if $funderIdentifier;
+    $ref{awardTitle}       = $awardTitle       if $awardTitle;
+    $ref{awardNumber}      = $awardNumber      if $awardNumber;
+    $ref{awardURI}         = $awardURI         if $awardURI;
     push @fundingReferences, \%ref;
   }
   return \@fundingReferences;
@@ -535,6 +593,60 @@ sub _get_dc_fields {
       }
     }
   }
+  return \@nodes;
+}
+
+sub _get_subject_scheme {
+  my ($self, $identifier) = @_;
+  return unless $identifier;
+
+  return {subjectScheme => 'Thema',               schemeURI => 'https://ns.editeur.org/thema/'}                    if $identifier =~ /^thema(?:[:\/]|$)/i;
+  return {subjectScheme => 'ÖFOS 2012',           schemeURI => 'https://vocabs.acdh.oeaw.ac.at/oefosdisciplines/'} if $identifier =~ /^oefos2012(?:[:\/]|$)/i;
+  return {subjectScheme => 'BIC',                 schemeURI => 'https://ns.editeur.org/bic/'}                      if $identifier =~ /^bic(?:[:\/]|$)/i;
+  return {subjectScheme => 'GND',                 schemeURI => 'https://d-nb.info/gnd/'}                           if $identifier =~ m{^https?://d-nb\.info/gnd/}i;
+  return {subjectScheme => 'Basisklassifikation', schemeURI => 'https://uri.gbv.de/terminology/bk/'}               if $identifier =~ m{^https?://uri\.gbv\.de/terminology/bk}i;
+
+  return;
+}
+
+sub _get_jsonld_subject_nodes {
+  my ($self, $iso6393ToBCP, $jsonld) = @_;
+
+  my @nodes;
+  for my $predicate ('dce:subject', 'dcterms:subject') {
+    next unless $jsonld->{$predicate};
+    for my $subject (@{$jsonld->{$predicate}}) {
+      next unless ref($subject) eq 'HASH';
+      next if ($subject->{'@type'} || '') eq 'phaidra:Subject';
+
+      my $scheme;
+      if ($predicate eq 'dcterms:subject' && $subject->{'skos:exactMatch'}) {
+        for my $identifier (@{$subject->{'skos:exactMatch'}}) {
+          $scheme = $self->_get_subject_scheme($self->_identifier_value($identifier));
+          last if $scheme;
+        }
+      }
+
+      for my $label_key ('skos:prefLabel', 'rdfs:label') {
+        next unless $subject->{$label_key};
+        for my $label (@{$subject->{$label_key}}) {
+          next unless ref($label) eq 'HASH' && $label->{'@value'};
+          my %node = (name => 'datacite:subject', value => $label->{'@value'});
+          my @attributes;
+          if ($label->{'@language'} && $label->{'@language'} ne 'xxx') {
+            push @attributes, {name => 'xml:lang', value => $self->_map_iso3_to_bcp($iso6393ToBCP, $label->{'@language'})};
+          }
+          if ($scheme) {
+            push @attributes, {name => 'subjectScheme', value => $scheme->{subjectScheme}};
+            push @attributes, {name => 'schemeURI',     value => $scheme->{schemeURI}};
+          }
+          $node{attributes} = \@attributes if @attributes;
+          push @nodes, \%node;
+        }
+      }
+    }
+  }
+
   return \@nodes;
 }
 
@@ -959,6 +1071,18 @@ sub get_metadata {
         value => $ref->{funderName}
         };
     }
+    if ($ref->{funderIdentifier}) {
+      push @refNodeChildren,
+        {
+        name       => 'funderIdentifier',
+        value      => $ref->{funderIdentifier},
+        attributes => [
+          { name  => 'funderIdentifierType',
+            value => 'ROR'
+          }
+        ]
+        };
+    }
     if ($ref->{awardTitle}) {
       push @refNodeChildren,
         {
@@ -967,11 +1091,18 @@ sub get_metadata {
         };
     }
     if ($ref->{awardNumber}) {
-      push @refNodeChildren,
-        {
+      my %awardNumberNode = (
         name  => 'awardNumber',
         value => $ref->{awardNumber}
-        };
+      );
+      if ($ref->{awardURI}) {
+        $awardNumberNode{attributes} = [
+          { name  => 'awardURI',
+            value => $ref->{awardURI}
+          }
+        ];
+      }
+      push @refNodeChildren, \%awardNumberNode;
     }
     $refNode{children} = \@refNodeChildren if (scalar @refNodeChildren > 0);
     push @refNodes, \%refNode;
@@ -1012,7 +1143,13 @@ sub get_metadata {
 
   # Subject (MA)
   # datacite:subject
-  my $subjects = $self->_get_dc_fields($c, \%iso6393ToBCP, $rec, 'subject', 'datacite:subject');
+  my $subjects;
+  if ($rec->{jsonld}) {
+    $subjects = $self->_get_jsonld_subject_nodes(\%iso6393ToBCP, $rec->{jsonld});
+  }
+  else {
+    $subjects = $self->_get_dc_fields($c, \%iso6393ToBCP, $rec, 'subject', 'datacite:subject');
+  }
   push @{$openaire->{children}},
     {
     name     => 'datacite:subjects',

@@ -15,6 +15,7 @@ use DateTime::Format::Strptime;
 use Clone            qw(clone);
 use Mojo::JSON       qw(encode_json decode_json);
 use Mojo::ByteStream qw(b);
+use PhaidraAPI::Model::Jsonld;
 use PhaidraAPI::Model::Mappings::Export::Openaire;
 use PhaidraAPI::Model::Mappings::Export::Dublincore;
 use PhaidraAPI::Model::Mappings::Export::Edm;
@@ -85,6 +86,10 @@ sub _get_metadata {
       return $dc_model->get_metadata($self, $rec, $set);
     }
     case 'oai_openaire' {
+      my $jsonld_model = PhaidraAPI::Model::Jsonld->new;
+      my $jsonldres    = $jsonld_model->get_object_jsonld_parsed($self, $rec->{pid});
+      $rec->{jsonld} = $jsonldres->{'JSON-LD'} if $jsonldres->{status} eq 200;
+
       my $oaire_model = PhaidraAPI::Model::Mappings::Export::Openaire->new;
       return $oaire_model->get_metadata($self, $rec);
     }
