@@ -65,6 +65,7 @@
             }
           },
           "mappings": [],
+          "max": 1,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -108,9 +109,36 @@
             "type": "prometheus",
             "uid": "Prometheus"
           },
-          "expr": "100 * rate(varnish_main_cache_hit{job=\"varnish\"}[1m]) / (rate(varnish_main_cache_hit{job=\"varnish\"}[1m]) + rate(varnish_main_cache_miss{job=\"varnish\"}[1m]))",
-          "legendFormat": "Hit Rate",
+          "expr": "rate(varnish_main_cache_hit{job=\"varnish\"}[$__rate_interval]) / rate(varnish_main_client_req {job=\"varnish\"}[$__rate_interval])",
+          "legendFormat": "varnish_main_cache_hit",
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Prometheus"
+          },
+          "expr": "rate(varnish_main_cache_miss{job=\"varnish\"}[$__rate_interval]) / rate(varnish_main_client_req {job=\"varnish\"}[$__rate_interval])",
+          "legendFormat": "varnish_main_cache_miss",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Prometheus"
+          },
+          "expr": "rate(varnish_main_beresp_uncacheable {job=\"varnish\"}[$__rate_interval]) / rate(varnish_main_client_req {job=\"varnish\"}[$__rate_interval])",
+          "legendFormat": "varnish_main_beresp_uncacheable",
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Prometheus"
+          },
+          "expr": "rate(varnish_main_client_req {job=\"varnish\"}[$__rate_interval]) / rate(varnish_main_client_req {job=\"varnish\"}[$__rate_interval])",
+          "legendFormat": "varnish_main_client_req",
+          "refId": "D"
         }
       ],
       "title": "Cache Hit Rate (%)",
