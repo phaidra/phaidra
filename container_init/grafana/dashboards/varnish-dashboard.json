@@ -687,7 +687,7 @@
             "type": "prometheus",
             "uid": "Prometheus"
           },
-          "expr": "varnish_main_sessions{job=\"varnish\",type=\"conn\"}",
+          "expr": "rate(varnish_main_sessions{job=\"varnish\",type=\"conn\"}[$__rate_interval])",
           "legendFormat": "Active Connections",
           "refId": "A"
         }
@@ -807,6 +807,6 @@
   "timezone": "browser",
   "title": "Varnish Cache Performance",
   "uid": "varnish-perf",
-  "version": 7,
+  "version": 8,
   "weekStart": ""
 }
