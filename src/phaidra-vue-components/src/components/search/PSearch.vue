@@ -104,7 +104,7 @@
           :previous-aria-label="$t('previous')"
           :next-aria-label="$t('next')"
           :current-page-aria-label="$t('currentPage')" 
-          v-if="total>pagesize" v-bind:length="totalPages" v-model="page" class="mb-8 w-100 flex-grow-1 overflow-x-hidden" />
+          v-if="total>pagesize" v-bind:length="totalPages" :total-visible="paginationTotalVisible" v-model="page" class="mb-8 w-100 flex-grow-1 overflow-x-hidden" />
           <p-search-results
             :docs="docs"
             :total="total"
@@ -117,7 +117,7 @@
           :previous-aria-label="$t('previous')"
           :next-aria-label="$t('next')"
           :current-page-aria-label="$t('currentPage')"
-          v-if="total>pagesize" v-bind:length="totalPages" v-model="page" class="mb-3 w-100 flex-grow-1 overflow-x-hidden" />
+          v-if="total>pagesize" v-bind:length="totalPages" :total-visible="paginationTotalVisible" v-model="page" class="mb-3 w-100 flex-grow-1 overflow-x-hidden" />
         </v-row>
       </v-col>
       <v-col cols="3" class="d-none d-md-block pa-3 pt-2">
@@ -198,6 +198,9 @@ export default {
     },
     totalPages: function () {
       return Math.ceil(this.total / this.pagesize)
+    },
+    paginationTotalVisible: function () {
+      return this.$vuetify.display.mdAndDown ? undefined : 10
     },
     instance: function () {
       return useRootStore()?.instanceconfig ?? {}

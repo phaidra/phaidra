@@ -758,7 +758,7 @@
                 justify="start"
                 class="py-4"
               >
-                <v-col cols="12" class="d-flex justify-start">
+                <v-col cols="12" class="overflow-x-hidden">
                   <v-pagination
                     :wrapper-aria-label="$t('pagination')"
                     :page-aria-label="$t('page')"
@@ -767,6 +767,8 @@
                     :current-page-aria-label="$t('currentPage')"
                     v-model="membersPage"
                     :length="Math.ceil(objectInfo.members.length / membersPageSize)"
+                    :total-visible="paginationTotalVisible"
+                    class="w-100"
                   ></v-pagination>
                 </v-col>
               </v-row>
@@ -923,7 +925,7 @@
                 justify="start"
                 class="py-4"
               >
-                <v-col cols="12" class="d-flex justify-start">
+                <v-col cols="12" class="overflow-x-hidden">
                   <v-pagination
                     :wrapper-aria-label="$t('pagination')"
                     :page-aria-label="$t('page')"
@@ -931,7 +933,9 @@
                     :next-aria-label="$t('next')"
                     :current-page-aria-label="$t('currentPage')"
                     v-bind:length="collMembersTotalPages"
+                    :total-visible="paginationTotalVisible"
                     v-model="collMembersPage"
+                    class="w-100"
                   ></v-pagination>
                 </v-col>
               </v-row>
@@ -1001,7 +1005,7 @@
               </v-row>
               <v-divider></v-divider>
             </div>
-            <v-row no-gutters v-if="useRootStore().collectionMembersTotal > collMembersPagesize" justify="start">
+            <v-row no-gutters v-if="useRootStore().collectionMembersTotal > collMembersPagesize" justify="start" class="overflow-x-hidden">
               <v-pagination
                 :wrapper-aria-label="$t('pagination')"
                 :page-aria-label="$t('page')"
@@ -1009,8 +1013,9 @@
                 :next-aria-label="$t('next')"
                 :current-page-aria-label="$t('currentPage')" 
                 v-bind:length="collMembersTotalPages"
+                :total-visible="paginationTotalVisible"
                 v-model="collMembersPage"
-                class="mt-4 mb-4"
+                class="mt-4 mb-4 w-100"
                 @input="scrollToCollectionMembersTop"
               ></v-pagination>
             </v-row>
@@ -2857,6 +2862,9 @@ export default {
     },
     collMembersTotalPages: function () {
       return Math.ceil(useRootStore().collectionMembersTotal / this.collMembersPagesize);
+    },
+    paginationTotalVisible: function () {
+      return this.$vuetify.display.mdAndDown ? undefined : 10
     },
     is3DModelType: function () {
       if (!this.objectInfo || !this.objectInfo.edm_hastype) {
