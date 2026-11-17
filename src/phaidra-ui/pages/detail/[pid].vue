@@ -2638,7 +2638,7 @@
       <v-dialog v-model="datareplaceDialog" max-width="1200px">
       <v-card>
         <v-card-title class="text-title-large font-weight-light text-white">
-          {{ $t('Upload new file to') }} {{objectInfo.pid}} ({{objectInfo.cmodel}})
+          {{ $t('Upload new file to') }} {{objectInfo.pid}} ({{ $t(objectInfo.cmodel) }})
         </v-card-title>
         <v-divider></v-divider>
         <v-card-text class="mt-4">
