@@ -205,7 +205,7 @@ sub _compute_roles {
 
 sub _build_resource {
   my ($self, $c, $pid, $opts) = @_;
- 
+
   my $resource = {
     type   => $opts->{resource_type} // 'object',
     pid    => $pid                   // '',

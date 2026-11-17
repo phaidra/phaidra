@@ -21,7 +21,7 @@ my $s3_endpoint           = $ENV{S3_ENDPOINT};
 my $bucketname            = $ENV{S3_BUCKETNAME};
 
 my %prefix2ns = (
- 
+
   # hasModel, state, ownerId
   "info:fedora/fedora-system:def/model#" => "fedora3",
 
