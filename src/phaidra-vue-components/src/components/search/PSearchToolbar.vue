@@ -126,7 +126,7 @@
       <v-col>
         <v-tooltip location="bottom">
           <template v-slot:activator="{ props: activatorProps }">
-            <v-icon-btn class="toolbar-btn" v-bind="activatorProps" icon="mdi-download" @click="csvExport()" :aria-label="$t('Download search results as a CSV file')" />
+            <v-icon-btn class="toolbar-btn" v-bind="activatorProps" icon="mdi-download" :loading="csvExporting" @click="csvExport()" :aria-label="$t('Download search results as a CSV file')" />
           </template>
           <span>{{ $t('Download search results as a CSV file') }}</span>
         </v-tooltip>
@@ -162,7 +162,8 @@ export default {
       required: true
     },
     selectioncheck: Boolean,
-    csvExport: Function
+    csvExport: Function,
+    csvExporting: Boolean
   },
   mixins: [copyTooltip],
   computed: {
