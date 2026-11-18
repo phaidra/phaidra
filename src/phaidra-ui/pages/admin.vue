@@ -380,6 +380,15 @@
                 <v-row>
                   <v-col>
                     <v-checkbox
+                      :label="$t('Disable collection member thumbnail')"
+                      v-model="parsedPublicConfigData.disablecollectionmemberthumbnail"
+                    ></v-checkbox>
+                  </v-col>
+                  <v-col cols="6" class="mt-4">{{ $t("When disabled, collection thumbnails only use an explicit isThumbnailFor relationship (or the default collection icon). When enabled (default), the oldest/first member is used as the collection thumbnail.") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-checkbox
                       :label="$t('Disable Uploader')"
                       v-model="parsedPublicConfigData.disableUploader"
                     ></v-checkbox>

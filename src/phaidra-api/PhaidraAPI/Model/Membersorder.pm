@@ -9,6 +9,7 @@ use Mojo::Util       qw(encode decode);
 use base             qw/Mojo::Base/;
 use XML::LibXML;
 use PhaidraAPI::Model::Object;
+use PhaidraAPI::Model::Collection;
 
 sub json_2_xml {
 
@@ -85,6 +86,12 @@ sub save_to_object() {
   my $object_model = PhaidraAPI::Model::Object->new;
   my $r            = $object_model->add_or_modify_datastream($c, $pid, "COLLECTIONORDER", "text/xml", undef, undef, $xml, 'X', undef, undef, $username, $password, 0, 0);
   push @{$res->{alerts}}, @{$r->{alerts}} if scalar @{$r->{alerts}} > 0;
+  $res->{status} = $r->{status} if $r->{status};
+
+  if ($res->{status} eq 200) {
+    my $coll_model = PhaidraAPI::Model::Collection->new;
+    $coll_model->clear_oldest_member_cache($c, $pid);
+  }
 
   return $res;
 }

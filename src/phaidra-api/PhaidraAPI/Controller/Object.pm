@@ -95,6 +95,14 @@ sub get_is_thumbnail_for {
   my $self = shift;
   my $pid  = shift;
 
+  my $cachekey = "is_thumbnail_for_$pid";
+  my $cached   = $self->app->chi->get($cachekey);
+  if ($cached) {
+    return $cached;
+  }
+
+  my $thumbPid;
+
   my $urlget = Mojo::URL->new;
   $urlget->scheme($self->app->config->{solr}->{scheme});
   $urlget->host($self->app->config->{solr}->{host});
@@ -111,26 +119,32 @@ sub get_is_thumbnail_for {
   if ($getres->is_success) {
     for my $d (@{$getres->json->{response}->{docs}}) {
       $self->app->log->info($d->{pid} . " is thumbnail for $pid");
-      return $d->{pid};
+      $thumbPid = $d->{pid};
+      last;
     }
   }
   else {
     $self->app->log->debug("error searching for isthumbnailfor: " . $getres->code . " " . $getres->message);
   }
 
-  $urlget->path("/solr/" . $self->app->config->{solr}->{core_pages} . "/select");
-  $urlget->query(q => "*:*", fq => "isthumbnailfor:\"$pid\"", rows => "1", wt => "json");
-  $getres = $ua->get($urlget)->result;
-  if ($getres->is_success) {
-    for my $d (@{$getres->json->{response}->{docs}}) {
-      $self->app->log->info($d->{pid} . " is thumbnail for $pid");
-      return $d->{pid};
+  unless ($thumbPid) {
+    $urlget->path("/solr/" . $self->app->config->{solr}->{core_pages} . "/select");
+    $urlget->query(q => "*:*", fq => "isthumbnailfor:\"$pid\"", rows => "1", wt => "json");
+    $getres = $ua->get($urlget)->result;
+    if ($getres->is_success) {
+      for my $d (@{$getres->json->{response}->{docs}}) {
+        $self->app->log->info($d->{pid} . " is thumbnail for $pid");
+        $thumbPid = $d->{pid};
+        last;
+      }
+    }
+    else {
+      $self->app->log->debug("error searching for isthumbnailfor: " . $getres->code . " " . $getres->message);
     }
   }
-  else {
-    $self->app->log->debug("error searching for isthumbnailfor: " . $getres->code . " " . $getres->message);
-  }
 
+  $self->app->chi->set($cachekey, $thumbPid, '1 day') if $thumbPid;
+  return $thumbPid;
 }
 
 sub get_is_preview_for {
@@ -297,7 +311,7 @@ sub thumbnail {
   my $size = "!$w,$h";
 
   my $thumbnest = defined $self->stash('thumbnest') ? $self->stash('thumbnest') : 0;
-  if ($thumbnest > 1) {
+  if ($thumbnest > 2) {
     $self->app->log->error("thumbnail nesting too deep [$thumbnest] for pid[$pid]");
     $self->setNoCacheHeaders();
     $self->reply->static('images/collection.png');
@@ -423,32 +437,31 @@ sub thumbnail {
       return;
     }
     case 'Collection' {
-      my $col_model = PhaidraAPI::Model::Collection->new;
-      my $r         = $col_model->get_oldest_member($self, $pid);
-      if ($res->{status} ne 200) {
-        $self->render(json => $res, status => $res->{status});
-        return;
-      }
-      if ($r->{oldest_member} && $r->{oldest_member}->{pid}) {
-        if ($r->{oldest_member}->{cmodel} eq 'Collection') {
-          $self->reply->static('images/collection.png');
+      my $confmodel                     = PhaidraAPI::Model::Config->new;
+      my $pubconfig                     = $confmodel->get_public_config($self);
+      my $disable_collection_member_thumb = $pubconfig && $pubconfig->{disablecollectionmemberthumbnail};
+
+      if (!$disable_collection_member_thumb) {
+        my $col_model = PhaidraAPI::Model::Collection->new;
+        my $r         = $col_model->get_oldest_member($self, $pid);
+        if ($res->{status} ne 200) {
+          $self->render(json => $res, status => $res->{status});
           return;
         }
-        else {
+        if ($r->{oldest_member} && $r->{oldest_member}->{pid}) {
           $self->stash(pid             => $r->{oldest_member}->{pid});
           $self->stash(thumbnest       => $thumbnest + 1);
           $self->stash(defaulticonpath => 'images/collection.png');
           return $self->thumbnail();
         }
       }
-      else {
-        if (defined $self->stash('defaulticonpath')) {
-          $self->reply->static($self->stash('defaulticonpath'));
-          return;
-        }
-        $self->reply->static('images/collection.png');
+
+      if (defined $self->stash('defaulticonpath')) {
+        $self->reply->static($self->stash('defaulticonpath'));
         return;
       }
+      $self->reply->static('images/collection.png');
+      return;
     }
     case 'Resource' {
       if (defined $self->stash('defaulticonpath')) {

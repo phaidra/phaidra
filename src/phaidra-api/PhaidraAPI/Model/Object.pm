@@ -1590,6 +1590,21 @@ sub approve {
   return $self->modify($c, $pid, 'A', undef, undef, undef, undef, $username, $password);
 }
 
+sub _clear_thumbnail_related_caches {
+  my ($self, $c, $pid, $predicate, $object) = @_;
+
+  if ($predicate eq 'info:fedora/fedora-system:def/relations-external#hasCollectionMember') {
+    require PhaidraAPI::Model::Collection;
+    PhaidraAPI::Model::Collection->new->clear_oldest_member_cache($c, $pid);
+  }
+
+  if ($predicate eq 'http://phaidra.org/XML/V1.0/relations#isThumbnailFor') {
+    my $target = $object // '';
+    $target =~ s/^info:fedora\///;
+    $c->app->chi->remove("is_thumbnail_for_$target") if $target;
+  }
+}
+
 sub add_relationship {
 
   my $self      = shift;
@@ -1637,6 +1652,7 @@ sub add_relationship {
   if ($addres->{status} ne 200) {
     return $addres;
   }
+  $self->_clear_thumbnail_related_caches($c, $pid, $predicate, $object);
 
   unless ($skiphook) {
     my $hooks_model = PhaidraAPI::Model::Hooks->new;
@@ -1667,6 +1683,12 @@ sub add_relationships {
   my $addres       = $fedora_model->addRelationships($c, $pid, $relationships, $skiphook);
   if ($addres->{status} != 200) {
     return $addres;
+  }
+
+  if (ref $relationships eq 'ARRAY') {
+    for my $rel (@{$relationships}) {
+      $self->_clear_thumbnail_related_caches($c, $pid, $rel->{predicate}, $rel->{object});
+    }
   }
 
   unless ($skiphook) {
@@ -1704,6 +1726,7 @@ sub purge_relationship {
   if ($rres->{status} != 200) {
     return $rres;
   }
+  $self->_clear_thumbnail_related_caches($c, $pid, $predicate, $object);
 
   unless ($skiphook) {
     my $hooks_model = PhaidraAPI::Model::Hooks->new;
@@ -1735,6 +1758,12 @@ sub purge_relationships {
   my $rres         = $fedora_model->removeRelationships($c, $pid, $relationships, $skiphook);
   if ($rres->{status} != 200) {
     return $rres;
+  }
+
+  if (ref $relationships eq 'ARRAY') {
+    for my $rel (@{$relationships}) {
+      $self->_clear_thumbnail_related_caches($c, $pid, $rel->{predicate}, $rel->{object});
+    }
   }
 
   my $hooks_model = PhaidraAPI::Model::Hooks->new;
