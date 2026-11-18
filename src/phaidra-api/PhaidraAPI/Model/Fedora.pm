@@ -83,32 +83,6 @@ sub getFirstJsonldValue {
   }
 }
 
-sub getJsonldValue {
-  my ($self, $c, $jsonld, $p) = @_;
-
-  my @a;
-  for my $ob (ensure_array($jsonld)) {
-    if (exists($ob->{$p})) {
-      for my $ob1 (ensure_array($ob->{$p})) {
-        if (exists($ob1->{'@value'})) {
-          push @a, $ob1->{'@value'};
-        }
-        else {
-          if (exists($ob1->{'@id'})) {
-            my $fp = $self->getFedoraUrlPrefix($c);
-
-            # $c->app->log->debug("XXXXXXXXXXX prefix $fp");
-            $ob1->{'@id'} =~ s/$fp//g;
-            push @a, $ob1->{'@id'};
-          }
-        }
-      }
-      last;
-    }
-  }
-  return \@a;
-}
-
 sub _getObjectProperties {
   my ($self, $c, $pid) = @_;
 
@@ -157,18 +131,12 @@ sub _getNTriplesValue {
   return;
 }
 
-sub _getNTriplesObjectProperties {
-  my ($self, $c, $pid) = @_;
+sub _getNTriplesProperties {
+  my ($self, $c, $path) = @_;
 
   my $res = {alerts => [], status => 200};
 
-  unless ($pid =~ m/^o:\d+$/) {
-    unshift @{$res->{alerts}}, {type => 'error', msg => 'Invalid pid'};
-    $res->{status} = 400;
-    return $res;
-  }
-
-  my $url = $c->app->fedoraurl->path($pid);
+  my $url = $c->app->fedoraurl->path($path);
   $c->app->log->debug("GET $url");
   my $getres = $c->ua->get($url => $self->wrapAtomic($c, {'Accept' => 'application/n-triples'}))->result;
 
@@ -199,7 +167,13 @@ sub getObjectProperties {
 
   my $res = {alerts => [], status => 200};
 
-  my $propres = $self->_getNTriplesObjectProperties($c, $pid);
+  unless ($pid =~ m/^o:\d+$/) {
+    unshift @{$res->{alerts}}, {type => 'error', msg => 'Invalid pid'};
+    $res->{status} = 400;
+    return $res;
+  }
+
+  my $propres = $self->_getNTriplesProperties($c, $pid);
   if ($propres->{status} != 200) {
     return $propres;
   }
@@ -266,10 +240,7 @@ sub headObjectExists {
       'http://www.w3.org/ns/ldp#PreferMembership', 'http://www.w3.org/ns/ldp#PreferMinimalContainer',
     )
   );
-  my $headers = {
-    'Accept' => 'application/ld+json',
-    'Prefer' => qq{return=representation; omit="$prefer_omit"},
-  };
+  my $headers = {'Prefer' => qq{return=representation; omit="$prefer_omit"},};
   my $headres = $c->ua->head($url => $self->wrapAtomic($c, $headers))->result;
 
   if ($headres->is_success) {
@@ -554,21 +525,22 @@ sub getDatastreamAttributes {
     return;
   }
 
-  my $url = $c->app->fedoraurl->path("$pid/$dsid/fcr:metadata");
-  $c->app->log->debug("GET $url");
-  my $getres = $c->ua->get($url => {'Accept' => 'application/ld+json'})->result;
-
-  if ($getres->is_success) {
-    $res->{size}     = $self->getFirstJsonldValue($c, $getres->json, 'http://www.loc.gov/premis/rdf/v1#hasSize');
-    $res->{mimetype} = $self->getFirstJsonldValue($c, $getres->json, 'http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#hasMimeType');
-    $res->{filename} = $self->getFirstJsonldValue($c, $getres->json, 'http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#filename');
-    $res->{modified} = $self->getFirstJsonldValue($c, $getres->json, 'http://fedora.info/definitions/v4/repository#lastModified');
-    $res->{created}  = $self->getFirstJsonldValue($c, $getres->json, 'http://fedora.info/definitions/v4/repository#created');
+  my $propres = $self->_getNTriplesProperties($c, "$pid/$dsid/fcr:metadata");
+  if ($propres->{status} != 200) {
+    return $propres;
   }
-  else {
-    unshift @{$res->{alerts}}, {type => 'error', msg => $getres->message};
-    $res->{status} = $getres->{code};
-    return $res;
+
+  my $props        = $propres->{props} // {};
+  my %property_map = (
+    'http://www.loc.gov/premis/rdf/v1#hasSize'                          => 'size',
+    'http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#hasMimeType' => 'mimetype',
+    'http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#filename'    => 'filename',
+    'http://fedora.info/definitions/v4/repository#lastModified'         => 'modified',
+    'http://fedora.info/definitions/v4/repository#created'              => 'created',
+  );
+
+  for my $predicate (keys %property_map) {
+    $res->{$property_map{$predicate}} = exists $props->{$predicate} ? $props->{$predicate}->[0] : undef;
   }
 
   return $res;
