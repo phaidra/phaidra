@@ -3853,12 +3853,23 @@ export default {
         this.datareplaceUploadErrors.push(this.$t('Missing file'))
         return
       }
+      let mimetype = this.datareplaceFile.type
+      if (!mimetype) {
+        let ext = this.datareplaceFile.name.split('.').pop().toLowerCase()
+        let mt = this.vocabularies['mimetypes'].terms.find(t => t['skos:notation'].includes(ext))
+        mimetype = mt ? mt['@id'] : null
+      }
+      if (!mimetype) {
+        this.datareplaceUploadErrors = [this.$t('Missing file type')]
+        return
+      }
       this.datareplaceLoading = true
       this.datareplaceUploadProgress = 0
       this.datareplaceUploadErrors = []
       try {
         var httpFormData = new FormData()
         httpFormData.append('file', this.datareplaceFile)
+        httpFormData.append('mimetype', mimetype)
         let self = this
         let response = await this.$axios.post('/object/' + this.objectInfo.pid + '/data', httpFormData, {
           headers: {
