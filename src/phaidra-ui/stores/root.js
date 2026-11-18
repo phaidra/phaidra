@@ -81,6 +81,7 @@ export const useRootStore = defineStore('root', {
       'hideInstitutionName',
       'isParentSelectionDisabled',
       'hideBreadcrumbsOnHomepage',
+      'hideForgotPasswordButton',
       'data_ot4rt',
       'enableCookieBanner',
       'cookieBannerMessage',
