@@ -437,8 +437,8 @@ sub thumbnail {
       return;
     }
     case 'Collection' {
-      my $confmodel                     = PhaidraAPI::Model::Config->new;
-      my $pubconfig                     = $confmodel->get_public_config($self);
+      my $confmodel                       = PhaidraAPI::Model::Config->new;
+      my $pubconfig                       = $confmodel->get_public_config($self);
       my $disable_collection_member_thumb = $pubconfig && $pubconfig->{disablecollectionmemberthumbnail};
 
       if (!$disable_collection_member_thumb) {
