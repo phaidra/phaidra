@@ -262,6 +262,12 @@ sub get_members {
 
 }
 
+sub clear_oldest_member_cache {
+  my ($self, $c, $pid) = @_;
+  return unless $pid;
+  $c->app->chi->remove("first_coll_mem_$pid");
+}
+
 sub get_oldest_member {
 
   my $self    = shift;
