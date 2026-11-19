@@ -2,7 +2,7 @@
   <v-row>
     <v-col :md="labelColMd" cols="12" class="pdlabel text-secondary font-weight-bold text-md-right">{{ $t(p) }}</v-col>
     <v-col :md="valueColMd" cols="12">
-      <v-card tile elevation="0" color="transparent">
+      <v-card variant="text">
         <v-card-text class="jsonld-border-left">
           <v-container fluid>
             <v-row v-if="o['skos:prefLabel']?.length">
