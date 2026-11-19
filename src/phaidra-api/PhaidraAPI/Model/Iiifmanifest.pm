@@ -10,6 +10,20 @@ use Mojo::URL;
 use PhaidraAPI::Model::Index;
 use PhaidraAPI::Model::Object;
 
+sub generate_collection_manifest {
+  my ($self, $c, $pid) = @_;
+
+  my $res            = {alerts => [], status => 200};
+  my $apiBaseUrlPath = $c->app->config->{scheme} . '://' . $c->app->config->{baseurl} . ($c->app->config->{basepath} ? '/' . $c->app->config->{basepath} : '');
+
+  my $index_model   = PhaidraAPI::Model::Index->new;
+  my $urlget        = $index_model->_get_solrget_url($c, 'Collection');
+  my $pidunderscore = $pid;
+  $pidunderscore =~ s/:/_/;
+  $urlget->query(q => "ispartof:\"$pid\" AND cmodel:Picture", rows => "1000", wt => "json", sort => "pos_in_$pidunderscore asc");
+  return $self->_picture_members_manifest_from_solr($c, $pid, $res, $apiBaseUrlPath, $index_model, $urlget);
+}
+
 sub generate_container_manifest {
   my ($self, $c, $pid) = @_;
 
@@ -19,6 +33,11 @@ sub generate_container_manifest {
   my $index_model = PhaidraAPI::Model::Index->new;
   my $urlget      = $index_model->_get_solrget_url($c, 'Container');
   $urlget->query(q => "ismemberof:\"$pid\" AND cmodel:Picture", rows => "1000", wt => "json", sort => "pos_in_$pid asc");
+  return $self->_picture_members_manifest_from_solr($c, $pid, $res, $apiBaseUrlPath, $index_model, $urlget);
+}
+
+sub _picture_members_manifest_from_solr {
+  my ($self, $c, $pid, $res, $apiBaseUrlPath, $index_model, $urlget) = @_;
   my $qr = $c->app->ua->get($urlget)->result;
   unless ($qr->is_success) {
     return {alerts => [{type => 'error', msg => $qr->code . " " . $qr->message}], status => 500};
