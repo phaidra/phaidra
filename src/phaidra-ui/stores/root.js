@@ -732,7 +732,9 @@ export const useRootStore = defineStore('root', {
       lastname: logindata.lastname,
       email: logindata.email,
       org_units_l1: logindata.org_units_l1,
-      org_units_l2: logindata.org_units_l2
+      org_units_l2: logindata.org_units_l2,
+      roles: logindata.roles,
+      ldapgroups: logindata.ldapgroups
     }
     console.log(user)
     const data = {

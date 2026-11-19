@@ -96,6 +96,10 @@ export default {
     loadCollections: async function () {
       this.loading = true
       let searchQuery = this.collectionsSearch ? this.collectionsSearch : '*:*'
+      let user = useRootStore().user
+      let roles = user.roles || []
+      let ldapgroups = user.ldapgroups || []
+      let seeAllCollections = user.isadmin || roles.includes('superuser') || ldapgroups.includes('phaidradmins')
       let params = {
         q: searchQuery,
         defType: 'edismax',
@@ -103,7 +107,7 @@ export default {
         start: (this.options.page - 1) * this.options.itemsPerPage,
         rows: this.options.itemsPerPage,
         sort: 'created desc',
-        fq: 'resourcetype:collection AND owner:' + useRootStore().user.username
+        fq: seeAllCollections ? 'resourcetype:collection' : 'resourcetype:collection AND owner:' + user.username
       }
       try {
         let response = await this.$axios.request({
