@@ -1244,7 +1244,7 @@ sub _update_replaced_file_metadata {
     return $res;
   }
 
-  my $jsonld = $jsonldres->{'JSON-LD'};
+  my $jsonld      = $jsonldres->{'JSON-LD'};
   my @filenameArr = ($filename);
   $jsonld->{'ebucore:filename'} = \@filenameArr;
   my @mimetypeArr = ($mimetype);
