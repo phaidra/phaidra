@@ -1210,12 +1210,52 @@ sub add_octets {
     return $addres;
   }
 
+  my $mdres = $self->_update_replaced_file_metadata($c, $pid, $name, $mimetype, $username, $password);
+  if ($mdres->{status} ne 200) {
+    return $mdres;
+  }
+
   my $hooks_model = PhaidraAPI::Model::Hooks->new;
   my $hr          = $hooks_model->add_octets_hook($c, $pid, $exists, $mimetype, $cmodel);
   if ($hr->{status} ne 200) {
     $c->app->log->error("pid[$pid] add_octets_hook error: " . $c->app->dumper($hr));
   }
   $c->app->log->info("pid[$pid] octets successfully uploaded: filename[$name] size[$size]");
+
+  return $res;
+}
+
+sub _update_replaced_file_metadata {
+
+  my $self     = shift;
+  my $c        = shift;
+  my $pid      = shift;
+  my $filename = shift;
+  my $mimetype = shift;
+  my $username = shift;
+  my $password = shift;
+
+  my $res = {alerts => [], status => 200};
+
+  my $jsonld_model = PhaidraAPI::Model::Jsonld->new;
+  my $jsonldres    = $jsonld_model->get_object_jsonld_parsed($c, $pid, $username, $password);
+  if ($jsonldres->{status} ne 200) {
+    $c->app->log->info("pid[$pid] no JSON-LD, not updating filename and mimetype");
+    return $res;
+  }
+
+  my $jsonld      = $jsonldres->{'JSON-LD'};
+  my @filenameArr = ($filename);
+  $jsonld->{'ebucore:filename'} = \@filenameArr;
+  my @mimetypeArr = ($mimetype);
+  $jsonld->{'ebucore:hasMimeType'} = \@mimetypeArr;
+
+  my $json    = encode_json($jsonld);
+  my $saveres = $self->add_or_modify_datastream($c, $pid, "JSON-LD", "application/json", undef, $c->app->config->{phaidra}->{defaultlabel}, $json, "M", undef, undef, $username, $password, 0, 1);
+  if ($saveres->{status} ne 200) {
+    $c->app->log->error("pid[$pid] Error saving JSON-LD: " . $c->app->dumper($saveres));
+    return $saveres;
+  }
 
   return $res;
 }

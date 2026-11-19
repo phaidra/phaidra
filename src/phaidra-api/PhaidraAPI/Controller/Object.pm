@@ -221,6 +221,7 @@ sub _proxy_thumbnail {
   if (defined($jobstatus) && ($jobstatus eq 'finished')) {
 
     # use imageserver
+    $self->stash(thumbnail_nocache => 1);
     my $isrv_model = PhaidraAPI::Model::Imageserver->new;
     my $t0         = [gettimeofday];
     my $res        = $isrv_model->get_url($self, Mojo::Parameters->new(IIIF => "$pid.tif/full/$size/0/default.jpg"), 0);
@@ -2036,6 +2037,12 @@ sub _proxy_tx {
   my $res = $tx->result;
   if ($res->is_success) {
     $c->tx->res($res);
+    if ($c->stash('thumbnail_nocache')) {
+      $c->tx->res->headers->remove('Cache-Control');
+      $c->tx->res->headers->remove('Pragma');
+      $c->tx->res->headers->remove('Expires');
+      $c->setNoCacheHeaders();
+    }
     $c->rendered;
   }
   else {

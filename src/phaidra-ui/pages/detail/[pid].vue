@@ -2682,6 +2682,14 @@ import objectMixin from 'phaidra-vue-components/src/mixins/object'
 import lang3to2map from "phaidra-vue-components/src/utils/lang3to2map";
 import Autolinker from "autolinker";
 import copyTooltip from 'phaidra-vue-components/src/mixins/copyTooltip'
+import { allowedMimetypes } from 'phaidra-vue-components/src/utils/mimetypes'
+
+const cmodelAllowedMimetypes = {
+  Picture: allowedMimetypes['https://pid.phaidra.org/vocabulary/44TN-P1S0'],
+  PDFDocument: allowedMimetypes['https://pid.phaidra.org/vocabulary/69ZZ-2KGX'],
+  Video: allowedMimetypes['https://pid.phaidra.org/vocabulary/B0Y6-GYT8'],
+  Audio: allowedMimetypes['https://pid.phaidra.org/vocabulary/8YB5-1M0J']
+}
 
 export default {
   mixins: [context, config, vocabulary, objectMixin, copyTooltip],
@@ -3861,6 +3869,11 @@ export default {
       }
       if (!mimetype) {
         this.datareplaceUploadErrors = [this.$t('Missing file type')]
+        return
+      }
+      let allowed = cmodelAllowedMimetypes[this.objectInfo.cmodel]
+      if (allowed && !allowed.includes(mimetype)) {
+        this.datareplaceUploadErrors = [this.$t('This file type is not supported for the chosen resource type.')]
         return
       }
       this.datareplaceLoading = true
