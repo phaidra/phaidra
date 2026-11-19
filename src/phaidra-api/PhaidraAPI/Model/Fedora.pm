@@ -816,6 +816,28 @@ sub delete {
   return $res;
 }
 
+sub purge {
+  my ($self, $c, $pid) = @_;
+
+  my $res = {alerts => [], status => 200};
+
+  my $url = $c->app->fedoraurl->path($pid . '/fcr:tombstone');
+  $c->app->log->debug("DELETE $url");
+  my $delres = $c->ua->delete($url)->result;
+  unless ($delres->is_success) {
+    if ($delres->{code} && $delres->{code} == 404) {
+      # Tombstone already purged (idempotent success)
+      return $res;
+    }
+    $c->app->log->error("Cannot purge fedora object pid[$pid]: code:" . $delres->{code} . " message:" . $delres->{message});
+    unshift @{$res->{alerts}}, {type => 'error', msg => $delres->{message}};
+    $res->{status} = $delres->{code} ? $delres->{code} : 500;
+    return $res;
+  }
+
+  return $res;
+}
+
 sub isDeleted {
   my ($self, $c, $pid) = @_;
 

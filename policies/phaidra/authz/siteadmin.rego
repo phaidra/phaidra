@@ -16,6 +16,7 @@ admin_actions := {
 	"admin_oai_blacklist",
 	"admin_index",
 	"admin_object_index",
+	"admin_object_purge",
 	"admin_imageserver_process",
 	"admin_tikaserver_process",
 	"admin_streaming_process",

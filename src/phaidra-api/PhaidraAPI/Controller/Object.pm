@@ -1078,6 +1078,26 @@ sub delete {
   $self->render(json => $r, status => $r->{status});
 }
 
+sub purge {
+  my $self = shift;
+
+  unless (defined($self->stash('pid'))) {
+    $self->render(json => {alerts => [{type => 'error', msg => 'Undefined pid'}]}, status => 400);
+    return;
+  }
+
+  my $pid = $self->stash('pid');
+  unless ($pid =~ m/^o:\d+$/) {
+    $self->render(json => {alerts => [{type => 'error', msg => 'Invalid pid'}]}, status => 400);
+    return;
+  }
+
+  my $object_model = PhaidraAPI::Model::Object->new;
+  my $r            = $object_model->purge($self, $pid, $self->stash->{basic_auth_credentials}->{username}, $self->stash->{basic_auth_credentials}->{password});
+
+  $self->render(json => $r, status => $r->{status});
+}
+
 sub modify {
   my $self = shift;
 

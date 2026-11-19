@@ -10522,7 +10522,7 @@
         "/object/{pid}/delete": {
             "post": {
                 "summary": "Delete object.",
-                "description": "This method permanently deletes the object from the repository. In case Fedora 6+ is the backend repository, a tombstone will be created in object's place.",
+                "description": "Deletes the object and creates a Fedora tombstone (Fedora 6+). Use /object/{pid}/purge to also remove the tombstone for permanent purge.",
                 "tags": [
                     "object-basics"
                 ],
@@ -10545,6 +10545,75 @@
                 "responses": {
                     "200": {
                         "description": "status of delete request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "alerts": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "msg": {
+                                                        "type": "string"
+                                                    },
+                                                    "type": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "status": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Not authenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/default"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/object/{pid}/purge": {
+            "post": {
+                "summary": "Purge object.",
+                "description": "Deletes the object if needed and then removes its Fedora tombstone by deleting /fcr:tombstone. Idempotent: returns success if the object/tombstone is already gone. Available only to site admin users (phaidraAdmin/admin role).",
+                "tags": [
+                    "object-basics"
+                ],
+                "security": [
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "pid",
+                        "schema": {
+                            "type": "string",
+                            "required": true
+                        },
+                        "description": "object pid"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "status of purge request",
                         "content": {
                             "application/json": {
                                 "schema": {

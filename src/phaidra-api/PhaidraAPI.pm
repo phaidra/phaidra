@@ -295,6 +295,9 @@ sub startup {
         my $res          = $fedora_model->headObjectExists($c, $pid);
 
         if ($res->{status} && $res->{status} == 404) {
+          if ($url_path =~ m{/object/\Q$pid\E/purge(?:$|/)}) {
+            return $next->();
+          }
           $c->render(text => 'Object not found', status => 404);
           return;
         }
@@ -305,7 +308,7 @@ sub startup {
         }
 
         if ($res->{status} && $res->{status} == 410) {
-          if ($url_path =~ m{/object/\Q$pid\E/info}) {
+          if ($url_path =~ m{/object/\Q$pid\E/(info|purge)(?:$|/)}) {
             return $next->();
           }
           $c->render(json => {alerts => [{type => 'error', msg => 'Gone'}], status => 410}, status => 410);
@@ -684,6 +687,7 @@ sub startup {
     $authz->post('object/:pid/approve')                                    ->to('object#approve', action_id => 'approve');
     $authz->post('object/:pid/modify')                                     ->to('object#modify', action_id => 'write');
     $authz->post('object/:pid/delete')                                     ->to('object#delete', action_id => 'delete');
+    $authz->post('object/:pid/purge')                                      ->to('object#purge', action_id => 'admin_object_purge');
     $authz->post('object/:pid/uwmetadata')                                 ->to('uwmetadata#post', action_id => 'write');
     $authz->post('object/:pid/mods')                                       ->to('mods#post', action_id => 'write');
     $authz->post('object/:pid/jsonld')                                     ->to('jsonld#post', action_id => 'write');

@@ -369,33 +369,39 @@ sub delete_hook {
   }
 
   my %valid_models = (
-    'Picture'     => 'libvips',
-    'PDFDocument' => 'libvips',
-    'Video'       => 'opencast',
-    '3DObject'    => '3d',
-    'PDFDocument' => 'tika'
+    'Picture'     => ['libvips'],
+    'PDFDocument' => ['libvips', 'tika'],
+    'Video'       => ['opencast'],
+    '3DObject'    => ['3d']
   );
 
   if (defined $cmodel && exists $valid_models{$cmodel}) {
-    my $agent = $valid_models{$cmodel};
-    my $find  = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => $agent});
+    my $agents = $valid_models{$cmodel};
 
-    if ($find && defined $find->{status}) {
-      $c->app->log->info("delete object hook for cmodel $cmodel pid[$pid] : Current streaming job status[$find->{status}]");
+    for my $agent (@{$agents}) {
+      my $jobs_cursor = $c->paf_mongo->get_collection('jobs')->find({pid => $pid, agent => $agent});
+      my @jobs        = $jobs_cursor->all;
 
-      if ($find->{status} eq "TO_DELETE" or $find->{status} eq "DEL_REQUESTED") {
-        $c->app->log->info("Delete already requested. Noop.");
-      }
-      elsif ($find->{status} =~ m/^OC_DELETED_/) {
-        $c->app->log->info("Already deleted. Noop.");
+      if (scalar @jobs > 0) {
+        for my $job (@jobs) {
+          my $status = defined $job->{status} ? $job->{status} : 'undefined';
+          $c->app->log->info("delete object hook for cmodel $cmodel pid[$pid] agent[$agent]: Current job status[$status]");
+
+          if (defined $job->{status} && ($job->{status} eq "TO_DELETE" or $job->{status} eq "DEL_REQUESTED")) {
+            $c->app->log->info("Delete already requested. Noop.");
+          }
+          elsif (defined $job->{status} && $job->{status} =~ m/^OC_DELETED_/) {
+            $c->app->log->info("Already deleted. Noop.");
+          }
+          else {
+            $c->app->log->info("Marking job for delete.");
+            $c->paf_mongo->get_collection('jobs')->update_one({'_id' => $job->{_id}}, {'$set' => {'status' => 'TO_DELETE'}}, {'upsert' => 0});
+          }
+        }
       }
       else {
-        $c->app->log->info("Marking stream for delete.");
-        $c->paf_mongo->get_collection('jobs')->update_one({'pid' => $pid, 'agent' => $agent}, {'$set' => {'status' => 'TO_DELETE'}}, {'upsert' => 0});
+        $c->app->log->info("Job wasn't found for agent[$agent]. Noop.");
       }
-    }
-    else {
-      $c->app->log->info("Streaming job wasn't found. Noop.");
     }
   }
 

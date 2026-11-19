@@ -124,7 +124,7 @@ sub _legacy_action_fallback {
     admin_storage_usage admin_storage_avg_year admin_imageserver_storage_avg_year
     admin_send_daily_report
     admin_config_private_read admin_config_public_write admin_config_private_write
-    admin_oai_blacklist admin_index admin_object_index
+    admin_oai_blacklist admin_index admin_object_index admin_object_purge
     admin_imageserver_process admin_tikaserver_process admin_streaming_process
     admin_objects_modify_bulk admin_objects_delete_bulk
     admin_templates_read admin_templates_write admin_users_read admin_users_write

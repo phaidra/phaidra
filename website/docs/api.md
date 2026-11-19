@@ -544,6 +544,32 @@ Response
 ```
 
 
+## Deleting and purging objects
+
+[POST object/{pid}/delete](http://localhost:8899/api/openapi#/object-basics/post_object__pid__delete)
+
+`/object/{pid}/delete` deletes the object. On Fedora 6+ backends this creates a Fedora tombstone (`/fcr:tombstone`), so the PID can remain as `410 Gone`.
+
+For permanent removal (including the Fedora tombstone), use the admin-only endpoint:
+
+[POST object/{pid}/purge](http://localhost:8899/api/openapi#/object-basics/post_object__pid__purge)
+
+`/object/{pid}/purge` works for both active and already tombstoned objects:
+
+1. Active object: delete first, then remove `/fcr:tombstone`
+2. Tombstoned object: remove `/fcr:tombstone` directly
+
+The purge endpoint is idempotent and returns success even if the object/tombstone is already gone.
+
+Examples:
+```bash
+# delete (regular object owner/superuser/site-admin permissions apply)
+curl -X POST -u pone:1234 "http://localhost:8899/api/object/o:1/delete"
+
+# purge (site admin / configured admin account only)
+curl -X POST -u <admin_user>:<admin_password> "http://localhost:8899/api/object/o:1/purge"
+```
+
 ## Changing object properties
 
 [POST object/{pid}/modify](http://localhost:8899/api/openapi#/object-advanced/post_object__pid__modify)

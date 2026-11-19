@@ -447,6 +447,41 @@ sub delete {
   return $res;
 }
 
+sub purge {
+  my $self     = shift;
+  my $c        = shift;
+  my $pid      = shift;
+  my $username = shift;
+  my $password = shift;
+
+  my $res = {alerts => [], status => 200};
+
+  my $fedora_model = PhaidraAPI::Model::Fedora->new;
+
+  my $exists_res = $fedora_model->headObjectExists($c, $pid);
+  if ($exists_res->{status} == 200) {
+    my $delete_res = $self->delete($c, $pid, $username, $password);
+    if ($delete_res->{status} ne 200) {
+      return $delete_res;
+    }
+    push @{$res->{alerts}}, @{$delete_res->{alerts}} if scalar @{$delete_res->{alerts}} > 0;
+  }
+  elsif ($exists_res->{status} != 410 && $exists_res->{status} != 404) {
+    return $exists_res;
+  }
+
+  my $purge_res = $fedora_model->purge($c, $pid);
+  if ($purge_res->{status} ne 200) {
+    return $purge_res;
+  }
+  push @{$res->{alerts}}, @{$purge_res->{alerts}} if scalar @{$purge_res->{alerts}} > 0;
+
+  my $cachekey = 'cmodel_' . $pid;
+  $c->app->chi->remove($cachekey);
+
+  return $res;
+}
+
 sub modify {
   my $self             = shift;
   my $c                = shift;
