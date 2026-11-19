@@ -826,6 +826,7 @@ sub purge {
   my $delres = $c->ua->delete($url)->result;
   unless ($delres->is_success) {
     if ($delres->{code} && $delres->{code} == 404) {
+
       # Tombstone already purged (idempotent success)
       return $res;
     }
