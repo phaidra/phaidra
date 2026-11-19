@@ -91,6 +91,17 @@ sub get_iiif_manifest {
         $res->{status} = $r->{status};
       }
 
+      if ($cmodelr->{cmodel} eq 'Collection') {
+        my $iiifm_model = PhaidraAPI::Model::Iiifmanifest->new;
+        my $r           = $iiifm_model->generate_collection_manifest($self, $pid);
+        if ($r->{status} == 200) {
+          $self->_apply_start_override($r->{manifest}, $pid);
+          $self->render(json => $r->{manifest}, status => $res->{status});
+          return;
+        }
+        $res->{status} = $r->{status};
+      }
+
       $self->render(json => {alerts => [{type => 'error', msg => "get_iiif_manifest pid[$pid] This object has currently no IIIF manifest"}], status => $res->{status}}, status => $res->{status});
       return;
     }
