@@ -428,7 +428,7 @@ services:
     hostname: "ui"
     depends_on: [api]
     <<: [*common, *logs]
-    image: phaidraorg/ui:e406500e
+    image: phaidraorg/ui:7de44865
     command: ["pm2-runtime", "start", "ecosystem.config.js"]
     environment:
       <<: [*api_common_env, *hosts, *ui_theme_env]
@@ -441,7 +441,7 @@ services:
     hostname: "ui"
     depends_on: [api-s3]
     <<: [*common, *logs]
-    image: phaidraorg/ui:e406500e
+    image: phaidraorg/ui:7de44865
     command: ["pm2-runtime", "start", "ecosystem.config.js"]
     environment:
       <<: [*api_common_env, *hosts, *ui_theme_env]
@@ -879,7 +879,7 @@ services:
   ############### phaidra sql db ###############
   mariadb-phaidra:
     hostname: "mariadb-phaidra"
-    image: phaidraorg/mariadb-phaidra-dist:62e27136
+    image: phaidraorg/mariadb-phaidra-dist:7de44865
     <<: [*common, *logs]
     command: --max_connections=200
     environment:
