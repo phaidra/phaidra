@@ -115,7 +115,11 @@ export default {
   },
   methods: {
     getReturnLocation () {
-      return buildReturnLocation(this.$route.query)
+      const returnLocation = buildReturnLocation(this.$route.query)
+      if (this.$router.resolve(returnLocation).name === this.$route.name) {
+        return { path: '/' }
+      }
+      return returnLocation
     },
     clearReturnPath () {
       try {
