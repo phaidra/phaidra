@@ -35,7 +35,6 @@ export const useRootStore = defineStore('root', {
     }
 
     let configurable = [
-      'baseurl',
       'api',
       'title', 
       'institution', 

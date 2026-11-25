@@ -216,6 +216,8 @@ export default {
       this.loading = true
       try {
         useRootStore().setInstanceConfigCookieDomain(this.$config?.public?.cookieDomain);
+        useRootStore().setInstanceConfigBaseUrl(this.$config?.public?.baseURL);
+        useRootStore().setInstanceConfigApiBaseUrl(this.$config?.public?.apiBaseURL);
         let settingResponse = await this.$axios.get("/config/public");
         const publicConfig = settingResponse?.data?.public_config
         if (publicConfig) {
@@ -231,17 +233,6 @@ export default {
             useSearchStore().setFacetQueries(publicConfig.data_facetqueries)
           }
 
-          // Do not overwrite API-provided values with undefined runtime config.
-          if (publicConfig.baseurl) {
-            useRootStore().setInstanceConfigBaseUrl(publicConfig.baseurl);
-          } else if (this.$config?.public?.baseURL) {
-            useRootStore().setInstanceConfigBaseUrl(this.$config?.public?.baseURL);
-          }
-          if (publicConfig.api) {
-            useRootStore().setInstanceConfigApiBaseUrl(publicConfig.api);
-          } else if (this.$config?.public?.apiBaseURL) {
-            useRootStore().setInstanceConfigApiBaseUrl(this.$config?.public?.apiBaseURL);
-          }
           this.refreshBreadcrumbs()
           this.hasLoadedInstanceConfig = true
         }

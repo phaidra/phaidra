@@ -34,7 +34,6 @@ if (!apiBaseURL) {
     apiBaseURL = fallbackInternalApiBaseURL
   }
 }
-const publicBaseURL = process.env.PHAIDRA_BASE_URL || publicApiBaseURL.replace(/\/api\/?$/, '')
 
 /** Redirect Vuetify's internal focusTrap module to `shims/vuetify-focusTrap.js` (SSR-safe teardown). */
 function vuetifyFocusTrapSsrShim() {
@@ -70,7 +69,7 @@ export default defineNuxtConfig({
       primaryColor: process.env.PHAIDRA_PRIMARY_COLOR,
       defaultTheme: process.env.PHAIDRA_DEFAULT_THEME,
       darkPrimaryColor: process.env.PHAIDRA_DARK_PRIMARY_COLOR,
-      baseURL: publicBaseURL,
+      baseURL: envOrigin,
       apiBaseURL: publicApiBaseURL,
       axios: {
         browserBaseURL: publicApiBaseURL
