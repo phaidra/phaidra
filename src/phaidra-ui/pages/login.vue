@@ -72,6 +72,12 @@ import { config, useDocumentTitle } from '../mixins/config'
 import { getReturnLocation as buildReturnLocation } from '../utils/returnPath'
 import { formatTermsForDisplay } from '../utils/formatTermsForDisplay'
 
+// In SSO setups Apache intercepts /login and proxies it to the SSO login, so
+// the local-account login form is only reachable through this alias.
+definePageMeta({
+  alias: ['/nossologin']
+})
+
 export default {
   mixins: [ context, config ],
   setup() {
