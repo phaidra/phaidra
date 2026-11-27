@@ -723,7 +723,6 @@ export const useRootStore = defineStore('root', {
     }
   },
   setLoginData(logindata) {
-    console.log('setLoginData: ')
     const user = {
       isadmin: logindata.isadmin,
       username: logindata.username,
@@ -735,7 +734,6 @@ export const useRootStore = defineStore('root', {
       roles: logindata.roles,
       ldapgroups: logindata.ldapgroups
     }
-    console.log(user)
     const data = {
       ...this.user,
       ...user
