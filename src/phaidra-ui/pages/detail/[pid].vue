@@ -4018,6 +4018,92 @@ export default {
       this.checksums = []
       this.detailsMetaInfo = null
     },
+    async refreshDetailObjectInfo () {
+      const pid = (this.objectInfo && this.objectInfo.pid) || this.$route.params.pid
+      if (!pid) {
+        return
+      }
+      await this.fetchAsyncData(this, pid)
+    },
+    addObjectToList: async function (list) {
+      try {
+        useRootStore().setLoading(true)
+        var httpFormData = new FormData()
+        httpFormData.append('members', JSON.stringify({ members: this.detailBookmarkMembers }))
+        let response = await this.$axios.request({
+          method: 'POST',
+          url: '/list/' + list.listid + '/members/add',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'X-XSRF-TOKEN': this.user.token
+          },
+          data: httpFormData
+        })
+        if (response.data.status === 200) {
+          useRootStore().setAlerts([{ msg: this.$t('Object list successfully updated'), type: 'success' }])
+        } else if (response.data.alerts && response.data.alerts.length > 0) {
+          useRootStore().setAlerts(response.data.alerts)
+        }
+      } catch (error) {
+        console.log(error)
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
+      } finally {
+        useRootStore().setLoading(false)
+      }
+    },
+    removeObjectFromList: async function (list) {
+      try {
+        useRootStore().setLoading(true)
+        var httpFormData = new FormData()
+        httpFormData.append('members', JSON.stringify({ members: this.detailBookmarkMembers }))
+        let response = await this.$axios.request({
+          method: 'POST',
+          url: '/list/' + list.listid + '/members/remove',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'X-XSRF-TOKEN': this.user.token
+          },
+          data: httpFormData
+        })
+        if (response.data.status === 200) {
+          useRootStore().setAlerts([{ msg: this.$t('Object list successfully updated'), type: 'success' }])
+        } else if (response.data.alerts && response.data.alerts.length > 0) {
+          useRootStore().setAlerts(response.data.alerts)
+        }
+      } catch (error) {
+        console.log(error)
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
+      } finally {
+        useRootStore().setLoading(false)
+      }
+    },
+    removeObjectFromCollection: async function (collection) {
+      try {
+        useRootStore().setLoading(true)
+        var httpFormData = new FormData()
+        httpFormData.append('metadata', JSON.stringify({ metadata: { members: this.detailBookmarkMembers } }))
+        let response = await this.$axios.request({
+          method: 'POST',
+          url: '/collection/' + collection.pid + '/members/remove',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'X-XSRF-TOKEN': this.user.token
+          },
+          data: httpFormData
+        })
+        if (response.data.status === 200) {
+          useRootStore().setAlerts([{ msg: this.$t('Collection successfully updated'), type: 'success' }])
+          await this.refreshDetailObjectInfo()
+        } else if (response.data.alerts && response.data.alerts.length > 0) {
+          useRootStore().setAlerts(response.data.alerts)
+        }
+      } catch (error) {
+        console.log(error)
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
+      } finally {
+        useRootStore().setLoading(false)
+      }
+    },
     addToCollection: async function (collection) {
       if (collection.pid === this.objectInfo.pid) {
         useRootStore().setAlerts([{ type: 'error', msg: 'A collection cannot be added inside itself.' }])
