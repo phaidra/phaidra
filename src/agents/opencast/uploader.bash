@@ -1,4 +1,26 @@
 ACL_PUBLIC='{"acl":{"ace":[{"allow":true,"role":"ROLE_ADMIN","action":"read"},{"allow":true,"role":"ROLE_ADMIN","action":"write"},{"allow":true,"role":"ROLE_ANONYMOUS","action":"read"}]}}'
+MAX_IN_FLIGHT="${OC_MAX_IN_FLIGHT:-5}"
+SLEEP_AT_CAP="${OC_UPLOAD_SLEEP_AT_CAP:-10}"
+
+if ! [[ "$MAX_IN_FLIGHT" =~ ^[1-9][0-9]*$ ]]; then
+    printf 'OC_MAX_IN_FLIGHT must be a positive integer, got: %s\n' "$MAX_IN_FLIGHT" >&2
+    exit 1
+fi
+
+if ! [[ "$SLEEP_AT_CAP" =~ ^[1-9][0-9]*$ ]]; then
+    printf 'OC_UPLOAD_SLEEP_AT_CAP must be a positive integer, got: %s\n' "$SLEEP_AT_CAP" >&2
+    exit 1
+fi
+
+function get_in_flight_count {
+    mongosh \
+        --quiet \
+        --authenticationDatabase admin \
+        -u "$M_USER" \
+        -p "$M_PASS" \
+        "mongodb://$MONGODB_PHAIDRA_HOST/$M_AGENT_DB" \
+        --eval 'print(db.jobs.countDocuments({ agent: "opencast", status: { $in: ["uploading", "sent"] } }))'
+}
 
 function claim_job {
     mongosh \
@@ -59,6 +81,19 @@ function get_suffix {
 # algorithm
 while true
 do
+    IN_FLIGHT=$(get_in_flight_count || true)
+    if ! [[ "$IN_FLIGHT" =~ ^[0-9]+$ ]]; then
+        printf 'Unable to determine the number of in-flight Opencast jobs; retrying in %s seconds.\n' "$SLEEP_AT_CAP" >&2
+        sleep "$SLEEP_AT_CAP"
+        continue
+    fi
+
+    if (( IN_FLIGHT >= MAX_IN_FLIGHT )); then
+        printf 'Opencast in-flight job limit reached (%s/%s); waiting %s seconds.\n' "$IN_FLIGHT" "$MAX_IN_FLIGHT" "$SLEEP_AT_CAP"
+        sleep "$SLEEP_AT_CAP"
+        continue
+    fi
+
     JOB=$(claim_job || true)
     if [[ -z "$JOB" ]]
     then
