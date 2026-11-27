@@ -88,6 +88,8 @@ do
         continue
     fi
 
+    printf 'Opencast in-flight jobs: %s/%s.\n' "$IN_FLIGHT" "$MAX_IN_FLIGHT"
+
     if (( IN_FLIGHT >= MAX_IN_FLIGHT )); then
         printf 'Opencast in-flight job limit reached (%s/%s); waiting %s seconds.\n' "$IN_FLIGHT" "$MAX_IN_FLIGHT" "$SLEEP_AT_CAP"
         sleep "$SLEEP_AT_CAP"
