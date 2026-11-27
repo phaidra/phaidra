@@ -2,7 +2,7 @@
 import { useRootStore } from '~/stores/root'
 import { h, defineComponent, getCurrentInstance } from 'vue'
 import { compile, NodeTypes } from '@vue/compiler-dom'
-import * as runtimeDom from '@vue/runtime-dom'
+import * as runtimeDom from 'vue'
 import { cmsRuntimeComponents } from '../utils/cms-runtime-components'
 import { ClientOnly, NuxtLink } from '#components'
 import { cmsLocalComponents } from '../utils/cms-local-components'
