@@ -692,7 +692,7 @@ services:
   ############### opencast agent ###############
   agent-opencast:
     hostname: "agent-opencast"
-    image: phaidraorg/agent-opencast-dist:98d12813
+    image: phaidraorg/agent-opencast-dist:8fc52c79
     <<: [*common, *logs]
     volumes:
       - agent-opencast-work:/opt/agent-opencast
